@@ -1,3 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Strings generales -->
     <string name="app_name">LibreBook</string>
+    <string name="navigation_drawer_open">Abrir menú de navegación</string>
+    <string name="navigation_drawer_close">Cerrar menú de navegación</string>
+
+    <!-- Strings para el menú de navegación -->
+    <string name="menu_home">Inicio</string>
+    <string name="menu_settings">Ajustes</string>
+
+    <!-- Strings para la configuración de idioma -->
+    <string name="select_language">Seleccionar idioma</string>
+    <string name="settings">Ajustes</string>
+    <string name="language">Idioma</string>
+    <string name="change_language">Cambiar idioma</string>
+    <string name="language_description">Selecciona el idioma de la aplicación</string>
 </resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- String orokorrak -->
+    <string name="app_name">LibreBook</string>
+    <string name="navigation_drawer_open">Ireki nabigazio menua</string>
+    <string name="navigation_drawer_close">Itxi nabigazio menua</string>
+
+    <!-- Nabigazio menuaren string-ak -->
+    <string name="menu_home">Hasiera</string>
+    <string name="menu_settings">Ezarpenak</string>
+
+    <!-- Hizkuntza ezarpenen string-ak -->
+    <string name="select_language">Hizkuntza aukeratu</string>
+    <string name="settings">Ezarpenak</string>
+    <string name="language">Hizkuntza</string>
+    <string name="change_language">Hizkuntza aldatu</string>
+    <string name="language_description">Hautatu aplikazioaren hizkuntza</string>
+</resources>
