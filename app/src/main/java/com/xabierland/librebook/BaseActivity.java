@@ -41,6 +41,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    // Método para crear el menú de opciones
     protected void setupDrawer() {
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
