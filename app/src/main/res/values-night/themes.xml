@@ -13,6 +13,10 @@
         <!-- Status bar color. -->
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <!-- Colores específicos para el modo oscuro -->
+        <item name="backgroundColor">#121212</item>
+        <item name="cardBackgroundColor">#242424</item>
+        <item name="textColor">@color/white</item>
     </style>
     
     <!-- Tema para forzar el modo oscuro -->
