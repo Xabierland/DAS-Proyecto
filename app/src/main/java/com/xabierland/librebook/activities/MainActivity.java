@@ -1,5 +1,5 @@
-package com.xabierland.librebook;
-
+package com.xabierland.librebook.activities;
+import com.xabierland.librebook.R;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -17,6 +17,11 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // Solo código específico de MainActivity
+
+        // Comprobar si venimos de un cambio de tema
+        if (getIntent().getBooleanExtra("THEME_CHANGED", false)) {
+            // No hacemos nada especial, el tema ya se ha aplicado en BaseActivity
+        }
     }
 
     @Override

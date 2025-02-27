@@ -14,5 +14,3 @@ La aplicacion se trata de una red social para compartir lecturas en la que puede
 
 - Java
 - Sqlite
-
-

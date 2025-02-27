@@ -15,4 +15,12 @@
     <string name="language">Language</string>
     <string name="change_language">Change language</string>
     <string name="language_description">Select the app language</string>
+
+    <!-- Strings for theme settings -->
+    <string name="theme">Theme</string>
+    <string name="change_theme">Change theme</string>
+    <string name="theme_description">Select the app theme</string>
+    <string name="system_default">System default</string>
+    <string name="light_theme">Light theme</string>
+    <string name="dark_theme">Dark theme</string>
 </resources>

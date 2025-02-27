@@ -24,11 +24,13 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <!-- Opción de idioma -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                app:cardElevation="4dp">
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="?attr/cardBackgroundColor">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -41,13 +43,15 @@
                         android:layout_height="wrap_content"
                         android:text="@string/language"
                         android:textSize="18sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:textColor="?attr/textColor"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="@string/language_description"/>
+                        android:text="@string/language_description"
+                        android:textColor="?attr/textColor"/>
 
                     <Button
                         android:id="@+id/btnChangeLanguage"
@@ -55,6 +59,46 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="@string/change_language"/>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Opción de tema -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="?attr/cardBackgroundColor">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/theme"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="?attr/textColor"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/theme_description"
+                        android:textColor="?attr/textColor"/>
+
+                    <Button
+                        android:id="@+id/btnChangeTheme"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/change_theme"/>
 
                 </LinearLayout>
 

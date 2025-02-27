@@ -4,6 +4,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.ColumnInfo;
 import androidx.room.Index;
+import androidx.room.Ignore;
 
 @Entity(tableName = "libros",
         indices = {@Index(value = {"isbn"}, unique = true)})
@@ -39,13 +40,20 @@ public class Libro {
     @ColumnInfo(name = "num_paginas")
     private int numPaginas;
     
-    // Constructor básico
+    // Constructor vacío para Room
+    public Libro() {
+        // Constructor vacío para Room
+    }
+    
+    // Constructor básico - marcado con @Ignore para que Room no lo use
+    @Ignore
     public Libro(String titulo, String autor) {
         this.titulo = titulo;
         this.autor = autor;
     }
     
-    // Constructor completo
+    // Constructor completo - marcado con @Ignore para que Room no lo use
+    @Ignore
     public Libro(String titulo, String autor, String isbn, String descripcion, 
                 String portadaUrl, int anioPublicacion, String editorial, 
                 String genero, int numPaginas) {
@@ -59,7 +67,7 @@ public class Libro {
         this.genero = genero;
         this.numPaginas = numPaginas;
     }
-    
+        
     // Getters y setters
     public int getId() {
         return id;

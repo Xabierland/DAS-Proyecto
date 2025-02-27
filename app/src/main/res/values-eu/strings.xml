@@ -15,4 +15,12 @@
     <string name="language">Hizkuntza</string>
     <string name="change_language">Hizkuntza aldatu</string>
     <string name="language_description">Hautatu aplikazioaren hizkuntza</string>
+
+    <!-- Gaiaren ezarpenen stringak -->
+    <string name="theme">Gaia</string>
+    <string name="change_theme">Gaia aldatu</string>
+    <string name="theme_description">Hautatu aplikazioaren gaia</string>
+    <string name="system_default">Sistemaren lehenetsia</string>
+    <string name="light_theme">Gai argia</string>
+    <string name="dark_theme">Gai iluna</string>
 </resources>

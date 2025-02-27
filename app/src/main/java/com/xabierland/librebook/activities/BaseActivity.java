@@ -1,5 +1,5 @@
-package com.xabierland.librebook;
-
+package com.xabierland.librebook.activities;
+import com.xabierland.librebook.R;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -8,6 +8,7 @@ import android.view.Menu;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -20,8 +21,15 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected Toolbar toolbar;
     protected NavigationView navigationView;
 
+    // Constantes para el tema
+    public static final int THEME_SYSTEM = 0;
+    public static final int THEME_LIGHT = 1;
+    public static final int THEME_DARK = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Aplicar el tema guardado
+        applyTheme();
         super.onCreate(savedInstanceState);
         // Esto hace que todas las actividades de la app tengan el idioma seleccionado
         loadLocale();
@@ -137,6 +145,66 @@ public abstract class BaseActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    // ======================== Lógica de temas ========================
+
+    protected void applyTheme() {
+        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
+        int themeMode = prefs.getInt("theme_mode", THEME_SYSTEM);
+        
+        switch (themeMode) {
+            case THEME_LIGHT:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                setTheme(R.style.Theme_LibreBook_Light);
+                break;
+            case THEME_DARK:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                setTheme(R.style.Theme_LibreBook_Dark);
+                break;
+            case THEME_SYSTEM:
+            default:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                setTheme(R.style.Theme_LibreBook);
+                break;
+        }
+    }
+    
+    protected void setThemeMode(int themeMode) {
+        SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
+        editor.putInt("theme_mode", themeMode);
+        editor.apply();
+        
+        // Recrear todas las actividades para aplicar el nuevo tema
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("THEME_CHANGED", true);
+        startActivity(intent);
+        finish();
+    }
+    
+    protected void showThemeDialog() {
+        final String[] themes = {
+            getString(R.string.system_default),
+            getString(R.string.light_theme),
+            getString(R.string.dark_theme)
+        };
+        
+        // Obtener el tema actual
+        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
+        int currentTheme = prefs.getInt("theme_mode", THEME_SYSTEM);
+        
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.change_theme);
+        builder.setSingleChoiceItems(themes, currentTheme, (dialog, which) -> {
+            if (which != currentTheme) {
+                setThemeMode(which);
+            }
+            dialog.dismiss();
+        });
+        
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+    
     // ================= 
     protected abstract String getActivityTitle();
 }

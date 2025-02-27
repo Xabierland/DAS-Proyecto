@@ -1,23 +1,43 @@
 package com.xabierland.librebook.data.models;
 
+import androidx.room.ColumnInfo;
+
 // Esta clase no es una entidad Room, es un POJO para resultados de consultas
 public class LibroConEstado {
     // Campos del libro
     private int id;
+    
     private String titulo;
+    
     private String autor;
+    
     private String isbn;
+    
     private String descripcion;
+    
+    @ColumnInfo(name = "portada_url")
     private String portadaUrl;
+    
+    @ColumnInfo(name = "anio_publicacion")
     private int anioPublicacion;
+    
     private String editorial;
+    
     private String genero;
+    
+    @ColumnInfo(name = "num_paginas")
     private int numPaginas;
     
     // Campos de la relación usuario-libro
+    @ColumnInfo(name = "estado_lectura")
     private String estadoLectura;
+    
+    @ColumnInfo(name = "es_favorito")
     private boolean esFavorito;
+    
     private Float calificacion;
+    
+    @ColumnInfo(name = "pagina_actual")
     private Integer paginaActual;
     
     // Constructor por defecto necesario para Room

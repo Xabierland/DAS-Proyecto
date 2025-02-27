@@ -7,10 +7,11 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Update;
+import androidx.room.RewriteQueriesToDropUnusedColumns;
 
-import com.xabierland.librebook.data.database.Libro;
-import com.xabierland.librebook.data.database.UsuarioLibro;
-import com.tuaplicacion.data.models.LibroConEstado;
+import com.xabierland.librebook.data.database.entities.Libro;
+import com.xabierland.librebook.data.database.entities.UsuarioLibro;
+import com.xabierland.librebook.data.models.LibroConEstado;
 
 import java.util.List;
 
@@ -33,6 +34,7 @@ public interface UsuarioLibroDao {
     UsuarioLibro obtenerPorUsuarioYLibro(int usuarioId, int libroId);
     
     // Obtener todos los libros de un usuario
+    @RewriteQueriesToDropUnusedColumns
     @Transaction
     @Query("SELECT l.*, ul.estado_lectura, ul.es_favorito, ul.calificacion, ul.pagina_actual " +
            "FROM libros l " +
@@ -41,6 +43,7 @@ public interface UsuarioLibroDao {
     List<LibroConEstado> obtenerTodosLosLibrosDeUsuario(int usuarioId);
     
     // Obtener libros por estado de lectura (por leer, leyendo, leídos)
+    @RewriteQueriesToDropUnusedColumns
     @Transaction
     @Query("SELECT l.*, ul.estado_lectura, ul.es_favorito, ul.calificacion, ul.pagina_actual " +
            "FROM libros l " +
@@ -49,6 +52,7 @@ public interface UsuarioLibroDao {
     List<LibroConEstado> obtenerLibrosPorEstado(int usuarioId, String estadoLectura);
     
     // Obtener libros favoritos
+    @RewriteQueriesToDropUnusedColumns
     @Transaction
     @Query("SELECT l.*, ul.estado_lectura, ul.es_favorito, ul.calificacion, ul.pagina_actual " +
            "FROM libros l " +
