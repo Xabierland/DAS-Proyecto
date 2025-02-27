@@ -23,15 +23,19 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Esto hace que todas las actividades de la app tengan el idioma seleccionado
         loadLocale();
     }
 
     @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
+        // Esto hace que el toolbar y el menu lateral se añadan a todas las actividades de la app
         setupToolbar();
         setupDrawer();
     }
+
+    // ======================== Logica del Toolbar ========================
 
     protected void setupToolbar() {
         toolbar = findViewById(R.id.toolbar);
@@ -41,7 +45,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    // Método para crear el menú de opciones
+    // ======================== Logica del Menu ========================
     protected void setupDrawer() {
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
@@ -94,6 +98,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    // ======================== Logica de idiomas ========================
+
     protected void loadLocale() {
         SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
         String language = prefs.getString("language", "");
@@ -131,5 +137,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    // ================= 
     protected abstract String getActivityTitle();
 }
