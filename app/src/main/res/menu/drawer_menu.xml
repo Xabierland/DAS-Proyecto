@@ -10,13 +10,27 @@
             android:title="@string/menu_home" />
 
         <!--Registrar usuario-->
+        <item
+            android:id="@+id/nav_register"
+            android:icon="@drawable/ic_register"
+            android:title="@string/register" />
 
         <!--Iniciar sesion-->
+        <item
+            android:id="@+id/nav_login"
+            android:icon="@drawable/ic_login"
+            android:title="@string/login" />
 
         <!--Ajustes-->
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings"
             android:title="@string/settings" />
+
+        <!--Cerrar sesion-->
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_logout"
+            android:title="@string/logout" />
     </group>
 </menu>

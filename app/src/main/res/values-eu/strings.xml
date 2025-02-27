@@ -16,6 +16,15 @@
     <string name="change_language">Hizkuntza aldatu</string>
     <string name="language_description">Hautatu aplikazioaren hizkuntza</string>
 
+    <!-- Erregistratzeko string-ak -->
+    <string name="register">Erregistratu</string>
+
+    <!-- Saioa hasteko string-ak -->
+    <string name="login">Saioa hasi</string>
+
+    <!-- Saioa itxi string-ak -->
+    <string name="logout">Saioa itxi</string>
+
     <!-- Gaiaren ezarpenen stringak -->
     <string name="theme">Gaia</string>
     <string name="change_theme">Gaia aldatu</string>

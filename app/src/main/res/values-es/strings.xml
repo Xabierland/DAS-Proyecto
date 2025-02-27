@@ -16,6 +16,15 @@
     <string name="change_language">Cambiar idioma</string>
     <string name="language_description">Selecciona el idioma de la aplicación</string>
 
+    <!-- Strings para registrarse -->
+    <string name="register">Registrarse</string>
+
+    <!-- Strings para iniciar sesión -->
+    <string name="login">Iniciar sesión</string>
+
+    <!-- Strings para cerrar sesión -->
+    <string name="logout">Cerrar sesión</string>
+
     <!-- Strings para el tema -->
     <string name="theme">Tema</string>
     <string name="change_theme">Cambiar tema</string>
