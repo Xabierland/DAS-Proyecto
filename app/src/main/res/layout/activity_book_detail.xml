@@ -156,28 +156,13 @@
                     android:orientation="vertical"
                     android:layout_marginBottom="16dp">
 
-                    <!-- Botón para añadir como "Por leer" -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/buttonAddPorLeer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/add_to_read"
-                        android:layout_marginBottom="8dp" />
-
-                    <!-- Botón para añadir como "Leyendo" -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/buttonAddLeyendo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/add_reading"
-                        android:layout_marginBottom="8dp" />
-
-                    <!-- Botón para añadir como "Leído" -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/buttonAddLeido"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/add_read" />
+                    <!-- Botón para añadir a biblioteca -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonAddToLibrary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_to_library"
+                    android:layout_marginBottom="16dp" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
