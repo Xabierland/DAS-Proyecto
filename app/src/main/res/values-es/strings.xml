@@ -25,6 +25,10 @@
     <!-- Strings para cerrar sesión -->
     <string name="logout">Cerrar sesión</string>
 
+    <string name="search">Buscar</string>
+    <string name="search_hint">Buscar por título o autor</string>
+    <string name="no_results">No se encontraron libros que coincidan con tu búsqueda</string>
+    <string name="book_cover">Portada del libro</string>
     <string name="welcome_guest">¡Bienvenido a LibreBook! Inicia sesión para acceder a tu biblioteca personal.</string>
     <string name="welcome_user">¡Bienvenido, %1$s! Tu biblioteca personal está lista.</string>
     <string name="email">Correo electrónico</string>

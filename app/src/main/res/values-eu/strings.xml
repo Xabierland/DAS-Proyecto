@@ -25,6 +25,10 @@
     <!-- Saioa itxi string-ak -->
     <string name="logout">Saioa itxi</string>
 
+    <string name="search">Bilatu</string>
+    <string name="search_hint">Bilatu izenburua edo egilearen arabera</string>
+    <string name="no_results">Ez dira aurkitu zure bilaketarekin bat datozen liburuak</string>
+    <string name="book_cover">Liburuaren azala</string>
     <string name="welcome_guest">Ongi etorri LibreBook-era! Saioa hasi zure liburutegi pertsonalera sartzeko.</string>
     <string name="welcome_user">Ongi etorri, %1$s! Zure liburutegi pertsonala prest dago.</string>
     <string name="email">Helbide elektronikoa</string>
