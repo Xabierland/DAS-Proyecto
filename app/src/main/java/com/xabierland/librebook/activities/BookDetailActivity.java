@@ -1,6 +1,9 @@
 package com.xabierland.librebook.activities;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
 import com.xabierland.librebook.R;
@@ -18,6 +22,7 @@ import com.xabierland.librebook.data.database.entities.Libro;
 import com.xabierland.librebook.data.database.entities.UsuarioLibro;
 import com.xabierland.librebook.data.repositories.BibliotecaRepository;
 import com.xabierland.librebook.data.repositories.LibroRepository;
+import com.xabierland.librebook.utils.ImageLoader;
 
 public class BookDetailActivity extends BaseActivity {
 
@@ -118,6 +123,7 @@ public class BookDetailActivity extends BaseActivity {
         });
     }
 
+    @SuppressLint("DefaultLocale")
     private void displayBookDetails() {
         // Mostrar datos del libro en las vistas
         textViewTitulo.setText(libro.getTitulo());
@@ -152,11 +158,17 @@ public class BookDetailActivity extends BaseActivity {
             textViewDescripcion.setText("No hay descripción disponible.");
         }
         
-        // Aquí podrías añadir código para cargar la imagen de la portada usando Glide o Picasso
-        // Por ejemplo:
-        // if (libro.getPortadaUrl() != null && !libro.getPortadaUrl().isEmpty()) {
-        //     Glide.with(this).load(libro.getPortadaUrl()).into(imageViewPortada);
-        // }
+        // Cargar la imagen de la portada
+        if (libro.getPortadaUrl() != null && !libro.getPortadaUrl().isEmpty()) {
+            imageViewPortada.setVisibility(View.VISIBLE);
+            // Verificar permiso de Internet
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
+                ImageLoader.loadImage(libro.getPortadaUrl(), imageViewPortada);
+            }
+        } else {
+            imageViewPortada.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void setupButtonListeners() {
