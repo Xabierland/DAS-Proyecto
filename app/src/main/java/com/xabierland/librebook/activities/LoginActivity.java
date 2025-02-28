@@ -108,6 +108,10 @@ public class LoginActivity extends BaseActivity {
                     // Mostrar mensaje de éxito
                     Toast.makeText(LoginActivity.this, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
                     
+                    // Ir a MainActivity
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+
                     // Volver a la actividad principal
                     finish();
                 } else {

@@ -166,12 +166,14 @@ public abstract class BaseActivity extends AppCompatActivity {
         // Mostrar mensaje
         Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
         
-        // Actualizar el menú de navegación y la interfaz de usuario si es necesario
+        // Actualizar el menú de navegación
         updateNavigationMenu();
         
-        // Si estamos en MainActivity, solo necesitamos actualizar la interfaz
-        // Si estamos en otra actividad, volvemos a MainActivity
-        if (!(this instanceof MainActivity)) {
+        // Si estamos en MainActivity, recrearla para actualizar la interfaz
+        if (this instanceof MainActivity) {
+            recreate();
+        } else {
+            // Si estamos en otra actividad, volvemos a MainActivity
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
