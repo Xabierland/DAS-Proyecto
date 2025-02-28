@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Sección de perfil del usuario -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="?attr/cardBackgroundColor">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <FrameLayout
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginBottom="16dp">
+
+                            <!-- Foto de perfil circular -->
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/imageViewProfilePic"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/default_profile_image"
+                                app:civ_border_width="2dp"
+                                app:civ_border_color="?attr/colorPrimary" />
+
+                            <!-- Botón flotante para cambiar la foto -->
+                            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                android:id="@+id/fabChangeProfilePic"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom|end"
+                                android:src="@drawable/ic_camera"
+                                app:fabSize="mini" />
+                        </FrameLayout>
+
+                        <!-- Nombre del usuario -->
+                        <TextView
+                            android:id="@+id/textViewUserName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Nombre del Usuario"
+                            android:textAlignment="center"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            android:textColor="?attr/textColor" />
+
+                        <!-- Email del usuario -->
+                        <TextView
+                            android:id="@+id/textViewUserEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="usuario@email.com"
+                            android:textAlignment="center"
+                            android:textSize="16sp"
+                            android:textColor="?attr/textColor"
+                            android:layout_marginTop="4dp" />
+
+                        <!-- Estadísticas de lectura -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="16dp">
+
+                            <!-- Libros leídos -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:id="@+id/textViewReadCount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold"
+                                    android:textColor="?attr/textColor" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Leídos"
+                                    android:textSize="14sp"
+                                    android:textColor="?attr/textColor" />
+                            </LinearLayout>
+
+                            <!-- Libros leyendo -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:id="@+id/textViewReadingCount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold"
+                                    android:textColor="?attr/textColor" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Leyendo"
+                                    android:textSize="14sp"
+                                    android:textColor="?attr/textColor" />
+                            </LinearLayout>
+
+                            <!-- Libros por leer -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:id="@+id/textViewToReadCount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold"
+                                    android:textColor="?attr/textColor" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Por leer"
+                                    android:textSize="14sp"
+                                    android:textColor="?attr/textColor" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Sección: Leyendo actualmente -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Leyendo actualmente"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="?attr/textColor"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewReading"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:orientation="horizontal"
+                    android:clipToPadding="false"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/textViewEmptyReading"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No estás leyendo ningún libro actualmente"
+                    android:textAlignment="center"
+                    android:textColor="?attr/textColor"
+                    android:padding="16dp"
+                    android:visibility="gone" />
+
+                <!-- Sección: Por leer -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Por leer"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="?attr/textColor"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewToRead"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:orientation="horizontal"
+                    android:clipToPadding="false"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/textViewEmptyToRead"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No tienes libros pendientes por leer"
+                    android:textAlignment="center"
+                    android:textColor="?attr/textColor"
+                    android:padding="16dp"
+                    android:visibility="gone" />
+
+                <!-- Sección: Leídos -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Leídos"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="?attr/textColor"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewRead"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:orientation="horizontal"
+                    android:clipToPadding="false"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/textViewEmptyRead"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No has leído ningún libro aún"
+                    android:textAlignment="center"
+                    android:textColor="?attr/textColor"
+                    android:padding="16dp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+
+    <!-- Menú lateral -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:menu="@menu/drawer_menu" />
+
+</androidx.drawerlayout.widget.DrawerLayout>

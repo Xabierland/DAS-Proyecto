@@ -102,7 +102,17 @@ public abstract class BaseActivity extends AppCompatActivity {
             intent = new Intent(this, MainActivity.class);
             // Limpiar el stack de activities si vamos al home
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        } 
+        }
+        else if (itemId == R.id.nav_profile) {
+            // Solo mostrar el perfil si el usuario está logueado
+            if (sharedPreferences.getBoolean("isLoggedIn", false)) {
+                intent = new Intent(this, ProfileActivity.class);
+            } else {
+                // Si no está logueado, redirigir al login
+                Toast.makeText(this, getString(R.string.login_required_profile), Toast.LENGTH_SHORT).show();
+                intent = new Intent(this, LoginActivity.class);
+            }
+        }
         else if (itemId == R.id.nav_settings) {
             intent = new Intent(this, SettingsActivity.class);
         }

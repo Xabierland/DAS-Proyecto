@@ -67,6 +67,24 @@
     <string name="status_read">Irakurrita</string>
     <string name="confirm_add_book">Liburu hau zure liburutegian gehitu?</string>
 
+    <!-- Erabiltzaile profilaren string-ak -->
+    <string name="profile">Profila</string>
+    <string name="my_profile">Nire Profila</string>
+    <string name="reading_now">Orain Irakurtzen</string>
+    <string name="to_read">Irakurtzeko</string>
+    <string name="read">Irakurrita</string>
+    <string name="empty_reading">Ez zaude libururik irakurtzen une honetan</string>
+    <string name="empty_to_read">Ez duzu irakurtzeko libururik</string>
+    <string name="empty_read">Ez duzu oraindik libururik irakurri</string>
+    <string name="change_profile_pic">Aldatu profilaren argazkia</string>
+    <string name="profile_pic_updated">Profilaren argazkia eguneratuta</string>
+    <string name="error_updating_profile_pic">Errorea profilaren argazkia eguneratzean</string>
+    <string name="error_loading_image">Errorea irudia kargatzean</string>
+    <string name="permission_denied">Galeria atzitzeko baimena ukatua</string>
+    <string name="login_required_profile">Zure profila ikusteko saioa hasi behar duzu</string>
+    <string name="error_loading_user_data">Errorea erabiltzailearen datuak kargatzean</string>
+    <string name="error_saving_image">Errorea irudia gordetzean</string>
+
     <!-- Gaiaren ezarpenen stringak -->
     <string name="theme">Gaia</string>
     <string name="change_theme">Gaia aldatu</string>

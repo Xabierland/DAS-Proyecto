@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="150dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="3dp"
+    app:cardBackgroundColor="?attr/cardBackgroundColor">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Portada del libro -->
+        <ImageView
+            android:id="@+id/imageViewBookCover"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:scaleType="centerCrop"
+            android:background="@color/purple_200"
+            android:contentDescription="@string/book_cover" />
+
+        <!-- Información del libro -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <!-- Título del libro -->
+            <TextView
+                android:id="@+id/textViewBookTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="?attr/textColor"
+                android:maxLines="2"
+                android:ellipsize="end" />
+
+            <!-- Autor del libro -->
+            <TextView
+                android:id="@+id/textViewBookAuthor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="?attr/textColor"
+                android:layout_marginTop="2dp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <!-- Progreso de lectura (si aplica) -->
+            <LinearLayout
+                android:id="@+id/layoutProgress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="4dp"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:id="@+id/progressBarReading"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:progress="50" />
+
+                <TextView
+                    android:id="@+id/textViewProgress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="50%"
+                    android:textSize="10sp"
+                    android:textColor="?attr/textColor"
+                    android:gravity="end" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

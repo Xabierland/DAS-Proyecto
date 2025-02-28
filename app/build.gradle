@@ -34,9 +34,11 @@ dependencies {
     implementation libs.activity
     implementation libs.constraintlayout
 
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+
     implementation "androidx.cardview:cardview:1.0.0"
 
-    // Dependencias de Room de forma directa
     implementation libs.androidx.room.runtime
     annotationProcessor libs.androidx.room.compiler
 

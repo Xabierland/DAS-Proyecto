@@ -66,6 +66,24 @@
     <string name="status_read">Read</string>
     <string name="confirm_add_book">Add this book to your library?</string>
 
+    <!-- Strings for user profile -->
+    <string name="profile">Profile</string>
+    <string name="my_profile">My Profile</string>
+    <string name="reading_now">Currently Reading</string>
+    <string name="to_read">To Read</string>
+    <string name="read">Read</string>
+    <string name="empty_reading">You are not reading any book currently</string>
+    <string name="empty_to_read">You have no books to read</string>
+    <string name="empty_read">You have not read any book yet</string>
+    <string name="change_profile_pic">Change profile picture</string>
+    <string name="profile_pic_updated">Profile picture updated</string>
+    <string name="error_updating_profile_pic">Error updating profile picture</string>
+    <string name="error_loading_image">Error loading image</string>
+    <string name="permission_denied">Permission denied to access gallery</string>
+    <string name="login_required_profile">You must log in to view your profile</string>
+    <string name="error_loading_user_data">Error loading user data</string>
+    <string name="error_saving_image">Error saving image</string>
+
     <!-- Strings for theme settings -->
     <string name="theme">Theme</string>
     <string name="change_theme">Change theme</string>

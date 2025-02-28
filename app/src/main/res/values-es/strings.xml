@@ -66,6 +66,24 @@
     <string name="status_read">Leído</string>
     <string name="confirm_add_book">¿Añadir este libro a tu biblioteca?</string>
 
+    <!-- Cadenas para el perfil de usuario -->
+    <string name="profile">Perfil</string>
+    <string name="my_profile">Mi Perfil</string>
+    <string name="reading_now">Leyendo actualmente</string>
+    <string name="to_read">Por leer</string>
+    <string name="read">Leídos</string>
+    <string name="empty_reading">No estás leyendo ningún libro actualmente</string>
+    <string name="empty_to_read">No tienes libros pendientes por leer</string>
+    <string name="empty_read">No has leído ningún libro aún</string>
+    <string name="change_profile_pic">Cambiar foto de perfil</string>
+    <string name="profile_pic_updated">Foto de perfil actualizada</string>
+    <string name="error_updating_profile_pic">Error al actualizar foto de perfil</string>
+    <string name="error_loading_image">Error al cargar la imagen</string>
+    <string name="permission_denied">Permiso denegado para acceder a la galería</string>
+    <string name="login_required_profile">Debes iniciar sesión para ver tu perfil</string>
+    <string name="error_loading_user_data">Error al cargar datos del usuario</string>
+    <string name="error_saving_image">Error al guardar la imagen</string>
+
     <!-- Strings para el tema -->
     <string name="theme">Tema</string>
     <string name="change_theme">Cambiar tema</string>
