@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.xabierland.librebook.R;
 import com.xabierland.librebook.data.database.entities.Usuario;
+import com.xabierland.librebook.data.repositories.LibroRepository;
 import com.xabierland.librebook.data.repositories.UsuarioRepository;
 
 public class MainActivity extends BaseActivity {
@@ -36,6 +37,19 @@ public class MainActivity extends BaseActivity {
         
         // Verificar si hay usuario logueado y actualizar la interfaz en consecuencia
         checkUserSessionAndUpdateUI();
+        
+        // Verificar la base de datos
+        verificarEstadoLibros();
+    }
+    
+    private void verificarEstadoLibros() {
+        // Este método solamente es para verificar que los libros se han cargado correctamente
+        LibroRepository.obtenerTodosLosLibros(libros -> {
+            Log.d(TAG, "Número de libros en la base de datos: " + libros.size());
+            
+            // Si quieres mostrar un mensaje para verificar, descomenta esta línea
+            // runOnUiThread(() -> Toast.makeText(MainActivity.this, "Libros en la BD: " + libros.size(), Toast.LENGTH_SHORT).show());
+        });
     }
     
     private void checkUserSessionAndUpdateUI() {

@@ -41,7 +41,11 @@ public abstract class AppDatabase extends RoomDatabase {
                             AppDatabase.class,
                             "mibiblioteca_db")
                             .fallbackToDestructiveMigration()
+                            .addCallback(DatabaseInitializer.getDatabaseCreationCallback())
                             .build();
+                    
+                    // Precargar la base de datos con datos iniciales
+                    DatabaseInitializer.precargarBaseDeDatos(context);
                 }
             }
         }
