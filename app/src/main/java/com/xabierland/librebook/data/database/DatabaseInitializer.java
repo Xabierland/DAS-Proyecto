@@ -41,7 +41,7 @@ public class DatabaseInitializer {
                 libro1.setAutor("Fiódor Dostoievski");
                 libro1.setIsbn("9788420674278");
                 libro1.setDescripcion("Relata la historia de Rodión Raskólnikov, un estudiante que vive en una pequeña habitación de San Petersburgo. En plena crisis ideológica y económica planea el asesinato de una vieja usurera para robar sus pertenencias.");
-                libro1.setPortadaUrl("https://covers.openlibrary.org/b/id/8286347-L.jpg");
+                libro1.setPortadaUrl("https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1445052614i/27187428.jpg");
                 libro1.setAnioPublicacion(1866);
                 libro1.setEditorial("Alianza Editorial");
                 libro1.setGenero("Novela psicológica");
@@ -54,7 +54,7 @@ public class DatabaseInitializer {
                 libro2.setAutor("Fiódor Dostoievski");
                 libro2.setIsbn("9788420674285");
                 libro2.setDescripcion("La última novela de Dostoievski narra el conflicto entre padres e hijos. El despótico y sensual Fiódor Karamázov es asesinado y uno de sus hijos, Dmitri, es arrestado por el crimen.");
-                libro2.setPortadaUrl("https://covers.openlibrary.org/b/id/8231990-L.jpg");
+                libro2.setPortadaUrl("https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1458131286i/29529737.jpg");
                 libro2.setAnioPublicacion(1880);
                 libro2.setEditorial("Alianza Editorial");
                 libro2.setGenero("Novela filosófica");
@@ -67,7 +67,7 @@ public class DatabaseInitializer {
                 libro3.setAutor("Fiódor Dostoievski");
                 libro3.setIsbn("9788420674292");
                 libro3.setDescripcion("El príncipe Myshkin, un joven de familia aristocrática que regresa a Rusia tras estar varios años en un sanatorio suizo, trata de integrarse en la sociedad de San Petersburgo.");
-                libro3.setPortadaUrl("https://covers.openlibrary.org/b/id/12909862-L.jpg");
+                libro3.setPortadaUrl("https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1480301010i/33140351.jpg");
                 libro3.setAnioPublicacion(1869);
                 libro3.setEditorial("Alianza Editorial");
                 libro3.setGenero("Novela psicológica");
@@ -80,7 +80,7 @@ public class DatabaseInitializer {
                 libro4.setAutor("Fiódor Dostoievski");
                 libro4.setIsbn("9788420674308");
                 libro4.setDescripcion("Una de las obras más influyentes de Dostoievski, narrada desde la perspectiva de un funcionario anónimo retirado, que vive aislado y amargado en San Petersburgo.");
-                libro4.setPortadaUrl("https://covers.openlibrary.org/b/id/9276919-L.jpg");
+                libro4.setPortadaUrl("https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1719801722i/204454054.jpg");
                 libro4.setAnioPublicacion(1864);
                 libro4.setEditorial("Alianza Editorial");
                 libro4.setGenero("Novela existencialista");
@@ -93,7 +93,7 @@ public class DatabaseInitializer {
                 libro5.setAutor("Fiódor Dostoievski");
                 libro5.setIsbn("9788420674315");
                 libro5.setDescripcion("Basada en las propias experiencias de Dostoievski como jugador, narra la historia de un tutor que trabaja para una familia rusa y desarrolla una obsesión por el juego en un casino.");
-                libro5.setPortadaUrl("https://covers.openlibrary.org/b/id/8420284-L.jpg");
+                libro5.setPortadaUrl("https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1660409488i/59736484.jpg");
                 libro5.setAnioPublicacion(1866);
                 libro5.setEditorial("Alianza Editorial");
                 libro5.setGenero("Novela");
@@ -106,7 +106,7 @@ public class DatabaseInitializer {
                 libro6.setAutor("Fiódor Dostoievski");
                 libro6.setIsbn("9788420674322");
                 libro6.setDescripcion("Novela que refleja el clima político y social de la Rusia de mediados del siglo XIX, centrada en un grupo de revolucionarios nihilistas que se proponen subvertir el orden establecido.");
-                libro6.setPortadaUrl("https://covers.openlibrary.org/b/id/8280858-L.jpg");
+                libro6.setPortadaUrl("https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1558320244i/45889115.jpg");
                 libro6.setAnioPublicacion(1872);
                 libro6.setEditorial("Alianza Editorial");
                 libro6.setGenero("Novela política");
@@ -119,7 +119,7 @@ public class DatabaseInitializer {
                 libro7.setAutor("Fiódor Dostoievski");
                 libro7.setIsbn("9788420674339");
                 libro7.setDescripcion("Primera novela larga de Dostoievski tras su regreso del exilio en Siberia, cuenta la historia de un joven escritor y su relación con una familia noble caída en desgracia.");
-                libro7.setPortadaUrl("https://covers.openlibrary.org/b/id/12571580-L.jpg");
+                libro7.setPortadaUrl("https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1410963705i/23244795.jpg");
                 libro7.setAnioPublicacion(1861);
                 libro7.setEditorial("Alianza Editorial");
                 libro7.setGenero("Novela social");
@@ -128,15 +128,15 @@ public class DatabaseInitializer {
                 
                 // Libro 8
                 Libro libro8 = new Libro();
-                libro8.setTitulo("El adolescente");
+                libro8.setTitulo("El eterno marido");
                 libro8.setAutor("Fiódor Dostoievski");
-                libro8.setIsbn("9788420674346");
-                libro8.setDescripcion("Penúltima novela de Dostoievski que narra las experiencias de un joven, hijo ilegítimo, que busca encontrar su lugar en la sociedad mientras intenta reconciliarse con su padre.");
-                libro8.setPortadaUrl("https://covers.openlibrary.org/b/id/6902395-L.jpg");
-                libro8.setAnioPublicacion(1875);
+                libro8.setIsbn("9788420678184");
+                libro8.setDescripcion("Novela que explora la relación entre un hombre y su difunto amigo, el marido eterno, y cómo la presencia de este último afecta a su vida y a su matrimonio.");
+                libro8.setPortadaUrl("https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1705677120i/33285812.jpg");
+                libro8.setAnioPublicacion(1870);
                 libro8.setEditorial("Alianza Editorial");
-                libro8.setGenero("Bildungsroman");
-                libro8.setNumPaginas(692);
+                libro8.setGenero("Novela psicológica");
+                libro8.setNumPaginas(232);
                 libros.add(libro8);
                 
                 // Libro 9
@@ -145,7 +145,7 @@ public class DatabaseInitializer {
                 libro9.setAutor("Fiódor Dostoievski");
                 libro9.setIsbn("9788420674353");
                 libro9.setDescripcion("Relato corto y sentimental que narra la historia de un soñador solitario que conoce a una joven durante las noches blancas de verano en San Petersburgo.");
-                libro9.setPortadaUrl("https://covers.openlibrary.org/b/id/8244913-L.jpg");
+                libro9.setPortadaUrl("https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1436307004i/25868547.jpg");
                 libro9.setAnioPublicacion(1848);
                 libro9.setEditorial("Alianza Editorial");
                 libro9.setGenero("Novela corta romántica");
@@ -158,7 +158,7 @@ public class DatabaseInitializer {
                 libro10.setAutor("Fiódor Dostoievski");
                 libro10.setIsbn("9788420674360");
                 libro10.setDescripcion("Obra que explora la dualidad psicológica a través de la historia de un funcionario del gobierno que se encuentra con su doble exacto, desencadenando una espiral de locura.");
-                libro10.setPortadaUrl("https://covers.openlibrary.org/b/id/7930196-L.jpg");
+                libro10.setPortadaUrl("https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1420981383i/15719498.jpg");
                 libro10.setAnioPublicacion(1846);
                 libro10.setEditorial("Alianza Editorial");
                 libro10.setGenero("Novela psicológica");

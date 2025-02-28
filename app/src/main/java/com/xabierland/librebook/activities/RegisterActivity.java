@@ -150,6 +150,10 @@ public class RegisterActivity extends BaseActivity {
                     // Guardar sesión del usuario
                     saveUserSession(result.intValue(), email);
                     
+                    // Ir a MainActivity
+                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                    startActivity(intent);
+
                     // Volver a la actividad principal
                     finish();
                 } else if (result == -1) {
