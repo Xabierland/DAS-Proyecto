@@ -1,5 +1,9 @@
 package com.xabierland.librebook.adapters;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,10 +11,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.xabierland.librebook.R;
+import com.xabierland.librebook.activities.BookDetailActivity;
 import com.xabierland.librebook.data.database.entities.Libro;
+import com.xabierland.librebook.utils.ImageLoader;
 
 import java.util.List;
 
@@ -18,6 +25,7 @@ public class LibroAdapter extends RecyclerView.Adapter<LibroAdapter.LibroViewHol
     
     private List<Libro> libros;
     private OnLibroClickListener listener;
+    private Context context;
     
     // Constructor
     public LibroAdapter(List<Libro> libros) {
@@ -37,7 +45,8 @@ public class LibroAdapter extends RecyclerView.Adapter<LibroAdapter.LibroViewHol
     @NonNull
     @Override
     public LibroViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
+        context = parent.getContext();
+        View view = LayoutInflater.from(context)
                 .inflate(R.layout.item_libro, parent, false);
         return new LibroViewHolder(view);
     }
@@ -57,21 +66,34 @@ public class LibroAdapter extends RecyclerView.Adapter<LibroAdapter.LibroViewHol
             holder.textViewGenero.setVisibility(View.GONE);
         }
         
-        // Si hay una URL de portada, cargarla (implementación simple)
+        // Si hay una URL de portada, cargarla usando nuestro ImageLoader
         if (libro.getPortadaUrl() != null && !libro.getPortadaUrl().isEmpty()) {
-            // Aquí podrías usar una biblioteca como Glide o Picasso para cargar la imagen
-            // Por ahora, simplemente mostramos un placeholder
             holder.imageViewPortada.setVisibility(View.VISIBLE);
+            // Verificar permiso de Internet
+            if (ContextCompat.checkSelfPermission(context, 
+                    Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
+                ImageLoader.loadImage(libro.getPortadaUrl(), holder.imageViewPortada);
+            }
         } else {
             holder.imageViewPortada.setVisibility(View.INVISIBLE);
         }
         
-        // Configurar el listener de clic si está disponible
-        if (listener != null) {
-            holder.itemView.setOnClickListener(v -> {
+        // Configurar el listener de clic para abrir la actividad de detalle
+        holder.itemView.setOnClickListener(v -> {
+            // Si se definió un listener personalizado, usarlo
+            if (listener != null) {
                 listener.onLibroClick(libro, holder.getAdapterPosition());
-            });
-        }
+            } else {
+                // Comportamiento por defecto: abrir la actividad de detalle
+                openBookDetail(libro);
+            }
+        });
+    }
+    
+    private void openBookDetail(Libro libro) {
+        Intent intent = new Intent(context, BookDetailActivity.class);
+        intent.putExtra(BookDetailActivity.EXTRA_LIBRO_ID, libro.getId());
+        context.startActivity(intent);
     }
     
     @Override

@@ -47,6 +47,26 @@
     <string name="invalid_email">Posta elektroniko formatua baliogabea</string>
     <string name="password_too_short">Pasahitzak gutxienez 6 karaktere izan behar ditu</string>
 
+    <!-- Liburuaren xehetasun jarduerarako tringak -->
+    <string name="book_detail">Liburuaren xehetasunak</string>
+    <string name="descripcion">Deskribapena</string>
+    <string name="add_to_library">Nire liburutegira gehitu</string>
+    <string name="add_to_read">Gehitu \"Irakurtzeko\" bezala</string>
+    <string name="add_reading">Gehitu \"Irakurtzen\" bezala</string>
+    <string name="add_read">Gehitu \"Irakurrita\" bezala</string>
+    <string name="book_added">Liburua zure liburutegian gehitu da</string>
+    <string name="error_adding_book">Errorea liburua gehitzean</string>
+    <string name="login_required">Saioa hasi behar duzu liburuak zure liburutegian gehitzeko</string>
+    <string name="book_already_in_library">Liburu hau dagoeneko zure liburutegian dago</string>
+    <string name="book_status_updated">Irakurketa egoera eguneratuta</string>
+
+    <!-- Liburua gehitzeko elkarrizketarako string-ak -->
+    <string name="add">Gehitu</string>
+    <string name="status_to_read">Irakurtzeko</string>
+    <string name="status_reading">Irakurtzen</string>
+    <string name="status_read">Irakurrita</string>
+    <string name="confirm_add_book">Liburu hau zure liburutegian gehitu?</string>
+
     <!-- Gaiaren ezarpenen stringak -->
     <string name="theme">Gaia</string>
     <string name="change_theme">Gaia aldatu</string>

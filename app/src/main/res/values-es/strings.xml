@@ -47,6 +47,25 @@
     <string name="invalid_email">Formato de correo inválido</string>
     <string name="password_too_short">La contraseña debe tener al menos 6 caracteres</string>
 
+    <string name="book_detail">Detalle del libro</string>
+    <string name="descripcion">Descripción</string>
+    <string name="add_to_library">Añadir a mi biblioteca</string>
+    <string name="add_to_read">Añadir como \"Por leer\"</string>
+    <string name="add_reading">Añadir como \"Leyendo actualmente\"</string>
+    <string name="add_read">Añadir como \"Leído\"</string>
+    <string name="book_added">Libro añadido a tu biblioteca</string>
+    <string name="error_adding_book">Error al añadir el libro</string>
+    <string name="login_required">Debes iniciar sesión para añadir libros a tu biblioteca</string>
+    <string name="book_already_in_library">Este libro ya está en tu biblioteca</string>
+    <string name="book_status_updated">Estado de lectura actualizado</string>
+
+    <!-- Strings para el diálogo de añadir libro -->
+    <string name="add">Añadir</string>
+    <string name="status_to_read">Por leer</string>
+    <string name="status_reading">Leyendo actualmente</string>
+    <string name="status_read">Leído</string>
+    <string name="confirm_add_book">¿Añadir este libro a tu biblioteca?</string>
+
     <!-- Strings para el tema -->
     <string name="theme">Tema</string>
     <string name="change_theme">Cambiar tema</string>
