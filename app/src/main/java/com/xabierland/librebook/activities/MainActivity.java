@@ -3,6 +3,7 @@ package com.xabierland.librebook.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -10,13 +11,18 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.xabierland.librebook.R;
+import com.xabierland.librebook.data.database.entities.Libro;
 import com.xabierland.librebook.data.database.entities.Usuario;
 import com.xabierland.librebook.data.repositories.LibroRepository;
 import com.xabierland.librebook.data.repositories.UsuarioRepository;
 
+import java.util.List;
+
 public class MainActivity extends BaseActivity {
     
+    private static final String TAG = "MainActivity";
     private UsuarioRepository usuarioRepository;
+    private LibroRepository libroRepository; // Declaración del repositorio
     private TextView textViewWelcome;
     
     @Override
@@ -24,8 +30,9 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        // Inicializar repositorio
+        // Inicializar repositorios
         usuarioRepository = new UsuarioRepository(getApplication());
+        libroRepository = new LibroRepository(getApplication()); // Inicialización del repositorio
         
         // Comprobar si venimos de un cambio de tema
         if (getIntent().getBooleanExtra("THEME_CHANGED", false)) {
@@ -43,8 +50,7 @@ public class MainActivity extends BaseActivity {
     }
     
     private void verificarEstadoLibros() {
-        // Este método solamente es para verificar que los libros se han cargado correctamente
-        LibroRepository.obtenerTodosLosLibros(libros -> {
+        libroRepository.obtenerTodosLosLibros(libros -> {
             Log.d(TAG, "Número de libros en la base de datos: " + libros.size());
             
             // Si quieres mostrar un mensaje para verificar, descomenta esta línea
