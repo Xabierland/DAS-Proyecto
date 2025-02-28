@@ -19,7 +19,28 @@
             android:background="?attr/colorPrimary"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-        <!-- Aquí va el resto de tu contenido -->
+        <!-- Contenido de la actividad -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Mensaje de bienvenida -->
+            <TextView
+                android:id="@+id/textViewWelcome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/welcome_guest"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:textColor="?attr/textColor" />
+
+            <!-- Aquí puedes añadir el resto del contenido de tu actividad principal -->
+
+        </LinearLayout>
 
     </LinearLayout>
 

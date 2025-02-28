@@ -25,6 +25,24 @@
     <!-- Strings for close session -->
     <string name="logout">Close session</string>
 
+    <string name="welcome_guest">Welcome to LibreBook! Log in to access your personal library.</string>
+    <string name="welcome_user">Welcome, %1$s! Your personal library is ready.</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="name">Name</string>
+    <string name="no_account_register">Don\'t have an account? Register</string>
+    <string name="already_have_account">Already have an account? Login</string>
+    <string name="login_success">Login successful</string>
+    <string name="login_error">Invalid email or password</string>
+    <string name="register_success">Registration successful</string>
+    <string name="register_error">Error creating account</string>
+    <string name="email_exists">Email already exists</string>
+    <string name="passwords_not_match">Passwords do not match</string>
+    <string name="empty_fields">Please fill all fields</string>
+    <string name="invalid_email">Invalid email format</string>
+    <string name="password_too_short">Password must be at least 6 characters long</string>
+
     <!-- Strings for theme settings -->
     <string name="theme">Theme</string>
     <string name="change_theme">Change theme</string>

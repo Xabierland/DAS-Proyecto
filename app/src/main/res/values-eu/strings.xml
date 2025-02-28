@@ -25,6 +25,24 @@
     <!-- Saioa itxi string-ak -->
     <string name="logout">Saioa itxi</string>
 
+    <string name="welcome_guest">Ongi etorri LibreBook-era! Saioa hasi zure liburutegi pertsonalera sartzeko.</string>
+    <string name="welcome_user">Ongi etorri, %1$s! Zure liburutegi pertsonala prest dago.</string>
+    <string name="email">Helbide elektronikoa</string>
+    <string name="password">Pasahitza</string>
+    <string name="confirm_password">Pasahitza berretsi</string>
+    <string name="name">Izena</string>
+    <string name="no_account_register">Konturik ez duzu? Erregistratu</string>
+    <string name="already_have_account">Dagoeneko kontua duzu? Hasi saioa</string>
+    <string name="login_success">Saio-hasiera arrakastatsua</string>
+    <string name="login_error">Posta elektroniko edo pasahitz okerra</string>
+    <string name="register_success">Erregistroa arrakastatsua</string>
+    <string name="register_error">Errorea kontua sortzean</string>
+    <string name="email_exists">Posta elektronikoa dagoeneko erabilita dago</string>
+    <string name="passwords_not_match">Pasahitzak ez datoz bat</string>
+    <string name="empty_fields">Mesedez, bete eremu guztiak</string>
+    <string name="invalid_email">Posta elektroniko formatua baliogabea</string>
+    <string name="password_too_short">Pasahitzak gutxienez 6 karaktere izan behar ditu</string>
+
     <!-- Gaiaren ezarpenen stringak -->
     <string name="theme">Gaia</string>
     <string name="change_theme">Gaia aldatu</string>

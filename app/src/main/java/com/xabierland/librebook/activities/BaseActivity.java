@@ -1,10 +1,12 @@
 package com.xabierland.librebook.activities;
-import com.xabierland.librebook.R;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
+import android.widget.Toast;
+
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,7 +14,10 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
 import com.google.android.material.navigation.NavigationView;
+import com.xabierland.librebook.R;
+
 import java.util.Locale;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -68,6 +73,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             toggle.syncState();
 
             if (navigationView != null) {
+                // Verificar el estado de inicio de sesión para mostrar/ocultar ítems del menú
+                updateNavigationMenu();
+                
                 navigationView.setNavigationItemSelectedListener(item -> {
                     handleNavigationItemSelected(item.getItemId());
                     drawerLayout.closeDrawer(GravityCompat.START);
@@ -80,7 +88,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void handleNavigationItemSelected(int itemId) {
         // Si estamos ya en la actividad seleccionada, no hacemos nada
         if ((this instanceof MainActivity && itemId == R.id.nav_home) ||
-            (this instanceof SettingsActivity && itemId == R.id.nav_settings)) {
+            (this instanceof SettingsActivity && itemId == R.id.nav_settings) ||
+            (this instanceof LoginActivity && itemId == R.id.nav_login) ||
+            (this instanceof RegisterActivity && itemId == R.id.nav_register)) {
             return;
         }
 
@@ -95,7 +105,17 @@ public abstract class BaseActivity extends AppCompatActivity {
         else if (itemId == R.id.nav_settings) {
             intent = new Intent(this, SettingsActivity.class);
         }
-        // Añadir más casos según necesites
+        else if (itemId == R.id.nav_login) {
+            intent = new Intent(this, LoginActivity.class);
+        }
+        else if (itemId == R.id.nav_register) {
+            intent = new Intent(this, RegisterActivity.class);
+        }
+        else if (itemId == R.id.nav_logout) {
+            // Mostrar diálogo de confirmación de cierre de sesión
+            showLogoutConfirmationDialog();
+            return;
+        }
         
         if (intent != null) {
             startActivity(intent);
@@ -103,6 +123,58 @@ public abstract class BaseActivity extends AppCompatActivity {
             if (itemId != R.id.nav_home) {
                 finish();
             }
+        }
+    }
+    
+    // Método para mostrar u ocultar ítems del menú basado en el estado de autenticación
+    protected void updateNavigationMenu() {
+        if (navigationView != null) {
+            Menu menu = navigationView.getMenu();
+            
+            // Verificar si el usuario ha iniciado sesión
+            SharedPreferences sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE);
+            boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+            
+            // Mostrar/ocultar opciones según el estado de inicio de sesión
+            menu.findItem(R.id.nav_login).setVisible(!isLoggedIn);
+            menu.findItem(R.id.nav_register).setVisible(!isLoggedIn);
+            menu.findItem(R.id.nav_logout).setVisible(isLoggedIn);
+        }
+    }
+    
+    // Método para mostrar diálogo de confirmación de cierre de sesión
+    protected void showLogoutConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.logout);
+        builder.setMessage("¿Estás seguro de que deseas cerrar sesión?");
+        builder.setPositiveButton("Sí", (dialog, which) -> {
+            logoutUser();
+        });
+        builder.setNegativeButton("No", null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+    
+    // Método para cerrar sesión
+    protected void logoutUser() {
+        // Eliminar información de sesión
+        SharedPreferences sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
+        
+        // Mostrar mensaje
+        Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
+        
+        // Actualizar el menú de navegación y la interfaz de usuario si es necesario
+        updateNavigationMenu();
+        
+        // Si estamos en MainActivity, solo necesitamos actualizar la interfaz
+        // Si estamos en otra actividad, volvemos a MainActivity
+        if (!(this instanceof MainActivity)) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 
@@ -207,4 +279,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     
     // ================= 
     protected abstract String getActivityTitle();
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Actualizar menú en cada reanudación para asegurar que refleje el estado actual
+        updateNavigationMenu();
+    }
 }
