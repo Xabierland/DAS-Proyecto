@@ -28,6 +28,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected NavigationView navigationView;
     protected SharedPreferences sharedPreferences; // Add this line to declare the SharedPreferences
 
+    // Constantes para idiomas
+    public static final int LANGUAGE_SYSTEM = 0;
+    public static final int LANGUAGE_ENGLISH = 1;
+    public static final int LANGUAGE_SPANISH = 2;
+    public static final int LANGUAGE_BASQUE = 3;
+
     // Constantes para el tema
     public static final int THEME_SYSTEM = 0;
     public static final int THEME_LIGHT = 1;
@@ -50,6 +56,23 @@ public abstract class BaseActivity extends AppCompatActivity {
         // Esto hace que el toolbar y el menu lateral se añadan a todas las actividades de la app
         setupToolbar();
         setupDrawer();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_search) {
+            // Abre la actividad de búsqueda
+            Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     // ======================== Logica del Toolbar ========================
@@ -149,6 +172,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
 
             // Mostrar/ocultar opciones según el estado de inicio de sesión
+            menu.findItem(R.id.nav_profile).setVisible(isLoggedIn);
             menu.findItem(R.id.nav_login).setVisible(!isLoggedIn);
             menu.findItem(R.id.nav_register).setVisible(!isLoggedIn);
             menu.findItem(R.id.nav_logout).setVisible(isLoggedIn);
@@ -196,56 +220,87 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void loadLocale() {
         SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
-        String language = prefs.getString("language", "");
-        setLocale(language);
+        int languageMode = prefs.getInt("language_mode", LANGUAGE_SYSTEM);
+        applyLanguage(languageMode, false);
     }
 
-    protected void setLocale(String language) {
-        if (!language.isEmpty()) {
-            Locale locale = new Locale(language);
-            Locale.setDefault(locale);
-            Configuration config = new Configuration();
-            config.locale = locale;
-            getBaseContext().getResources().updateConfiguration(config,
-                    getBaseContext().getResources().getDisplayMetrics());
-
+    protected void applyLanguage(int languageMode, boolean recreateActivity) {
+        // Obtener el código del idioma basado en el modo
+        String languageCode;
+        
+        switch (languageMode) {
+            case LANGUAGE_ENGLISH:
+                languageCode = "en";
+                break;
+            case LANGUAGE_SPANISH:
+                languageCode = "es";
+                break;
+            case LANGUAGE_BASQUE:
+                languageCode = "eu";
+                break;
+            case LANGUAGE_SYSTEM:
+            default:
+                languageCode = Locale.getDefault().getLanguage();
+                break;
+        }
+        
+        // Aplicar el idioma
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config,
+                getBaseContext().getResources().getDisplayMetrics());
+        
+        // Guardar la configuración
+        if (languageMode != LANGUAGE_SYSTEM) {
             SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
-            editor.putString("language", language);
+            editor.putInt("language_mode", languageMode);
             editor.apply();
+        }
+        
+        // Recrear la actividad si es necesario
+        if (recreateActivity) {
+            recreate();
         }
     }
 
+    protected void setLanguageMode(int languageMode) {
+        SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
+        editor.putInt("language_mode", languageMode);
+        editor.apply();
+
+        // Recrear todas las actividades para aplicar el nuevo idioma
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("LANGUAGE_CHANGED", true);
+        startActivity(intent);
+        finish();
+    }
+
     protected void showLanguageDialog() {
-        final String[] languages = {"English", "Español", "Euskera"};
-        final String[] languageCodes = {"en", "es", "eu"};
+        final String[] languages = {
+                getString(R.string.system_default),
+                "English",
+                "Español",
+                "Euskera"
+        };
+
+        // Obtener el idioma actual
+        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
+        int currentLanguage = prefs.getInt("language_mode", LANGUAGE_SYSTEM);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.select_language);
-        builder.setSingleChoiceItems(languages, -1, (dialog, which) -> {
-            setLocale(languageCodes[which]);
-            recreate();
+        builder.setSingleChoiceItems(languages, currentLanguage, (dialog, which) -> {
+            if (which != currentLanguage) {
+                setLanguageMode(which);
+            }
             dialog.dismiss();
         });
 
         AlertDialog dialog = builder.create();
         dialog.show();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_search) {
-            // Abre la actividad de búsqueda
-            Intent intent = new Intent(this, SearchActivity.class);
-            startActivity(intent);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     // ======================== Lógica de temas ========================
