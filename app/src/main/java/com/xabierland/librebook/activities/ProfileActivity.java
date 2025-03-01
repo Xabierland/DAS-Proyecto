@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -254,13 +256,66 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void checkPermissionAndOpenGallery() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    REQUEST_PERMISSION_READ_EXTERNAL_STORAGE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Android 13+: Necesitamos READ_MEDIA_IMAGES
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES)
+                    != PackageManager.PERMISSION_GRANTED) {
+                
+                // Verifica si debemos mostrar una explicación
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, 
+                        Manifest.permission.READ_MEDIA_IMAGES)) {
+                    // Muestra una explicación al usuario
+                    new AlertDialog.Builder(this)
+                        .setTitle("Permiso necesario")
+                        .setMessage("Para cambiar tu foto de perfil, necesitamos acceso a tus imágenes.")
+                        .setPositiveButton("Aceptar", (dialog, which) -> {
+                            // Solicita el permiso después de que el usuario vea la explicación
+                            ActivityCompat.requestPermissions(ProfileActivity.this,
+                                    new String[]{Manifest.permission.READ_MEDIA_IMAGES},
+                                    REQUEST_PERMISSION_READ_EXTERNAL_STORAGE);
+                        })
+                        .setNegativeButton("Cancelar", null)
+                        .create()
+                        .show();
+                } else {
+                    // No necesita explicación, solicita directamente
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.READ_MEDIA_IMAGES},
+                            REQUEST_PERMISSION_READ_EXTERNAL_STORAGE);
+                }
+            } else {
+                openGallery();
+            }
         } else {
-            openGallery();
+            // Android 12 y versiones anteriores: Usamos READ_EXTERNAL_STORAGE
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                
+                // Verifica si debemos mostrar una explicación
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, 
+                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    // Muestra una explicación al usuario
+                    new AlertDialog.Builder(this)
+                        .setTitle("Permiso necesario")
+                        .setMessage("Para cambiar tu foto de perfil, necesitamos acceso a tus imágenes.")
+                        .setPositiveButton("Aceptar", (dialog, which) -> {
+                            // Solicita el permiso después de que el usuario vea la explicación
+                            ActivityCompat.requestPermissions(ProfileActivity.this,
+                                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                    REQUEST_PERMISSION_READ_EXTERNAL_STORAGE);
+                        })
+                        .setNegativeButton("Cancelar", null)
+                        .create()
+                        .show();
+                } else {
+                    // No necesita explicación, solicita directamente
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                            REQUEST_PERMISSION_READ_EXTERNAL_STORAGE);
+                }
+            } else {
+                openGallery();
+            }
         }
     }
 
