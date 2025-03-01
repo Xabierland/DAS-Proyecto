@@ -1,0 +1,111 @@
+\documentclass[a4paper,12pt]{report}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx, csquotes, longtable, array, booktabs, xparse, float, titlesec, enumitem, dingbat, soul, multicol, listings}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[margin=2cm]{geometry}
+
+% Añadir la bibliografía
+%\usepackage[backend=biber, style=numeric, sorting=ynt]{biblatex}
+%\addbibresource{TFG.bib}
+
+% Cambia el color de los links
+\usepackage{hyperref}
+\hypersetup{hidelinks}
+
+% Generamos un comando para saltar pagina con las secciones
+\NewDocumentCommand{\cpsection}{s o m}{%
+  \clearpage
+  \IfBooleanTF{#1}
+    {\section*{#3}}
+    {%
+      \IfNoValueTF{#2}
+        {\section{#3}}
+        {\section[#2]{#3}}%
+    }%
+}
+
+\NewDocumentCommand{\cpsubsection}{s o m}{%
+  \clearpage
+  \IfBooleanTF{#1}
+    {\subsection*{#3}}
+    {%
+      \IfNoValueTF{#2}
+        {\subsection{#3}}
+        {\subsection[#2]{#3}}%
+    }%
+}
+
+% Elimina la palabra "Capítulo" de los títulos de los capítulos
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries}{}{0pt}{\Huge\thechapter.\space}
+
+\titleformat{name=\chapter,numberless}[display]
+  {\normalfont\bfseries}{}{0pt}{\Huge}
+
+\titlespacing*{\chapter}{0pt}{-50pt}{20pt}
+
+% Personalización del índice de listados
+\renewcommand{\lstlistingname}{Código}  % Cambiar el nombre de "Listing" a "Código"
+\renewcommand{\lstlistlistingname}{Índice de códigos}
+
+% Añade numeración a los subsubsections y los añade al índice
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+
+% Idioma predeterminado (Español)
+\selectlanguage{spanish}
+
+\begin{document}
+  \begin{titlepage}
+      \centering
+      \includegraphics[width=0.6\textwidth]{./.img/logo.jpg}\\
+      \vspace{1cm}
+      \Large Ingeniería Informática de Gestión y Sistemas de Información\\
+      \vspace{3cm}
+      \Huge Desarrollo Avanzado de Software\\
+      \vspace{0.5cm}
+      \huge \textbf{LibreBook}\\
+      \vspace{7.5cm}
+      \Large Estudiante:\\
+      \vspace{0.2cm}
+      \large Gabiña Barañano, Xabier\\
+      \vspace{1cm}
+      \vfill
+      \today
+  \end{titlepage}
+  \tableofcontents
+  \listoffigures
+  \listoftables
+  \lstlistoflistings
+  \chapter{Introducción}
+  \chapter{Objetivos}
+    \section{Elementos obligatorios}
+    \begin{longtable}{|c|p{7.5cm}|p{7.5cm}|}
+      \hline
+      \textbf{ID} & \textbf{Descripción} & \textbf{Funcionalidad}\\
+      \hline
+      \endhead
+      1 & Uso de ListView+CardView personalizado o de RecyclerView+CardView para mostrar listados de elementos con diferentes características. & \\
+      \hline
+      2 & Usar una base de datos local, para listar, añadir y modificar elementos y características de cada elemento. & \\
+      \hline
+      3 & Uso de diálogos. & \\
+      \hline
+      4 & Usar notificaciones locales. & \\
+      \hline
+      5 & Control de la pila de actividades. & \\
+      \hline
+    \end{longtable}
+    \section{Elementos opcionales}
+  \chapter{Planificación}
+  \chapter{Manual de usuario}
+    \section{Registrarse}
+    \section{Iniciar sesión}
+    \section{Buscar libros}
+    \section{Añadir libros a tu biblioteca}
+    \section{Ver tu biblioteca}
+    \section{Ajustes}
+  \chapter{Dificultades}
+  \chapter{Conclusiones}
+\end{document}

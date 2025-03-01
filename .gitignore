@@ -13,3 +13,16 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# LaTeX
+*.aux
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lol
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
