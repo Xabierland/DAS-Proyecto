@@ -36,16 +36,25 @@ public interface UsuarioLibroDao {
     // Obtener todos los libros de un usuario
     @RewriteQueriesToDropUnusedColumns
     @Transaction
-    @Query("SELECT l.*, ul.estado_lectura, ul.es_favorito, ul.calificacion, ul.pagina_actual " +
+    @Query("SELECT l.*, ul.estado_lectura, ul.es_favorito, ul.calificacion, ul.pagina_actual, ul.notas " +
            "FROM libros l " +
            "INNER JOIN usuarios_libros ul ON l.id = ul.libro_id " +
            "WHERE ul.usuario_id = :usuarioId")
     List<LibroConEstado> obtenerTodosLosLibrosDeUsuario(int usuarioId);
     
+    // Obtener un libro específico de un usuario
+    @RewriteQueriesToDropUnusedColumns
+    @Transaction
+    @Query("SELECT l.*, ul.estado_lectura, ul.es_favorito, ul.calificacion, ul.pagina_actual, ul.notas " +
+           "FROM libros l " +
+           "INNER JOIN usuarios_libros ul ON l.id = ul.libro_id " +
+           "WHERE ul.usuario_id = :usuarioId AND l.id = :libroId")
+    LibroConEstado obtenerLibroDeUsuario(int usuarioId, int libroId);
+    
     // Obtener libros por estado de lectura (por leer, leyendo, leídos)
     @RewriteQueriesToDropUnusedColumns
     @Transaction
-    @Query("SELECT l.*, ul.estado_lectura, ul.es_favorito, ul.calificacion, ul.pagina_actual " +
+    @Query("SELECT l.*, ul.estado_lectura, ul.es_favorito, ul.calificacion, ul.pagina_actual, ul.notas " +
            "FROM libros l " +
            "INNER JOIN usuarios_libros ul ON l.id = ul.libro_id " +
            "WHERE ul.usuario_id = :usuarioId AND ul.estado_lectura = :estadoLectura")
@@ -54,7 +63,7 @@ public interface UsuarioLibroDao {
     // Obtener libros favoritos
     @RewriteQueriesToDropUnusedColumns
     @Transaction
-    @Query("SELECT l.*, ul.estado_lectura, ul.es_favorito, ul.calificacion, ul.pagina_actual " +
+    @Query("SELECT l.*, ul.estado_lectura, ul.es_favorito, ul.calificacion, ul.pagina_actual, ul.notas " +
            "FROM libros l " +
            "INNER JOIN usuarios_libros ul ON l.id = ul.libro_id " +
            "WHERE ul.usuario_id = :usuarioId AND ul.es_favorito = 1")

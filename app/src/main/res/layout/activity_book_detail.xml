@@ -121,6 +121,83 @@
                     </LinearLayout>
                 </LinearLayout>
 
+                <!-- Sección: Calificación y reseña del usuario (visible solo si ya está en la biblioteca) -->
+                <LinearLayout
+                    android:id="@+id/reviewSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:layout_marginBottom="24dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/your_rating_review"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="?attr/textColor"
+                        android:layout_marginBottom="8dp" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="2dp"
+                        app:cardBackgroundColor="?attr/cardBackgroundColor">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <!-- Calificación con estrellas -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:gravity="center"
+                                android:layout_marginBottom="16dp">
+
+                                <RatingBar
+                                    android:id="@+id/ratingBarDisplay"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:numStars="5"
+                                    android:rating="0"
+                                    android:stepSize="0.5"
+                                    android:isIndicator="true"
+                                    style="?android:attr/ratingBarStyleIndicator"
+                                    android:layout_marginBottom="4dp" />
+
+                                <TextView
+                                    android:id="@+id/textViewRating"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="?attr/textColor"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+
+                            <!-- Reseña -->
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/review"
+                                android:textStyle="bold"
+                                android:textColor="?attr/textColor"
+                                android:layout_marginBottom="4dp" />
+
+                            <TextView
+                                android:id="@+id/textViewReview"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="?attr/textColor" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+
                 <!-- Sección de descripción -->
                 <TextView
                     android:layout_width="match_parent"
@@ -143,7 +220,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/add_to_library"
+                    android:text="@string/library_management"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="?attr/textColor"
@@ -157,12 +234,12 @@
                     android:layout_marginBottom="16dp">
 
                     <!-- Botón para añadir a biblioteca -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/buttonAddToLibrary"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/add_to_library"
-                    android:layout_marginBottom="16dp" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonAddToLibrary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/add_to_library"
+                        android:layout_marginBottom="16dp" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

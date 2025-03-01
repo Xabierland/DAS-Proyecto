@@ -45,6 +45,17 @@ public class BibliotecaRepository {
         });
     }
     
+    // Método para obtener un libro específico de la biblioteca del usuario
+    public void obtenerLibroDeBiblioteca(int usuarioId, int libroId, 
+                                      final DataCallback<LibroConEstado> callback) {
+        executorService.execute(() -> {
+            LibroConEstado libro = usuarioLibroDao.obtenerLibroDeUsuario(usuarioId, libroId);
+            if (callback != null) {
+                callback.onComplete(libro);
+            }
+        });
+    }
+    
     // Método para obtener libros por estado de lectura
     public void obtenerLibrosPorEstado(int usuarioId, String estadoLectura, 
                                      final DataCallback<List<LibroConEstado>> callback) {

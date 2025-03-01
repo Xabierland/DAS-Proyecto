@@ -84,6 +84,16 @@
     <string name="error_loading_user_data">Error al cargar datos del usuario</string>
     <string name="error_saving_image">Error al guardar la imagen</string>
 
+    <!-- Nuevas cadenas para la funcionalidad de calificación y reseñas -->
+    <string name="rating">Calificación</string>
+    <string name="review">Reseña</string>
+    <string name="review_hint">Escribe tu reseña aquí...</string>
+    <string name="update">Actualizar</string>
+    <string name="update_in_library">Actualizar en biblioteca</string>
+    <string name="library_management">Gestión de biblioteca</string>
+    <string name="reading_status">Estado de lectura</string>
+    <string name="your_rating_review">Tu calificación y reseña</string>
+
     <!-- Strings para el tema -->
     <string name="theme">Tema</string>
     <string name="change_theme">Cambiar tema</string>

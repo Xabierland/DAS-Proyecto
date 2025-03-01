@@ -40,6 +40,9 @@ public class LibroConEstado {
     @ColumnInfo(name = "pagina_actual")
     private Integer paginaActual;
     
+    // Notas o reseña del usuario sobre el libro
+    private String notas;
+    
     // Constructor por defecto necesario para Room
     public LibroConEstado() {}
     
@@ -154,6 +157,14 @@ public class LibroConEstado {
 
     public void setPaginaActual(Integer paginaActual) {
         this.paginaActual = paginaActual;
+    }
+    
+    public String getNotas() {
+        return notas;
+    }
+    
+    public void setNotas(String notas) {
+        this.notas = notas;
     }
     
     // Métodos útiles para la aplicación

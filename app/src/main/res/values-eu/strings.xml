@@ -85,6 +85,16 @@
     <string name="error_loading_user_data">Errorea erabiltzailearen datuak kargatzean</string>
     <string name="error_saving_image">Errorea irudia gordetzean</string>
 
+    <!-- Kalifikazio eta iruzkin funtzionalitaterako kate berriak -->
+    <string name="rating">Kalifikazioa</string>
+    <string name="review">Iruzkina</string>
+    <string name="review_hint">Idatzi zure iruzkina hemen...</string>
+    <string name="update">Eguneratu</string>
+    <string name="update_in_library">Liburutegian eguneratu</string>
+    <string name="library_management">Liburutegiaren kudeaketa</string>
+    <string name="reading_status">Irakurketa egoera</string>
+    <string name="your_rating_review">Zure kalifikazioa eta iruzkina</string>
+
     <!-- Gaiaren ezarpenen stringak -->
     <string name="theme">Gaia</string>
     <string name="change_theme">Gaia aldatu</string>

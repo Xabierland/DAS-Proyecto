@@ -9,7 +9,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RatingBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,9 +20,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.xabierland.librebook.R;
 import com.xabierland.librebook.data.database.entities.Libro;
 import com.xabierland.librebook.data.database.entities.UsuarioLibro;
+import com.xabierland.librebook.data.models.LibroConEstado;
 import com.xabierland.librebook.data.repositories.BibliotecaRepository;
 import com.xabierland.librebook.data.repositories.LibroRepository;
 import com.xabierland.librebook.utils.ImageLoader;
@@ -40,6 +45,11 @@ public class BookDetailActivity extends BaseActivity {
     private TextView textViewPaginas;
     private TextView textViewDescripcion;
     private MaterialButton buttonAddToLibrary;
+    
+    // Vistas para la sección de calificación y reseña
+    private View reviewSection;
+    private TextView textViewRating;
+    private TextView textViewReview;
 
     // Repositorios
     private LibroRepository libroRepository;
@@ -47,8 +57,10 @@ public class BookDetailActivity extends BaseActivity {
 
     // Datos
     private Libro libro;
+    private UsuarioLibro usuarioLibro;
     private int usuarioId = -1;
     private boolean isLoggedIn = false;
+    private boolean libroYaEnBiblioteca = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +95,11 @@ public class BookDetailActivity extends BaseActivity {
         textViewPaginas = findViewById(R.id.textViewPaginas);
         textViewDescripcion = findViewById(R.id.textViewDescripcion);
         buttonAddToLibrary = findViewById(R.id.buttonAddToLibrary);
+        
+        // Inicializar sección de calificación y reseña
+        reviewSection = findViewById(R.id.reviewSection);
+        textViewRating = findViewById(R.id.textViewRating);
+        textViewReview = findViewById(R.id.textViewReview);
     }
 
     private void checkUserSession() {
@@ -108,18 +125,49 @@ public class BookDetailActivity extends BaseActivity {
 
         // Cargar datos del libro
         libroRepository.obtenerLibroPorId(libroId, result -> {
-            // Cerrar diálogo de carga
-            loadingDialog.dismiss();
-
-            runOnUiThread(() -> {
-                if (result != null) {
-                    libro = result;
-                    displayBookDetails();
+            if (result != null) {
+                libro = result;
+                
+                // Si el usuario está logueado, verificar si el libro ya está en su biblioteca
+                if (isLoggedIn && usuarioId != -1) {
+                    bibliotecaRepository.obtenerLibroDeBiblioteca(usuarioId, libro.getId(), libroConEstado -> {
+                        loadingDialog.dismiss();
+                        
+                        if (libroConEstado != null) {
+                            // El libro ya está en la biblioteca del usuario
+                            libroYaEnBiblioteca = true;
+                            usuarioLibro = new UsuarioLibro(usuarioId, libro.getId(), libroConEstado.getEstadoLectura());
+                            usuarioLibro.setCalificacion(libroConEstado.getCalificacion());
+                            usuarioLibro.setNotas(libroConEstado.getNotas());
+                            
+                            runOnUiThread(() -> {
+                                displayBookDetails();
+                                updateUIForExistingBook(libroConEstado);
+                            });
+                        } else {
+                            // El libro no está en la biblioteca del usuario
+                            libroYaEnBiblioteca = false;
+                            runOnUiThread(() -> {
+                                displayBookDetails();
+                                updateUIForNewBook();
+                            });
+                        }
+                    });
                 } else {
+                    // No hay usuario logueado, simplemente mostrar los detalles del libro
+                    loadingDialog.dismiss();
+                    runOnUiThread(() -> {
+                        displayBookDetails();
+                        updateUIForNewBook();
+                    });
+                }
+            } else {
+                loadingDialog.dismiss();
+                runOnUiThread(() -> {
                     Toast.makeText(BookDetailActivity.this, "No se encontró el libro", Toast.LENGTH_SHORT).show();
                     finish();
-                }
-            });
+                });
+            }
         });
     }
 
@@ -171,6 +219,63 @@ public class BookDetailActivity extends BaseActivity {
         }
     }
 
+    private void updateUIForExistingBook(LibroConEstado libroConEstado) {
+        // Cambiar el texto del botón según el estado actual
+        String estadoActual = "";
+        switch (libroConEstado.getEstadoLectura()) {
+            case UsuarioLibro.ESTADO_POR_LEER:
+                estadoActual = getString(R.string.status_to_read);
+                break;
+            case UsuarioLibro.ESTADO_LEYENDO:
+                estadoActual = getString(R.string.status_reading);
+                break;
+            case UsuarioLibro.ESTADO_LEIDO:
+                estadoActual = getString(R.string.status_read);
+                break;
+        }
+        
+        buttonAddToLibrary.setText(getString(R.string.update_in_library) + " (" + estadoActual + ")");
+        
+        // Mostrar sección de calificación y reseña si existen
+        if (libroConEstado.getCalificacion() != null || (libroConEstado.getNotas() != null && !libroConEstado.getNotas().isEmpty())) {
+            reviewSection.setVisibility(View.VISIBLE);
+            
+            // Mostrar calificación si existe
+            if (libroConEstado.getCalificacion() != null) {
+                // Obtener referencias a las vistas de calificación
+                RatingBar ratingBarDisplay = findViewById(R.id.ratingBarDisplay);
+                TextView textViewRating = findViewById(R.id.textViewRating);
+                
+                // Configurar el RatingBar (convertir de 0-10 a 0-5 estrellas)
+                float ratingValue = libroConEstado.getCalificacion();
+                float ratingStars = ratingValue / 2;
+                ratingBarDisplay.setRating(ratingStars);
+                textViewRating.setText(formatRating(ratingValue));
+                textViewRating.setVisibility(View.VISIBLE);
+            } else {
+                findViewById(R.id.ratingBarDisplay).setVisibility(View.GONE);
+                findViewById(R.id.textViewRating).setVisibility(View.GONE);
+            }
+            
+            // Mostrar reseña si existe
+            TextView textViewReview = findViewById(R.id.textViewReview);
+            if (libroConEstado.getNotas() != null && !libroConEstado.getNotas().isEmpty()) {
+                textViewReview.setText(libroConEstado.getNotas());
+                textViewReview.setVisibility(View.VISIBLE);
+            } else {
+                textViewReview.setVisibility(View.GONE);
+                findViewById(R.id.textViewReview).setVisibility(View.GONE);
+            }
+        } else {
+            reviewSection.setVisibility(View.GONE);
+        }
+    }
+
+    private void updateUIForNewBook() {
+        buttonAddToLibrary.setText(R.string.add_to_library);
+        reviewSection.setVisibility(View.GONE);
+    }
+
     private void setupButtonListeners() {
         // Botón para añadir a biblioteca
         buttonAddToLibrary.setOnClickListener(v -> {
@@ -180,6 +285,19 @@ public class BookDetailActivity extends BaseActivity {
                 showLoginRequiredDialog();
             }
         });
+    }
+    
+    /**
+     * Formatea la calificación para mostrar solo decimales cuando es necesario.
+     * Ejemplo: 10.0 se muestra como "10/10", mientras que 8.5 se muestra como "8.5/10"
+     */
+    private String formatRating(float rating) {
+        // Si el valor es un número entero (parte decimal es cero)
+        if (rating == Math.floor(rating)) {
+            return String.format("%.0f/10", rating);
+        } else {
+            return String.format("%.1f/10", rating);
+        }
     }
     
     private void showAddToLibraryDialog() {
@@ -193,9 +311,60 @@ public class BookDetailActivity extends BaseActivity {
         AlertDialog dialog = builder.create();
         
         // Referencias a las vistas del diálogo
+        TextView textViewDialogTitle = view.findViewById(R.id.textViewDialogTitle);
         RadioGroup radioGroupEstado = view.findViewById(R.id.radioGroupEstado);
+        RadioButton radioButtonPorLeer = view.findViewById(R.id.radioButtonPorLeer);
+        RadioButton radioButtonLeyendo = view.findViewById(R.id.radioButtonLeyendo);
+        RadioButton radioButtonLeido = view.findViewById(R.id.radioButtonLeido);
+        RatingBar ratingBarStars = view.findViewById(R.id.ratingBarStars);
+        TextView textViewRatingValue = view.findViewById(R.id.textViewRatingValue);
+        TextInputEditText editTextReview = view.findViewById(R.id.editTextReview);
         Button buttonCancel = view.findViewById(R.id.buttonCancel);
         Button buttonConfirm = view.findViewById(R.id.buttonConfirm);
+        
+        // Configurar el título según si el libro ya está en la biblioteca o no
+        if (libroYaEnBiblioteca) {
+            textViewDialogTitle.setText(R.string.update_in_library);
+            buttonConfirm.setText(R.string.update);
+            
+            // Preseleccionar el estado actual
+            if (usuarioLibro != null) {
+                switch (usuarioLibro.getEstadoLectura()) {
+                    case UsuarioLibro.ESTADO_POR_LEER:
+                        radioButtonPorLeer.setChecked(true);
+                        break;
+                    case UsuarioLibro.ESTADO_LEYENDO:
+                        radioButtonLeyendo.setChecked(true);
+                        break;
+                    case UsuarioLibro.ESTADO_LEIDO:
+                        radioButtonLeido.setChecked(true);
+                        break;
+                }
+                
+                // Establecer la calificación actual si existe
+                if (usuarioLibro.getCalificacion() != null) {
+                    // Convertir la calificación de 0-10 a 0-5 estrellas
+                    float ratingStars = usuarioLibro.getCalificacion() / 2;
+                    ratingBarStars.setRating(ratingStars);
+                    textViewRatingValue.setText(formatRating(usuarioLibro.getCalificacion()));
+                }
+                
+                // Establecer la reseña actual si existe
+                if (usuarioLibro.getNotas() != null) {
+                    editTextReview.setText(usuarioLibro.getNotas());
+                }
+            }
+        }
+        
+        // Configurar el listener para el ratingBar de estrellas
+        ratingBarStars.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                // Convertir la calificación de 0-5 estrellas a 0-10
+                float ratingValue = rating * 2;
+                textViewRatingValue.setText(formatRating(ratingValue));
+            }
+        });
         
         // Configurar listeners
         buttonCancel.setOnClickListener(v -> dialog.dismiss());
@@ -214,58 +383,84 @@ public class BookDetailActivity extends BaseActivity {
                 estadoLectura = UsuarioLibro.ESTADO_POR_LEER;
             }
             
+            // Obtener calificación (convertir de 0-5 estrellas a 0-10)
+            float calificacion = ratingBarStars.getRating() * 2;
+            
+            // Obtener reseña
+            String review = editTextReview.getText().toString().trim();
+            
             // Cerrar el diálogo
             dialog.dismiss();
             
-            // Añadir el libro a la biblioteca
-            addBookToLibrary(estadoLectura);
+            // Añadir o actualizar el libro en la biblioteca
+            if (libroYaEnBiblioteca) {
+                updateBookInLibrary(estadoLectura, calificacion, review);
+            } else {
+                addBookToLibrary(estadoLectura, calificacion, review);
+            }
         });
         
         // Mostrar el diálogo
         dialog.show();
     }
 
-    private void addBookToLibrary(String estadoLectura) {
+    private void addBookToLibrary(String estadoLectura, float calificacion, String review) {
         if (libro != null && usuarioId != -1) {
             // Mostrar diálogo de carga
             AlertDialog loadingDialog = createLoadingDialog();
             loadingDialog.show();
 
-            // Primero verificar si el libro ya está en la biblioteca del usuario
-            bibliotecaRepository.obtenerTodosLosLibrosDeUsuario(usuarioId, libros -> {
-                boolean libroYaExistente = false;
-                for (int i = 0; i < libros.size(); i++) {
-                    if (libros.get(i).getId() == libro.getId()) {
-                        libroYaExistente = true;
-                        break;
+            // Añadir el libro a la biblioteca del usuario
+            bibliotecaRepository.agregarLibro(usuarioId, libro.getId(), estadoLectura, result -> {
+                if (result > 0) {
+                    // Actualizar calificación si se ha proporcionado
+                    if (calificacion > 0) {
+                        bibliotecaRepository.actualizarCalificacion(usuarioId, libro.getId(), calificacion, null);
                     }
-                }
-
-                if (libroYaExistente) {
-                    // El libro ya está en la biblioteca, actualizar su estado
-                    bibliotecaRepository.cambiarEstadoLectura(usuarioId, libro.getId(), estadoLectura, result -> {
-                        loadingDialog.dismiss();
-                        runOnUiThread(() -> {
-                            if (result > 0) {
-                                Toast.makeText(BookDetailActivity.this, R.string.book_status_updated, Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(BookDetailActivity.this, R.string.error_adding_book, Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                    
+                    // Actualizar reseña si se ha proporcionado
+                    if (!review.isEmpty()) {
+                        bibliotecaRepository.guardarNotas(usuarioId, libro.getId(), review, null);
+                    }
+                    
+                    loadingDialog.dismiss();
+                    
+                    // Recrear la actividad para actualizar la UI
+                    runOnUiThread(() -> {
+                        Toast.makeText(BookDetailActivity.this, R.string.book_added, Toast.LENGTH_SHORT).show();
+                        recreate();
                     });
                 } else {
-                    // El libro no está en la biblioteca, añadirlo
-                    bibliotecaRepository.agregarLibro(usuarioId, libro.getId(), estadoLectura, result -> {
-                        loadingDialog.dismiss();
-                        runOnUiThread(() -> {
-                            if (result > 0) {
-                                Toast.makeText(BookDetailActivity.this, R.string.book_added, Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(BookDetailActivity.this, R.string.error_adding_book, Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                    loadingDialog.dismiss();
+                    
+                    runOnUiThread(() -> {
+                        Toast.makeText(BookDetailActivity.this, R.string.error_adding_book, Toast.LENGTH_SHORT).show();
                     });
                 }
+            });
+        }
+    }
+
+    private void updateBookInLibrary(String estadoLectura, float calificacion, String review) {
+        if (libro != null && usuarioId != -1) {
+            // Mostrar diálogo de carga
+            AlertDialog loadingDialog = createLoadingDialog();
+            loadingDialog.show();
+
+            // Primero actualizar el estado de lectura
+            bibliotecaRepository.cambiarEstadoLectura(usuarioId, libro.getId(), estadoLectura, result -> {
+                // Luego actualizar la calificación
+                bibliotecaRepository.actualizarCalificacion(usuarioId, libro.getId(), calificacion, null);
+                
+                // Finalmente actualizar la reseña
+                bibliotecaRepository.guardarNotas(usuarioId, libro.getId(), review, updateResult -> {
+                    loadingDialog.dismiss();
+                    
+                    runOnUiThread(() -> {
+                        Toast.makeText(BookDetailActivity.this, R.string.book_status_updated, Toast.LENGTH_SHORT).show();
+                        recreate();
+                    });
+                });
             });
         }
     }

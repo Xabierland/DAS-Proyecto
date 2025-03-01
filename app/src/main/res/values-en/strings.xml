@@ -85,6 +85,16 @@
     <string name="error_loading_user_data">Error loading user data</string>
     <string name="error_saving_image">Error saving image</string>
 
+    <!-- New strings for rating and review functionality -->
+    <string name="rating">Rating</string>
+    <string name="review">Review</string>
+    <string name="review_hint">Write your review here...</string>
+    <string name="update">Update</string>
+    <string name="update_in_library">Update in library</string>
+    <string name="library_management">Library Management</string>
+    <string name="reading_status">Reading Status</string>
+    <string name="your_rating_review">Your Rating and Review</string>
+
     <!-- Strings for theme settings -->
     <string name="theme">Theme</string>
     <string name="change_theme">Change theme</string>
