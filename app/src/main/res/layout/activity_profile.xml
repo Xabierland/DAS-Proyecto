@@ -190,7 +190,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewReading"
                     android:layout_width="match_parent"
-                    android:layout_height="220dp"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:clipToPadding="false"
                     android:paddingStart="4dp"
@@ -221,7 +221,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewToRead"
                     android:layout_width="match_parent"
-                    android:layout_height="220dp"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:clipToPadding="false"
                     android:paddingStart="4dp"
@@ -252,7 +252,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewRead"
                     android:layout_width="match_parent"
-                    android:layout_height="220dp"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:clipToPadding="false"
                     android:paddingStart="4dp"
