@@ -115,9 +115,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void handleNavigationItemSelected(int itemId) {
         // Si estamos ya en la actividad seleccionada, no hacemos nada
         if ((this instanceof MainActivity && itemId == R.id.nav_home) ||
-                (this instanceof SettingsActivity && itemId == R.id.nav_settings) ||
+                (this instanceof ProfileActivity && itemId == R.id.nav_profile) ||
+                (this instanceof SearchActivity && itemId == R.id.action_search) ||
                 (this instanceof LoginActivity && itemId == R.id.nav_login) ||
-                (this instanceof RegisterActivity && itemId == R.id.nav_register)) {
+                (this instanceof RegisterActivity && itemId == R.id.nav_register) ||
+                (this instanceof SettingsActivity && itemId == R.id.nav_settings))
+                {
             return;
         }
 
@@ -130,14 +133,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         }
         else if (itemId == R.id.nav_profile) {
-            // Solo mostrar el perfil si el usuario está logueado
-            if (sharedPreferences.getBoolean("isLoggedIn", false)) {
-                intent = new Intent(this, ProfileActivity.class);
-            } else {
-                // Si no está logueado, redirigir al login
-                Toast.makeText(this, getString(R.string.login_required_profile), Toast.LENGTH_SHORT).show();
-                intent = new Intent(this, LoginActivity.class);
-            }
+            intent = new Intent(this, ProfileActivity.class);
         }
         else if (itemId == R.id.nav_settings) {
             intent = new Intent(this, SettingsActivity.class);
@@ -153,11 +149,10 @@ public abstract class BaseActivity extends AppCompatActivity {
             showLogoutConfirmationDialog();
             return;
         }
-
         if (intent != null) {
             startActivity(intent);
-            // Si no es la home, cerrar la activity actual
-            if (itemId != R.id.nav_home) {
+            // Si es la home, cerrar la activity actual
+            if (itemId == R.id.nav_home) {
                 finish();
             }
         }

@@ -70,7 +70,7 @@
     <!-- Erabiltzaile profilaren string-ak -->
     <string name="profile">Profila</string>
     <string name="my_profile">Nire Profila</string>
-    <string name="reading_now">Orain Irakurtzen</string>
+    <string name="reading_now">Irakurtzen</string>
     <string name="to_read">Irakurtzeko</string>
     <string name="read">Irakurrita</string>
     <string name="empty_reading">Ez zaude libururik irakurtzen une honetan</string>

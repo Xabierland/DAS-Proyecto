@@ -69,7 +69,7 @@
     <!-- Strings for user profile -->
     <string name="profile">Profile</string>
     <string name="my_profile">My Profile</string>
-    <string name="reading_now">Currently Reading</string>
+    <string name="reading_now">Reading</string>
     <string name="to_read">To Read</string>
     <string name="read">Read</string>
     <string name="empty_reading">You are not reading any book currently</string>

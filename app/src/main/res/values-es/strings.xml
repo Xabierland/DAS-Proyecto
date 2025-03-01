@@ -69,7 +69,7 @@
     <!-- Cadenas para el perfil de usuario -->
     <string name="profile">Perfil</string>
     <string name="my_profile">Mi Perfil</string>
-    <string name="reading_now">Leyendo actualmente</string>
+    <string name="reading_now">Leyendo</string>
     <string name="to_read">Por leer</string>
     <string name="read">Leídos</string>
     <string name="empty_reading">No estás leyendo ningún libro actualmente</string>
