@@ -110,6 +110,20 @@ public class ProfileActivity extends BaseActivity {
         checkUserSession();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        
+        SharedPreferences sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE);
+        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+        int currentUserId = sharedPreferences.getInt("userId", -1);
+
+        if (isLoggedIn && currentUserId != -1 && currentUserId == usuarioId) {
+            // Recargar solo los libros
+            loadBooks();
+        }
+    }
+    
     private void initViews() {
         // Vistas de perfil
         imageViewProfilePic = findViewById(R.id.imageViewProfilePic);
