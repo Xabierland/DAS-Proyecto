@@ -99,7 +99,7 @@ public class ProfileActivity extends BaseActivity {
                             imageViewProfilePic.setImageBitmap(bitmap);
                         } catch (IOException e) {
                             e.printStackTrace();
-                            Toast.makeText(this, "Error al cargar la imagen", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, getString(R.string.error_loading_image), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -159,7 +159,7 @@ public class ProfileActivity extends BaseActivity {
 
         if (!isLoggedIn || usuarioId == -1) {
             // Si no hay sesión activa, redirigir al login
-            Toast.makeText(this, "Debes iniciar sesión para ver tu perfil", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.login_required_profile), Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, LoginActivity.class));
             finish();
             return;
@@ -176,7 +176,7 @@ public class ProfileActivity extends BaseActivity {
                     this.usuario = usuario;
                     updateUI();
                 } else {
-                    Toast.makeText(ProfileActivity.this, "Error al cargar datos del usuario", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileActivity.this, getString(R.string.error_loading_user_data), Toast.LENGTH_SHORT).show();
                     finish();
                 }
             });
@@ -297,15 +297,15 @@ public class ProfileActivity extends BaseActivity {
             usuarioRepository.actualizarUsuario(usuario, result -> {
                 runOnUiThread(() -> {
                     if (result > 0) {
-                        Toast.makeText(ProfileActivity.this, "Foto de perfil actualizada", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileActivity.this, getString(R.string.profile_pic_updated), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(ProfileActivity.this, "Error al actualizar foto de perfil", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileActivity.this, getString(R.string.error_updating_profile_pic), Toast.LENGTH_SHORT).show();
                     }
                 });
             });
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error al guardar la imagen", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_saving_image), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -316,13 +316,13 @@ public class ProfileActivity extends BaseActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 openGallery();
             } else {
-                Toast.makeText(this, "Permiso denegado para acceder a la galería", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     @Override
     protected String getActivityTitle() {
-        return "Mi Perfil";
+        return getString(R.string.my_profile);
     }
 }

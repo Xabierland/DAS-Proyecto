@@ -42,12 +42,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Aplicar el tema guardado
+        loadLocale();
         applyTheme();
         super.onCreate(savedInstanceState);
         // Inicializar SharedPreferences
         sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE);
         // Esto hace que todas las actividades de la app tengan el idioma seleccionado
-        loadLocale();
     }
 
     @Override

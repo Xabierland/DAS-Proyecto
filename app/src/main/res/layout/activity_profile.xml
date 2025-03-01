@@ -74,7 +74,7 @@
                             android:id="@+id/textViewUserName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Nombre del Usuario"
+                            android:text="@string/name"
                             android:textAlignment="center"
                             android:textSize="22sp"
                             android:textStyle="bold"
@@ -118,7 +118,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Leídos"
+                                    android:text="@string/read"
                                     android:textSize="14sp"
                                     android:textColor="?attr/textColor" />
                             </LinearLayout>
@@ -143,7 +143,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Leyendo"
+                                    android:text="@string/reading_now"
                                     android:textSize="14sp"
                                     android:textColor="?attr/textColor" />
                             </LinearLayout>
@@ -168,7 +168,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Por leer"
+                                    android:text="@string/to_read"
                                     android:textSize="14sp"
                                     android:textColor="?attr/textColor" />
                             </LinearLayout>
@@ -180,7 +180,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Leyendo actualmente"
+                    android:text="@string/reading_now"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="?attr/textColor"
@@ -201,7 +201,7 @@
                     android:id="@+id/textViewEmptyReading"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="No estás leyendo ningún libro actualmente"
+                    android:text="@string/empty_reading"
                     android:textAlignment="center"
                     android:textColor="?attr/textColor"
                     android:padding="16dp"
@@ -211,7 +211,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Por leer"
+                    android:text="@string/to_read"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="?attr/textColor"
@@ -232,7 +232,7 @@
                     android:id="@+id/textViewEmptyToRead"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="No tienes libros pendientes por leer"
+                    android:text="@string/empty_to_read"
                     android:textAlignment="center"
                     android:textColor="?attr/textColor"
                     android:padding="16dp"
@@ -242,7 +242,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Leídos"
+                    android:text="@string/read"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="?attr/textColor"
@@ -263,7 +263,7 @@
                     android:id="@+id/textViewEmptyRead"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="No has leído ningún libro aún"
+                    android:text="@string/empty_read"
                     android:textAlignment="center"
                     android:textColor="?attr/textColor"
                     android:padding="16dp"
