@@ -95,6 +95,10 @@
     <string name="reading_status">Irakurketa egoera</string>
     <string name="your_rating_review">Zure kalifikazioa eta iruzkina</string>
 
+    <!-- Jakinarazpenak -->
+    <string name="notification_register_title">Ongi etorri LibreBook-era!</string>
+    <string name="notification_register_text">Kaixo %1$s! Zure kontua arrakastaz sortu da</string>
+
     <string name="remove_from_library">Nire liburutegitik kendu</string>
     <string name="confirm_remove_book">Ziur zaude liburu hau zure liburutegitik kendu nahi duzula?</string>
     <string name="remove">Kendu</string>

@@ -101,6 +101,10 @@
     <string name="book_removed">Book removed from your library</string>
     <string name="error_removing_book">Error removing book</string>
 
+    <!-- Notifications -->
+    <string name="notification_register_title">Welcome to LibreBook!</string>
+    <string name="notification_register_text">Hello %1$s! Your account has been successfully created</string>
+
     <!-- Strings for theme settings -->
     <string name="theme">Theme</string>
     <string name="change_theme">Change theme</string>

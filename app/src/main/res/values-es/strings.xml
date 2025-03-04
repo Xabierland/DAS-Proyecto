@@ -66,6 +66,10 @@
     <string name="status_read">Leído</string>
     <string name="confirm_add_book">¿Añadir este libro a tu biblioteca?</string>
 
+    <!-- Notificaciones -->
+    <string name="notification_register_title">¡Bienvenido a LibreBook!</string>
+    <string name="notification_register_text">¡Hola %1$s! Tu cuenta ha sido creada con éxito</string>
+
     <!-- Cadenas para el perfil de usuario -->
     <string name="profile">Perfil</string>
     <string name="my_profile">Mi Perfil</string>
