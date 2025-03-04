@@ -58,24 +58,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         setupDrawer();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_search) {
-            // Abre la actividad de búsqueda
-            Intent intent = new Intent(this, SearchActivity.class);
-            startActivity(intent);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    // ======================== Logica del Toolbar ========================
+    //! ======================== Logica del Toolbar ========================
 
     protected void setupToolbar() {
         toolbar = findViewById(R.id.toolbar);
@@ -85,7 +68,27 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    // ======================== Logica del Menu ========================
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_search) {
+            if (this instanceof SearchActivity) {
+                return true;
+            }
+            // Abre la actividad de búsqueda
+            Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    //! ======================== Logica del Menu ========================
     protected void setupDrawer() {
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
@@ -115,6 +118,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void handleNavigationItemSelected(int itemId) {
         // Si estamos ya en la actividad seleccionada, no hacemos nada
         if ((this instanceof MainActivity && itemId == R.id.nav_home) ||
+                (this instanceof SearchActivity && itemId == R.id.nav_search) ||
                 (this instanceof ProfileActivity && itemId == R.id.nav_profile) ||
                 (this instanceof SearchActivity && itemId == R.id.action_search) ||
                 (this instanceof LoginActivity && itemId == R.id.nav_login) ||
@@ -131,6 +135,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             intent = new Intent(this, MainActivity.class);
             // Limpiar el stack de activities si vamos al home
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        }
+        else if (itemId == R.id.nav_search) {
+            intent = new Intent(this, SearchActivity.class);
         }
         else if (itemId == R.id.nav_profile) {
             intent = new Intent(this, ProfileActivity.class);
@@ -174,6 +181,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    //! ======================== Logica de cierre de sesión ========================
     // Método para mostrar diálogo de confirmación de cierre de sesión
     protected void showLogoutConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -211,8 +219,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    // ======================== Logica de idiomas ========================
-
+    //! ======================== Logica de idiomas ========================
     protected void loadLocale() {
         SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
         int languageMode = prefs.getInt("language_mode", LANGUAGE_SYSTEM);
@@ -298,8 +305,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    // ======================== Lógica de temas ========================
-
+    //! ======================== Lógica de temas ========================
     protected void applyTheme() {
         SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
         int themeMode = prefs.getInt("theme_mode", THEME_SYSTEM);
@@ -358,7 +364,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    // ================= 
+    //! ================= Lógica de las actividades =================
     protected abstract String getActivityTitle();
 
     @Override
