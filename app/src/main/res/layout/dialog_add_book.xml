@@ -1,144 +1,191 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="24dp">
-
-    <TextView
-        android:id="@+id/textViewDialogTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/add_to_library"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="?attr/textColor"
-        android:layout_marginBottom="16dp"/>
-
-    <!-- Estado de lectura -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/reading_status"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:textColor="?attr/textColor"
-        android:layout_marginBottom="8dp"/>
-
-    <RadioGroup
-        android:id="@+id/radioGroupEstado"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="16dp">
-
-        <RadioButton
-            android:id="@+id/radioButtonPorLeer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/status_to_read"
-            android:checked="true"
-            android:padding="8dp"/>
-
-        <RadioButton
-            android:id="@+id/radioButtonLeyendo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/status_reading"
-            android:padding="8dp"/>
-
-        <RadioButton
-            android:id="@+id/radioButtonLeido"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/status_read"
-            android:padding="8dp"/>
-    </RadioGroup>
-
-    <!-- Calificación con estrellas -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/rating"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:textColor="?attr/textColor"
-        android:layout_marginBottom="8dp"/>
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center"
-        android:layout_marginBottom="16dp">
-
-        <RatingBar
-            android:id="@+id/ratingBarStars"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:numStars="5"
-            android:rating="0"
-            android:stepSize="0.5"
-            android:isIndicator="false" />
+        android:padding="24dp">
 
         <TextView
-            android:id="@+id/textViewRatingValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0.0/10"
-            android:textColor="?attr/textColor"
-            android:textSize="16sp"
-            android:layout_marginTop="8dp"/>
-    </LinearLayout>
-
-    <!-- Reseña -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/review"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:textColor="?attr/textColor"
-        android:layout_marginBottom="8dp"/>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextReview"
+            android:id="@+id/textViewDialogTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/review_hint"
-            android:inputType="textMultiLine"
-            android:minLines="3"
-            android:maxLines="5"
-            android:gravity="top|start" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:text="@string/add_to_library"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="?attr/textColor"
+            android:layout_marginBottom="16dp"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="end"
-        android:layout_marginTop="16dp">
-
-        <Button
-            android:id="@+id/buttonCancel"
-            android:layout_width="wrap_content"
+        <!-- Estado de lectura -->
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@android:string/cancel"
-            android:backgroundTint="?attr/colorSurface"
-            android:textColor="?attr/colorPrimary"
-            style="@style/Widget.MaterialComponents.Button.TextButton"/>
+            android:text="@string/reading_status"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="?attr/textColor"
+            android:layout_marginBottom="8dp"/>
 
-        <Button
-            android:id="@+id/buttonConfirm"
-            android:layout_width="wrap_content"
+        <RadioGroup
+            android:id="@+id/radioGroupEstado"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/add"
-            android:layout_marginStart="8dp"/>
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+
+            <RadioButton
+                android:id="@+id/radioButtonPorLeer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/status_to_read"
+                android:checked="true"
+                android:padding="8dp"/>
+
+            <RadioButton
+                android:id="@+id/radioButtonLeyendo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/status_reading"
+                android:padding="8dp"/>
+
+            <RadioButton
+                android:id="@+id/radioButtonLeido"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/status_read"
+                android:padding="8dp"/>
+        </RadioGroup>
+
+        <!-- Campo para página actual (visible solo cuando está leyendo) -->
+        <LinearLayout
+            android:id="@+id/layoutPaginaActual"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Página actual"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="?attr/textColor"
+                android:layout_marginBottom="8dp"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextPaginaActual"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Introduce la página actual"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <!-- Calificación con estrellas (visible solo cuando está leído) -->
+        <LinearLayout
+            android:id="@+id/layoutCalificacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rating"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="?attr/textColor"
+                android:layout_marginBottom="8dp"/>
+
+            <RatingBar
+                android:id="@+id/ratingBarStars"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:rating="0"
+                android:stepSize="0.5"
+                android:isIndicator="false" />
+
+            <TextView
+                android:id="@+id/textViewRatingValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.0/10"
+                android:textColor="?attr/textColor"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"/>
+        </LinearLayout>
+
+        <!-- Reseña (visible solo cuando está leído) -->
+        <LinearLayout
+            android:id="@+id/layoutReview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/review"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="?attr/textColor"
+                android:layout_marginBottom="8dp"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextReview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/review_hint"
+                    android:inputType="textMultiLine"
+                    android:minLines="3"
+                    android:maxLines="5"
+                    android:gravity="top|start" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:layout_marginTop="16dp">
+
+            <Button
+                android:id="@+id/buttonCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@android:string/cancel"
+                android:backgroundTint="?attr/colorSurface"
+                android:textColor="?attr/colorPrimary"
+                style="@style/Widget.MaterialComponents.Button.TextButton"/>
+
+            <Button
+                android:id="@+id/buttonConfirm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</ScrollView>

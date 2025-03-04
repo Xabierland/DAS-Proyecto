@@ -165,12 +165,12 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
     // Implementación de OnBookActionListener
 
     @Override
-    public void onAddToLibrary(String estadoLectura, float calificacion, String review) {
+    public void onAddToLibrary(String estadoLectura, float calificacion, String review, Integer paginaActual) {
         if (libro != null && usuarioId != -1) {
             // Mostrar diálogo de carga
             AlertDialog loadingDialog = createLoadingDialog();
             loadingDialog.show();
-
+    
             // Añadir el libro a la biblioteca del usuario
             bibliotecaRepository.agregarLibro(usuarioId, libro.getId(), estadoLectura, result -> {
                 if (result > 0) {
@@ -180,8 +180,13 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
                     }
                     
                     // Actualizar reseña si se ha proporcionado
-                    if (!review.isEmpty()) {
+                    if (review != null && !review.isEmpty()) {
                         bibliotecaRepository.guardarNotas(usuarioId, libro.getId(), review, null);
+                    }
+                    
+                    // Actualizar página actual si se ha proporcionado
+                    if (paginaActual != null && paginaActual > 0) {
+                        bibliotecaRepository.actualizarPaginaActual(usuarioId, libro.getId(), paginaActual, null);
                     }
                     
                     loadingDialog.dismiss();
@@ -201,9 +206,9 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
             });
         }
     }
-
+    
     @Override
-    public void onUpdateInLibrary(String estadoLectura, float calificacion, String review) {
+    public void onUpdateInLibrary(String estadoLectura, float calificacion, String review, Integer paginaActual) {
         if (libro != null && usuarioId != -1) {
             // Mostrar diálogo de carga
             AlertDialog loadingDialog = createLoadingDialog();
@@ -214,14 +219,19 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
                 // Luego actualizar la calificación
                 bibliotecaRepository.actualizarCalificacion(usuarioId, libro.getId(), calificacion, null);
                 
-                // Finalmente actualizar la reseña
-                bibliotecaRepository.guardarNotas(usuarioId, libro.getId(), review, updateResult -> {
-                    loadingDialog.dismiss();
-                    
-                    runOnUiThread(() -> {
-                        Toast.makeText(BookDetailActivity.this, R.string.book_status_updated, Toast.LENGTH_SHORT).show();
-                        recreate();
-                    });
+                // Actualizar la reseña
+                bibliotecaRepository.guardarNotas(usuarioId, libro.getId(), review, null);
+                
+                // Actualizar página actual si corresponde
+                if (paginaActual != null && paginaActual > 0) {
+                    bibliotecaRepository.actualizarPaginaActual(usuarioId, libro.getId(), paginaActual, null);
+                }
+                
+                loadingDialog.dismiss();
+                
+                runOnUiThread(() -> {
+                    Toast.makeText(BookDetailActivity.this, R.string.book_status_updated, Toast.LENGTH_SHORT).show();
+                    recreate();
                 });
             });
         }

@@ -6,10 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,8 +28,8 @@ public class BookActionsFragment extends Fragment {
 
     // Interfaz para comunicación con la actividad
     public interface OnBookActionListener {
-        void onAddToLibrary(String estadoLectura, float calificacion, String review);
-        void onUpdateInLibrary(String estadoLectura, float calificacion, String review);
+        void onAddToLibrary(String estadoLectura, float calificacion, String review, Integer paginaActual);
+        void onUpdateInLibrary(String estadoLectura, float calificacion, String review, Integer paginaActual);
         void onRemoveFromLibrary();
         boolean isUserLoggedIn();
         void showLoginRequiredDialog();
@@ -45,6 +47,7 @@ public class BookActionsFragment extends Fragment {
     private String estadoActual = "";
     private Float calificacionActual = null;
     private String notasActuales = null;
+    private Integer paginaActual = null;
 
     public BookActionsFragment() {
         // Constructor vacío requerido
@@ -130,6 +133,7 @@ public class BookActionsFragment extends Fragment {
         estadoActual = libroConEstado.getEstadoLectura();
         calificacionActual = libroConEstado.getCalificacion();
         notasActuales = libroConEstado.getNotas();
+        paginaActual = libroConEstado.getPaginaActual();
         
         // Cambiar el texto del botón según el estado actual
         String estadoLabel = "";
@@ -193,6 +197,7 @@ public class BookActionsFragment extends Fragment {
         // Crear el diálogo con el layout personalizado
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setView(view);
+        builder.setCancelable(false); // Evitar que el diálogo se cierre al tocar fuera
         
         AlertDialog dialog = builder.create();
         
@@ -202,9 +207,17 @@ public class BookActionsFragment extends Fragment {
         RadioButton radioButtonPorLeer = view.findViewById(R.id.radioButtonPorLeer);
         RadioButton radioButtonLeyendo = view.findViewById(R.id.radioButtonLeyendo);
         RadioButton radioButtonLeido = view.findViewById(R.id.radioButtonLeido);
+        
+        // Para la funcionalidad de cambiar campos según estado de lectura
+        View layoutPaginaActual = view.findViewById(R.id.layoutPaginaActual);
+        View layoutCalificacion = view.findViewById(R.id.layoutCalificacion);
+        View layoutReview = view.findViewById(R.id.layoutReview);
+        
+        TextInputEditText editTextPaginaActual = view.findViewById(R.id.editTextPaginaActual);
         RatingBar ratingBarStars = view.findViewById(R.id.ratingBarStars);
         TextView textViewRatingValue = view.findViewById(R.id.textViewRatingValue);
         TextInputEditText editTextReview = view.findViewById(R.id.editTextReview);
+        
         Button buttonCancel = view.findViewById(R.id.buttonCancel);
         Button buttonConfirm = view.findViewById(R.id.buttonConfirm);
         
@@ -221,9 +234,17 @@ public class BookActionsFragment extends Fragment {
                         break;
                     case UsuarioLibro.ESTADO_LEYENDO:
                         radioButtonLeyendo.setChecked(true);
+                        // Mostrar campo de página actual
+                        layoutPaginaActual.setVisibility(View.VISIBLE);
+                        if (paginaActual != null) {
+                            editTextPaginaActual.setText(String.valueOf(paginaActual));
+                        }
                         break;
                     case UsuarioLibro.ESTADO_LEIDO:
                         radioButtonLeido.setChecked(true);
+                        // Mostrar calificación y reseña
+                        layoutCalificacion.setVisibility(View.VISIBLE);
+                        layoutReview.setVisibility(View.VISIBLE);
                         break;
                 }
             }
@@ -242,6 +263,26 @@ public class BookActionsFragment extends Fragment {
             }
         }
         
+        // Configurar el listener para el RadioGroup
+        radioGroupEstado.setOnCheckedChangeListener((group, checkedId) -> {
+            // Ocultar todos los campos adicionales primero
+            layoutPaginaActual.setVisibility(View.GONE);
+            layoutCalificacion.setVisibility(View.GONE);
+            layoutReview.setVisibility(View.GONE);
+            
+            // Mostrar campos según el estado seleccionado
+            if (checkedId == R.id.radioButtonPorLeer) {
+                // No mostrar campos adicionales
+            } else if (checkedId == R.id.radioButtonLeyendo) {
+                // Mostrar solo el campo de página actual
+                layoutPaginaActual.setVisibility(View.VISIBLE);
+            } else if (checkedId == R.id.radioButtonLeido) {
+                // Mostrar calificación y reseña
+                layoutCalificacion.setVisibility(View.VISIBLE);
+                layoutReview.setVisibility(View.VISIBLE);
+            }
+        });
+        
         // Configurar el listener para el ratingBar de estrellas
         ratingBarStars.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
             // Convertir la calificación de 0-5 estrellas a 0-10
@@ -249,7 +290,7 @@ public class BookActionsFragment extends Fragment {
             textViewRatingValue.setText(formatRating(ratingValue));
         });
         
-        // Configurar listeners
+        // Configurar listeners para los botones
         buttonCancel.setOnClickListener(v -> dialog.dismiss());
         
         buttonConfirm.setOnClickListener(v -> {
@@ -266,22 +307,49 @@ public class BookActionsFragment extends Fragment {
                 estadoLectura = UsuarioLibro.ESTADO_POR_LEER;
             }
             
-            // Obtener calificación (convertir de 0-5 estrellas a 0-10)
-            float calificacion = ratingBarStars.getRating() * 2;
+            // Valores por defecto
+            float calificacion = 0;
+            String review = "";
+            Integer pagina = null;
             
-            // Obtener reseña
-            String review = editTextReview.getText().toString().trim();
+            // Obtener valores según el estado
+            if (estadoLectura.equals(UsuarioLibro.ESTADO_LEIDO)) {
+                // Obtener calificación (convertir de 0-5 estrellas a 0-10)
+                calificacion = ratingBarStars.getRating() * 2;
+                // Obtener reseña
+                review = editTextReview.getText().toString().trim();
+            } else if (estadoLectura.equals(UsuarioLibro.ESTADO_LEYENDO)) {
+                // Obtener página actual
+                String paginaStr = editTextPaginaActual.getText().toString().trim();
+                if (!paginaStr.isEmpty()) {
+                    try {
+                        pagina = Integer.parseInt(paginaStr);
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(getContext(), "Introduce un número válido para la página", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+            }
             
             // Cerrar el diálogo
             dialog.dismiss();
             
             // Añadir o actualizar el libro en la biblioteca
             if (libroYaEnBiblioteca) {
-                listener.onUpdateInLibrary(estadoLectura, calificacion, review);
+                listener.onUpdateInLibrary(estadoLectura, calificacion, review, pagina);
             } else {
-                listener.onAddToLibrary(estadoLectura, calificacion, review);
+                listener.onAddToLibrary(estadoLectura, calificacion, review, pagina);
             }
         });
+        
+        // Ejecutar el listener inicial para configurar la visibilidad según el estado actual
+        int selectedId = radioGroupEstado.getCheckedRadioButtonId();
+        radioGroupEstado.clearCheck(); // Limpiar para forzar el evento
+        if (selectedId != -1) {
+            ((RadioButton)view.findViewById(selectedId)).setChecked(true);
+        } else {
+            radioButtonPorLeer.setChecked(true);
+        }
         
         // Mostrar el diálogo
         dialog.show();
