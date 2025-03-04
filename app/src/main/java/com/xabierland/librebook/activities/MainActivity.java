@@ -8,22 +8,34 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.xabierland.librebook.R;
+import com.xabierland.librebook.adapters.LibroAdapter;
 import com.xabierland.librebook.data.database.entities.Libro;
 import com.xabierland.librebook.data.database.entities.Usuario;
 import com.xabierland.librebook.data.repositories.LibroRepository;
 import com.xabierland.librebook.data.repositories.UsuarioRepository;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends BaseActivity {
     
     private static final String TAG = "MainActivity";
     private UsuarioRepository usuarioRepository;
-    private LibroRepository libroRepository; // Declaración del repositorio
+    private LibroRepository libroRepository; 
     private TextView textViewWelcome;
+    
+    // Para la lista de libros recomendados
+    private RecyclerView recyclerViewRecommended;
+    private TextView textViewNoRecommended;
+    private LibroAdapter recommendedAdapter;
+    private List<Libro> recommendedBooks = new ArrayList<>();
+    private static final int RECOMMENDED_BOOKS_COUNT = 4;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,21 +44,37 @@ public class MainActivity extends BaseActivity {
         
         // Inicializar repositorios
         usuarioRepository = new UsuarioRepository(getApplication());
-        libroRepository = new LibroRepository(getApplication()); // Inicialización del repositorio
+        libroRepository = new LibroRepository(getApplication());
         
         // Comprobar si venimos de un cambio de tema
         if (getIntent().getBooleanExtra("THEME_CHANGED", false)) {
             // No hacemos nada especial, el tema ya se ha aplicado en BaseActivity
         }
         
-        // Buscar vista de bienvenida (asumimos que existe o se añadirá)
-        textViewWelcome = findViewById(R.id.textViewWelcome);
+        // Inicializar vistas
+        initViews();
         
         // Verificar si hay usuario logueado y actualizar la interfaz en consecuencia
         checkUserSessionAndUpdateUI();
         
         // Verificar la base de datos
         verificarEstadoLibros();
+        
+        // Cargar libros recomendados
+        loadRecommendedBooks();
+    }
+    
+    private void initViews() {
+        textViewWelcome = findViewById(R.id.textViewWelcome);
+        
+        // Inicializar vistas de libros recomendados
+        recyclerViewRecommended = findViewById(R.id.recyclerViewRecommended);
+        textViewNoRecommended = findViewById(R.id.textViewNoRecommended);
+        
+        // Configurar RecyclerView de libros recomendados en orientación vertical
+        recyclerViewRecommended.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recommendedAdapter = new LibroAdapter(recommendedBooks);
+        recyclerViewRecommended.setAdapter(recommendedAdapter);
     }
     
     private void verificarEstadoLibros() {
@@ -56,6 +84,55 @@ public class MainActivity extends BaseActivity {
             // Si quieres mostrar un mensaje para verificar, descomenta esta línea
             // runOnUiThread(() -> Toast.makeText(MainActivity.this, "Libros en la BD: " + libros.size(), Toast.LENGTH_SHORT).show());
         });
+    }
+    
+    private void loadRecommendedBooks() {
+        // Mostrar indicador de carga (opcional)
+        recyclerViewRecommended.setVisibility(View.GONE);
+        textViewNoRecommended.setVisibility(View.VISIBLE);
+        
+        // Obtener todos los libros
+        libroRepository.obtenerTodosLosLibros(libros -> {
+            if (libros != null && !libros.isEmpty()) {
+                // Seleccionar 4 libros aleatorios
+                List<Libro> randomBooks = getRandomBooks(libros, RECOMMENDED_BOOKS_COUNT);
+                
+                // Actualizar la UI en el hilo principal
+                runOnUiThread(() -> {
+                    recommendedBooks.clear();
+                    recommendedBooks.addAll(randomBooks);
+                    recommendedAdapter.notifyDataSetChanged();
+                    
+                    recyclerViewRecommended.setVisibility(View.VISIBLE);
+                    textViewNoRecommended.setVisibility(View.GONE);
+                });
+            } else {
+                // No hay libros disponibles
+                runOnUiThread(() -> {
+                    recyclerViewRecommended.setVisibility(View.GONE);
+                    textViewNoRecommended.setVisibility(View.VISIBLE);
+                });
+            }
+        });
+    }
+    
+    /**
+     * Selecciona libros aleatorios de una lista
+     */
+    private List<Libro> getRandomBooks(List<Libro> allBooks, int count) {
+        // Si hay menos libros que count, devolver todos
+        if (allBooks.size() <= count) {
+            return new ArrayList<>(allBooks);
+        }
+        
+        // Crear una copia de la lista original para no modificarla
+        List<Libro> shuffledList = new ArrayList<>(allBooks);
+        
+        // Mezclar la lista para obtener resultados aleatorios
+        Collections.shuffle(shuffledList, new Random(System.currentTimeMillis()));
+        
+        // Tomar los primeros 'count' elementos
+        return shuffledList.subList(0, count);
     }
     
     private void checkUserSessionAndUpdateUI() {

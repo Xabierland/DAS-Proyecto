@@ -20,27 +20,60 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
         <!-- Contenido de la actividad -->
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_height="match_parent">
 
-            <!-- Mensaje de bienvenida -->
-            <TextView
-                android:id="@+id/textViewWelcome"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/welcome_guest"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:textColor="?attr/textColor" />
+                android:orientation="vertical"
+                android:padding="16dp">
 
-            <!-- Aquí puedes añadir el resto del contenido de tu actividad principal -->
+                <!-- Mensaje de bienvenida -->
+                <TextView
+                    android:id="@+id/textViewWelcome"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/welcome_guest"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:textColor="?attr/textColor" />
 
-        </LinearLayout>
+                <!-- Sección: Libros recomendados -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Libros recomendados"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="?attr/textColor"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp" />
+                    
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewRecommended"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp" />
+
+                <!-- Texto para cuando no hay libros -->
+                <TextView
+                    android:id="@+id/textViewNoRecommended"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No hay libros recomendados disponibles"
+                    android:textAlignment="center"
+                    android:textColor="?attr/textColor"
+                    android:padding="16dp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+        </ScrollView>
 
     </LinearLayout>
 
