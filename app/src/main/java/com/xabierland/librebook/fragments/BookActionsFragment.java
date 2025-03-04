@@ -164,8 +164,11 @@ public class BookActionsFragment extends Fragment {
         // Mostrar el botón de eliminar
         buttonRemoveFromLibrary.setVisibility(View.VISIBLE);
         
-        // Mostrar sección de calificación y reseña si existen
-        if (calificacionActual != null || (notasActuales != null && !notasActuales.isEmpty())) {
+        // Determinar si se debe mostrar la sección de calificación y reseña
+        boolean mostrarReviewSection = UsuarioLibro.ESTADO_LEIDO.equals(estadoActual) && 
+                                      (calificacionActual != null || (notasActuales != null && !notasActuales.isEmpty()));
+        
+        if (mostrarReviewSection) {
             reviewSection.setVisibility(View.VISIBLE);
             
             // Mostrar calificación si existe
@@ -175,6 +178,7 @@ public class BookActionsFragment extends Fragment {
                 ratingBarDisplay.setRating(ratingStars);
                 textViewRating.setText(formatRating(calificacionActual));
                 textViewRating.setVisibility(View.VISIBLE);
+                ratingBarDisplay.setVisibility(View.VISIBLE);
             } else {
                 ratingBarDisplay.setVisibility(View.GONE);
                 textViewRating.setVisibility(View.GONE);
@@ -188,6 +192,7 @@ public class BookActionsFragment extends Fragment {
                 textViewReview.setVisibility(View.GONE);
             }
         } else {
+            // Si no está en estado leído, ocultar la sección completa
             reviewSection.setVisibility(View.GONE);
         }
     }
@@ -264,7 +269,7 @@ public class BookActionsFragment extends Fragment {
             }
             
             // Establecer la calificación actual si existe
-            if (calificacionActual != null) {
+            if (calificacionActual != null && UsuarioLibro.ESTADO_LEIDO.equals(estadoActual)) {
                 // Convertir la calificación de 0-10 a 0-5 estrellas
                 float ratingStars = calificacionActual / 2;
                 ratingBarStars.setRating(ratingStars);
@@ -272,7 +277,7 @@ public class BookActionsFragment extends Fragment {
             }
             
             // Establecer la reseña actual si existe
-            if (notasActuales != null) {
+            if (notasActuales != null && UsuarioLibro.ESTADO_LEIDO.equals(estadoActual)) {
                 editTextReview.setText(notasActuales);
             }
         }
