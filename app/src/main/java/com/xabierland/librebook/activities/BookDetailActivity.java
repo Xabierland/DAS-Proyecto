@@ -18,7 +18,7 @@ import com.xabierland.librebook.data.repositories.LibroRepository;
 import com.xabierland.librebook.fragments.BookActionsFragment;
 import com.xabierland.librebook.fragments.BookInfoFragment;
 
-public class BookDetailActivity extends BaseActivity implements BookActionsFragment.OnBookActionListener {
+public class BookDetailActivity extends BaseActivity implements BookActionsFragment.OnBookActionListener{
 
     // Constantes para los extras
     public static final String EXTRA_LIBRO_ID = "libro_id";
@@ -80,18 +80,18 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
     private void loadBookData() {
         // Obtener el ID del libro desde los extras
         int libroId = getIntent().getIntExtra(EXTRA_LIBRO_ID, -1);
-
+    
         if (libroId == -1) {
             // Si no hay ID válido, cerrar la actividad
             Toast.makeText(this, "Error al cargar el libro", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
-
+    
         // Mostrar diálogo de carga
         AlertDialog loadingDialog = createLoadingDialog();
         loadingDialog.show();
-
+    
         // Cargar datos del libro
         libroRepository.obtenerLibroPorId(libroId, result -> {
             if (result != null) {
@@ -109,6 +109,8 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
                             runOnUiThread(() -> {
                                 // Actualizar fragments con los datos del libro
                                 bookInfoFragment.setLibro(libro);
+                                // Establecer el número total de páginas antes de mostrar UI
+                                bookActionsFragment.setNumPaginasTotal(libro.getNumPaginas());
                                 bookActionsFragment.updateUIForExistingBook(libroConEstado);
                             });
                         } else {
@@ -117,6 +119,8 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
                             runOnUiThread(() -> {
                                 // Actualizar fragments con los datos del libro
                                 bookInfoFragment.setLibro(libro);
+                                // Establecer el número total de páginas antes de mostrar UI
+                                bookActionsFragment.setNumPaginasTotal(libro.getNumPaginas());
                                 bookActionsFragment.updateUIForNewBook();
                             });
                         }
@@ -127,6 +131,8 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
                     runOnUiThread(() -> {
                         // Actualizar fragments con los datos del libro
                         bookInfoFragment.setLibro(libro);
+                        // Establecer el número total de páginas antes de mostrar UI
+                        bookActionsFragment.setNumPaginasTotal(libro.getNumPaginas());
                         bookActionsFragment.updateUIForNewBook();
                     });
                 }
@@ -139,7 +145,6 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
             }
         });
     }
-
     private AlertDialog createLoadingDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_loading, null);
@@ -163,7 +168,6 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
     }
 
     // Implementación de OnBookActionListener
-
     @Override
     public void onAddToLibrary(String estadoLectura, float calificacion, String review, Integer paginaActual) {
         if (libro != null && usuarioId != -1) {
@@ -213,7 +217,7 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
             // Mostrar diálogo de carga
             AlertDialog loadingDialog = createLoadingDialog();
             loadingDialog.show();
-
+    
             // Primero actualizar el estado de lectura
             bibliotecaRepository.cambiarEstadoLectura(usuarioId, libro.getId(), estadoLectura, result -> {
                 // Luego actualizar la calificación
@@ -235,8 +239,7 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
                 });
             });
         }
-    }
-    
+    }    
     @Override
     public void onRemoveFromLibrary() {
         if (libro != null && usuarioId != -1) {

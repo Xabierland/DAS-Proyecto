@@ -73,6 +73,11 @@ public class BookInfoFragment extends Fragment {
         this.libro = libro;
         updateUI();
     }
+    
+    // Método para obtener el número de páginas del libro
+    public int getNumPaginas() {
+        return libro != null ? libro.getNumPaginas() : 0;
+    }
 
     @SuppressLint("DefaultLocale")
     private void updateUI() {

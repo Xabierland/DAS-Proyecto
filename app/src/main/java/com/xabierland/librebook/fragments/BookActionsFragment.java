@@ -2,6 +2,8 @@ package com.xabierland.librebook.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +50,14 @@ public class BookActionsFragment extends Fragment {
     private Float calificacionActual = null;
     private String notasActuales = null;
     private Integer paginaActual = null;
+    
+    // Nuevo campo para el número total de páginas
+    private int numPaginasTotal = 0;
+    
+    // Método para establecer el número total de páginas
+    public void setNumPaginasTotal(int numPaginas) {
+        this.numPaginasTotal = numPaginas;
+    }
 
     public BookActionsFragment() {
         // Constructor vacío requerido
@@ -197,7 +207,7 @@ public class BookActionsFragment extends Fragment {
         // Crear el diálogo con el layout personalizado
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setView(view);
-        builder.setCancelable(false); // Evitar que el diálogo se cierre al tocar fuera
+        builder.setCancelable(false); // Evitar que se cierre al tocar fuera
         
         AlertDialog dialog = builder.create();
         
@@ -209,10 +219,11 @@ public class BookActionsFragment extends Fragment {
         RadioButton radioButtonLeido = view.findViewById(R.id.radioButtonLeido);
         
         // Para la funcionalidad de cambiar campos según estado de lectura
-        View layoutPaginaActual = view.findViewById(R.id.layoutPaginaActual);
-        View layoutCalificacion = view.findViewById(R.id.layoutCalificacion);
-        View layoutReview = view.findViewById(R.id.layoutReview);
+        LinearLayout layoutPaginaActual = view.findViewById(R.id.layoutPaginaActual);
+        LinearLayout layoutCalificacion = view.findViewById(R.id.layoutCalificacion);
+        LinearLayout layoutReview = view.findViewById(R.id.layoutReview);
         
+        TextView textViewTotalPaginas = view.findViewById(R.id.textViewTotalPaginas);
         TextInputEditText editTextPaginaActual = view.findViewById(R.id.editTextPaginaActual);
         RatingBar ratingBarStars = view.findViewById(R.id.ratingBarStars);
         TextView textViewRatingValue = view.findViewById(R.id.textViewRatingValue);
@@ -220,6 +231,9 @@ public class BookActionsFragment extends Fragment {
         
         Button buttonCancel = view.findViewById(R.id.buttonCancel);
         Button buttonConfirm = view.findViewById(R.id.buttonConfirm);
+        
+        // Actualizar texto con el número total de páginas
+        textViewTotalPaginas.setText(" (de " + numPaginasTotal + " páginas)");
         
         // Configurar el título según si el libro ya está en la biblioteca o no
         if (libroYaEnBiblioteca) {
@@ -283,6 +297,37 @@ public class BookActionsFragment extends Fragment {
             }
         });
         
+        // Validación de entrada para el campo de página actual
+        editTextPaginaActual.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // No necesario
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // No necesario
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0) {
+                    try {
+                        int paginaValue = Integer.parseInt(s.toString());
+                        if (paginaValue > numPaginasTotal) {
+                            editTextPaginaActual.setError("La página no puede ser mayor que " + numPaginasTotal);
+                        } else if (paginaValue < 1) {
+                            editTextPaginaActual.setError("La página debe ser mayor o igual a 1");
+                        } else {
+                            editTextPaginaActual.setError(null);
+                        }
+                    } catch (NumberFormatException e) {
+                        editTextPaginaActual.setError("Introduce un número válido");
+                    }
+                }
+            }
+        });
+        
         // Configurar el listener para el ratingBar de estrellas
         ratingBarStars.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
             // Convertir la calificación de 0-5 estrellas a 0-10
@@ -323,7 +368,18 @@ public class BookActionsFragment extends Fragment {
                 String paginaStr = editTextPaginaActual.getText().toString().trim();
                 if (!paginaStr.isEmpty()) {
                     try {
-                        pagina = Integer.parseInt(paginaStr);
+                        int paginaValue = Integer.parseInt(paginaStr);
+                        
+                        // Validar que el número de página esté dentro del rango válido
+                        if (paginaValue < 1) {
+                            Toast.makeText(getContext(), "La página debe ser mayor o igual a 1", Toast.LENGTH_SHORT).show();
+                            return;
+                        } else if (paginaValue > numPaginasTotal) {
+                            Toast.makeText(getContext(), "La página no puede ser mayor que " + numPaginasTotal, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        
+                        pagina = paginaValue;
                     } catch (NumberFormatException e) {
                         Toast.makeText(getContext(), "Introduce un número válido para la página", Toast.LENGTH_SHORT).show();
                         return;
