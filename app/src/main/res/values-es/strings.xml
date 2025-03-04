@@ -94,6 +94,12 @@
     <string name="reading_status">Estado de lectura</string>
     <string name="your_rating_review">Tu calificación y reseña</string>
 
+    <string name="remove_from_library">Eliminar de mi biblioteca</string>
+    <string name="confirm_remove_book">¿Estás seguro de que deseas eliminar este libro de tu biblioteca?</string>
+    <string name="remove">Eliminar</string>
+    <string name="book_removed">Libro eliminado de tu biblioteca</string>
+    <string name="error_removing_book">Error al eliminar el libro</string>
+
     <!-- Strings para el tema -->
     <string name="theme">Tema</string>
     <string name="change_theme">Cambiar tema</string>

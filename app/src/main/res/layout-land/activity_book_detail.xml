@@ -21,19 +21,34 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
+            <!-- Columna izquierda - Información del libro -->
             <FrameLayout
                 android:id="@+id/fragmentInfoContainer"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="6" />
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="6"
+                android:layout_marginEnd="8dp"
+                android:background="?attr/backgroundColor"
+                android:elevation="2dp" />
 
+            <!-- Divisor vertical -->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="?attr/colorPrimary"
+                android:alpha="0.5" />
+
+            <!-- Columna derecha - Acciones del libro -->
             <FrameLayout
                 android:id="@+id/fragmentActionsContainer"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="4" />
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:layout_marginStart="8dp"
+                android:background="?attr/backgroundColor"
+                android:elevation="2dp" />
 
         </LinearLayout>
     </LinearLayout>

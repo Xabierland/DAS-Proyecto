@@ -95,6 +95,12 @@
     <string name="reading_status">Reading Status</string>
     <string name="your_rating_review">Your Rating and Review</string>
 
+    <string name="remove_from_library">Remove from my library</string>
+    <string name="confirm_remove_book">Are you sure you want to remove this book from your library?</string>
+    <string name="remove">Remove</string>
+    <string name="book_removed">Book removed from your library</string>
+    <string name="error_removing_book">Error removing book</string>
+
     <!-- Strings for theme settings -->
     <string name="theme">Theme</string>
     <string name="change_theme">Change theme</string>

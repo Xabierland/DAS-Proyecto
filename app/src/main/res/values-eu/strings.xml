@@ -95,6 +95,12 @@
     <string name="reading_status">Irakurketa egoera</string>
     <string name="your_rating_review">Zure kalifikazioa eta iruzkina</string>
 
+    <string name="remove_from_library">Nire liburutegitik kendu</string>
+    <string name="confirm_remove_book">Ziur zaude liburu hau zure liburutegitik kendu nahi duzula?</string>
+    <string name="remove">Kendu</string>
+    <string name="book_removed">Liburua zure liburutegitik kendu da</string>
+    <string name="error_removing_book">Errorea liburua kentzean</string>
+
     <!-- Gaiaren ezarpenen stringak -->
     <string name="theme">Gaia</string>
     <string name="change_theme">Gaia aldatu</string>

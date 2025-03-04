@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="?attr/cardBackgroundColor"
+        android:layout_margin="8dp">
+
+        <!-- Sección superior con portada e información básica -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="24dp">
+
+            <!-- Portada del libro -->
+            <ImageView
+                android:id="@+id/imageViewPortada"
+                android:layout_width="120dp"
+                android:layout_height="180dp"
+                android:scaleType="centerCrop"
+                android:background="@color/purple_200"
+                android:contentDescription="@string/book_cover" />
+
+            <!-- Información básica del libro -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="16dp">
+
+                <!-- Título del libro -->
+                <TextView
+                    android:id="@+id/textViewTitulo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="?attr/textColor" />
+
+                <!-- Autor del libro -->
+                <TextView
+                    android:id="@+id/textViewAutor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="?attr/textColor"
+                    android:layout_marginTop="8dp" />
+
+                <!-- Género del libro -->
+                <TextView
+                    android:id="@+id/textViewGenero"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="?attr/colorPrimary"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/rounded_background"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp" />
+
+                <!-- Año de publicación -->
+                <TextView
+                    android:id="@+id/textViewAnio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="?attr/textColor"
+                    android:layout_marginTop="8dp" />
+
+                <!-- Editorial -->
+                <TextView
+                    android:id="@+id/textViewEditorial"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="?attr/textColor"
+                    android:layout_marginTop="4dp" />
+
+                <!-- ISBN -->
+                <TextView
+                    android:id="@+id/textViewIsbn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="?attr/textColor"
+                    android:layout_marginTop="4dp" />
+
+                <!-- Número de páginas -->
+                <TextView
+                    android:id="@+id/textViewPaginas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="?attr/textColor"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Sección de descripción -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/descripcion"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="?attr/textColor"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/textViewDescripcion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="?attr/textColor"
+            android:layout_marginBottom="24dp" />
+
+    </LinearLayout>
+</ScrollView>
