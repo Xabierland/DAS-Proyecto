@@ -129,6 +129,9 @@ public class LoginActivity extends BaseActivity {
         editor.putString("userEmail", email);
         editor.putBoolean("isLoggedIn", true);
         editor.apply();
+        
+        // Actualizar el menú de navegación para reflejar que el usuario ha iniciado sesión
+        updateNavigationMenu();
     }
     
     private void checkIfUserIsLoggedIn() {

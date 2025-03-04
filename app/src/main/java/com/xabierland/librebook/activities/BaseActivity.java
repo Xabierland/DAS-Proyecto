@@ -3,9 +3,12 @@ package com.xabierland.librebook.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -18,15 +21,29 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.xabierland.librebook.R;
+import com.xabierland.librebook.data.database.entities.Usuario;
+import com.xabierland.librebook.data.repositories.UsuarioRepository;
 
+import java.io.File;
 import java.util.Locale;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public abstract class BaseActivity extends AppCompatActivity {
     protected DrawerLayout drawerLayout;
     protected ActionBarDrawerToggle toggle;
     protected Toolbar toolbar;
     protected NavigationView navigationView;
-    protected SharedPreferences sharedPreferences; // Add this line to declare the SharedPreferences
+    protected SharedPreferences sharedPreferences;
+    
+    // Variables para las vistas del header del navigation drawer
+    protected View headerView;
+    protected CircleImageView imageViewNavHeaderProfile;
+    protected TextView textViewNavHeaderName;
+    protected TextView textViewNavHeaderEmail;
+    
+    // Repositorio para obtener datos del usuario
+    protected UsuarioRepository usuarioRepository;
 
     // Constantes para idiomas
     public static final int LANGUAGE_SYSTEM = 0;
@@ -47,7 +64,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         // Inicializar SharedPreferences
         sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE);
-        // Esto hace que todas las actividades de la app tengan el idioma seleccionado
+        // Inicializar el repositorio de usuarios
+        usuarioRepository = new UsuarioRepository(getApplication());
     }
 
     @Override
@@ -93,7 +111,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
 
-        if (drawerLayout != null && toolbar != null) {
+        if (drawerLayout != null && toolbar != null && navigationView != null) {
+            // Configurar el toggle para abrir/cerrar el drawer
             toggle = new ActionBarDrawerToggle(
                     this, drawerLayout, toolbar,
                     R.string.navigation_drawer_open,
@@ -101,17 +120,82 @@ public abstract class BaseActivity extends AppCompatActivity {
             );
             drawerLayout.addDrawerListener(toggle);
             toggle.syncState();
-
-            if (navigationView != null) {
-                // Verificar el estado de inicio de sesión para mostrar/ocultar ítems del menú
-                updateNavigationMenu();
-
-                navigationView.setNavigationItemSelectedListener(item -> {
-                    handleNavigationItemSelected(item.getItemId());
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                    return true;
-                });
+            
+            // Añadir el header al navigation view
+            if (navigationView.getHeaderCount() == 0) {
+                navigationView.inflateHeaderView(R.layout.nav_header_main);
             }
+            
+            // Obtener las referencias a las vistas del header
+            headerView = navigationView.getHeaderView(0);
+            imageViewNavHeaderProfile = headerView.findViewById(R.id.imageViewNavHeaderProfile);
+            textViewNavHeaderName = headerView.findViewById(R.id.textViewNavHeaderName);
+            textViewNavHeaderEmail = headerView.findViewById(R.id.textViewNavHeaderEmail);
+            
+            // Configurar clic en el header para ir al perfil
+            headerView.setOnClickListener(v -> {
+                if (sharedPreferences.getBoolean("isLoggedIn", false)) {
+                    handleNavigationItemSelected(R.id.nav_profile);
+                } else {
+                    handleNavigationItemSelected(R.id.nav_login);
+                }
+                drawerLayout.closeDrawer(GravityCompat.START);
+            });
+
+            // Verificar el estado de inicio de sesión para mostrar/ocultar ítems del menú
+            updateNavigationMenu();
+
+            navigationView.setNavigationItemSelectedListener(item -> {
+                handleNavigationItemSelected(item.getItemId());
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            });
+        }
+    }
+
+    // Método para actualizar el header del navigation view con los datos del usuario
+    protected void updateNavigationHeader() {
+        if (headerView == null || imageViewNavHeaderProfile == null || 
+            textViewNavHeaderName == null || textViewNavHeaderEmail == null) {
+            return;
+        }
+
+        // Verificar si el usuario ha iniciado sesión
+        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+        int userId = sharedPreferences.getInt("userId", -1);
+
+        if (isLoggedIn && userId != -1) {
+            // Cargar datos del usuario
+            usuarioRepository.obtenerUsuarioPorId(userId, usuario -> {
+                runOnUiThread(() -> {
+                    if (usuario != null) {
+                        // Mostrar nombre y email del usuario
+                        textViewNavHeaderName.setText(usuario.getNombre());
+                        textViewNavHeaderEmail.setText(usuario.getEmail());
+                        
+                        // Mostrar foto de perfil si existe
+                        if (usuario.getFotoPerfil() != null && !usuario.getFotoPerfil().isEmpty()) {
+                            File imgFile = new File(usuario.getFotoPerfil());
+                            if (imgFile.exists()) {
+                                imageViewNavHeaderProfile.setImageURI(Uri.fromFile(imgFile));
+                            }
+                        } else {
+                            // Usar imagen por defecto
+                            imageViewNavHeaderProfile.setImageResource(R.drawable.default_profile_image);
+                        }
+                    } else {
+                        // Si hay un error al obtener el usuario, mostrar valores por defecto
+                        textViewNavHeaderName.setText(R.string.app_name);
+                        textViewNavHeaderEmail.setText("Inicia sesión para acceder a tu biblioteca");
+                        imageViewNavHeaderProfile.setImageResource(R.drawable.default_profile_image);
+                    }
+                });
+            });
+        } else {
+            // Usuario no conectado, mostrar valores por defecto
+            textViewNavHeaderName.setText(R.string.app_name);
+            textViewNavHeaderEmail.setText("Inicia sesión para acceder a tu biblioteca");
+            imageViewNavHeaderProfile.setImageResource(R.drawable.default_profile_image);
         }
     }
 
@@ -178,6 +262,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             menu.findItem(R.id.nav_login).setVisible(!isLoggedIn);
             menu.findItem(R.id.nav_register).setVisible(!isLoggedIn);
             menu.findItem(R.id.nav_logout).setVisible(isLoggedIn);
+            
+            // Actualizar también el header del navigation view
+            updateNavigationHeader();
         }
     }
 
