@@ -79,25 +79,35 @@
   \listoftables
   \lstlistoflistings
   \chapter{Introducción}
+    \paragraph*{}{
+      LibreBook es una aplicación móvil para Android diseñada para los amantes de la lectura. Es una plataforma que permite a los usuarios crear una biblioteca personal digital donde pueden registrar, organizar y seguir su progreso en los libros que están leyendo o desean leer.
+    }
+    \paragraph*{}{
+      La aplicación está desarrollada completamente en Java utilizando Android Studio y sigue las mejores prácticas de desarrollo para Android, incluyendo el uso de Room para la persistencia de datos, arquitectura MVVM, y componentes de la biblioteca de Material Design para ofrecer una interfaz moderna y funcional.
+    }
   \chapter{Objetivos}
     \section{Elementos obligatorios}
-    \begin{longtable}{|c|p{7.5cm}|p{7.5cm}|}
+      \begin{longtable}{|c|p{0.4\textwidth}|p{0.4\textwidth}|}
+        \hline
+        \textbf{ID} & \textbf{Elementos obligatorios} & \textbf{Descripcion} \\ \hline
+        1 & Uso de ListView+CardView personalizado o de RecyclerView+CardView para mostrar listados de elementos con diferentes características. & Implementado a través de RecyclerView con adaptadores personalizados para mostrar listas de libros. Se utiliza en múltiples actividades como MainActivity, SearchActivity y ProfileActivity. Los libros se muestran en cards personalizadas definidas en layouts como \texttt{item\_libro.xml} y \texttt{item\_book\_card.xml}. \\ \hline
+        2 & Usar una base de datos local, para listar, añadir y modificar elementos y características de cada elemento. & Base de datos SQLite implementada mediante Room. Se han creado entidades como \texttt{Libro.java}, \texttt{Usuario.java} y \texttt{UsuarioLibro.java}, además de DAOs y repositorios correspondientes (\texttt{LibroRepository.java}, \texttt{UsuarioRepository.java}, \texttt{BibliotecaRepository.java}). \\ \hline
+        3 & Uso de diálogos. & Diálogos implementados en varias partes de la aplicación: confirmación de cierre de sesión, añadir libros a la biblioteca (\texttt{dialog\_add\_book.xml}), indicadores de carga (\texttt{dialog\_loading.xml}), selección de idioma y tema. \\ \hline
+        4 & Usar notificaciones locales. & Implementado notificaciones locales a través de \texttt{NotificationUtils.java} para notificar al usuario cuando se ha registrado correctamente. \\ \hline
+        5 & Control de la pila de actividades. & Implementado en \texttt{BaseActivity.java} mediante el uso de flags como \texttt{FLAG\_ACTIVITY\_CLEAR\_TOP} para asegurar una navegación coherente entre actividades. \\ \hline
+      \end{longtable}
+    \cpsection{Elementos opcionales}
+    \begin{longtable}{|c|p{0.4\textwidth}|p{0.4\textwidth}|}
       \hline
-      \textbf{ID} & \textbf{Descripción} & \textbf{Funcionalidad}\\
-      \hline
-      \endhead
-      1 & Uso de ListView+CardView personalizado o de RecyclerView+CardView para mostrar listados de elementos con diferentes características. & \\
-      \hline
-      2 & Usar una base de datos local, para listar, añadir y modificar elementos y características de cada elemento. & \\
-      \hline
-      3 & Uso de diálogos. & \\
-      \hline
-      4 & Usar notificaciones locales. & \\
-      \hline
-      5 & Control de la pila de actividades. & \\
-      \hline
+      \textbf{ID} & \textbf{Elementos obligatorios} & \textbf{Descripcion} \\ \hline
+      1 & Permitir que una misma funcionalidad se compote de manera distintia dependiendo de la orientación (o del tamaño) del dispositivo mediatne el uso de Fragments. & \\ \hline
+      2 & Hacer la aplicacion mutiidioma y añadir la opcion de cambiar de idioma en la propia aplicacion. & \\ \hline
+      3 & Uso de ficheros de texto. & \\ \hline
+      4 & Uso de Preferencias, para guardar las preferencias del usuario en cuanto a mostrar/esconder cierta información, elegir colores para la aplicación, o cualquier otra cosa relacionada con la visualización de la aplicación. & \\ \hline
+      5 & Crear estilos y temas propios, para personalizar fondos, botones, etc. & \\ \hline 
+      6 & Usar intents implícitos para abrir otras aplicaciones, contactos, etc. & \\ \hline
+      7 & Añadir una barra de herramientas (ToolBar) personalizada en la aplicación así como un panel de navegación (Navigation Drawer) & \\ \hline
     \end{longtable}
-    \section{Elementos opcionales}
   \chapter{Planificación}
   \chapter{Manual de usuario}
     \section{Registrarse}
