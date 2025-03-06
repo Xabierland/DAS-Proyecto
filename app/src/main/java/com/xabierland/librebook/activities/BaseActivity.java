@@ -11,12 +11,14 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.ViewCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
@@ -28,6 +30,8 @@ import java.io.File;
 import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import androidx.core.graphics.Insets;
+import androidx.core.view.WindowInsetsCompat;
 
 public abstract class BaseActivity extends AppCompatActivity {
     protected DrawerLayout drawerLayout;
@@ -62,6 +66,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         loadLocale();
         applyTheme();
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.menu.drawer_menu);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.drawer_layout), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
         // Inicializar SharedPreferences
         sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE);
         // Inicializar el repositorio de usuarios
