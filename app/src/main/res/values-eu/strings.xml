@@ -118,4 +118,11 @@
     <string name="system_default">Sistemaren lehenetsia</string>
     <string name="light_theme">Gai argia</string>
     <string name="dark_theme">Gai iluna</string>
+    
+    <!-- Baimen elkarrizketarako string-ak -->
+    <string name="permission_title">Baimena ukatua</string>
+    <string name="permission_gallery_message">Baimen hau gabe ezin izango duzu zure profileko argazkia aldatu. Aplikazioko ezarpenak ireki nahi dituzu baimena eskuz emateko?</string>
+    <string name="go_to_settings">Ezarpenetara joan</string>
+    <string name="cancel">Utzi</string>
+
 </resources>

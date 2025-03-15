@@ -406,6 +406,20 @@ public class ProfileActivity extends BaseActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 openGallery();
             } else {
+                // Mostrar un diálogo preguntando si quiere ir a los ajustes
+                new AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.permission_title))
+                    .setMessage(getString(R.string.permission_gallery_message))
+                    .setPositiveButton(getString(R.string.go_to_settings), (dialog, which) -> {
+                        // Intent implícito para abrir los ajustes de la aplicación
+                        Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", getPackageName(), null);
+                        intent.setData(uri);
+                        startActivity(intent);
+                    })
+                    .setNegativeButton(getString(R.string.cancel), null)
+                    .create()
+                    .show();
                 Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_SHORT).show();
             }
         }

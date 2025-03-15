@@ -117,4 +117,11 @@
     <string name="system_default">Predeterminado del sistema</string>
     <string name="light_theme">Tema claro</string>
     <string name="dark_theme">Tema oscuro</string>
+    
+    <!-- Strings para diálogo de permisos -->
+    <string name="permission_title">Permiso denegado</string>
+    <string name="permission_gallery_message">Sin este permiso no podrás cambiar tu foto de perfil. ¿Deseas abrir los ajustes de la aplicación para conceder el permiso manualmente?</string>
+    <string name="go_to_settings">Ir a Ajustes</string>
+    <string name="cancel">Cancelar</string>
+
 </resources>

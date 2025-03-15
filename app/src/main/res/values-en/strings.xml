@@ -118,4 +118,10 @@
     <string name="system_default">System default</string>
     <string name="light_theme">Light theme</string>
     <string name="dark_theme">Dark theme</string>
+    
+    <!-- Permission dialog strings -->
+    <string name="permission_title">Permission denied</string>
+    <string name="permission_gallery_message">Without this permission you won\'t be able to change your profile picture. Do you want to open app settings to grant permission manually?</string>
+    <string name="go_to_settings">Go to Settings</string>
+    <string name="cancel">Cancel</string>
 </resources>
