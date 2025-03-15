@@ -287,11 +287,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void showLogoutConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.logout);
-        builder.setMessage("¿Estás seguro de que deseas cerrar sesión?");
-        builder.setPositiveButton("Sí", (dialog, which) -> {
+        builder.setMessage(R.string.confirm_logout);
+        builder.setPositiveButton(R.string.yes, (dialog, which) -> {
             logoutUser();
         });
-        builder.setNegativeButton("No", null);
+        builder.setNegativeButton(R.string.no, null);
         AlertDialog dialog = builder.create();
         dialog.show();
     }
@@ -304,7 +304,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         editor.apply();
 
         // Mostrar mensaje
-        Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.session_closed, Toast.LENGTH_SHORT).show();
 
         // Actualizar el menú de navegación
         updateNavigationMenu();

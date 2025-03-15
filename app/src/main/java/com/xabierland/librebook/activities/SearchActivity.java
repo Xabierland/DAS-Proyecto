@@ -202,7 +202,7 @@ public class SearchActivity extends BaseActivity {
         
         // Actualizar mensaje de no resultados según el tipo de búsqueda
         if (isSearchingUsers) {
-            textViewNoResults.setText("No se encontraron usuarios que coincidan con tu búsqueda");
+            textViewNoResults.setText(getString(R.string.no_users_found));
         } else {
             textViewNoResults.setText(getString(R.string.no_results));
         }
