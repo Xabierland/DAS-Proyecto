@@ -1,0 +1,39 @@
+erDiagram
+    LIBRO {
+        int id PK
+        string titulo
+        string autor
+        string isbn UK
+        string descripcion
+        string portadaUrl
+        int anioPublicacion
+        string editorial
+        string genero
+        int numPaginas
+    }
+    
+    USUARIO {
+        int id PK
+        string nombre
+        string email UK
+        string password
+        string fotoPerfil
+        long fechaRegistro
+    }
+    
+    USUARIO_LIBRO {
+        int id PK
+        int usuarioId FK
+        int libroId FK
+        string estadoLectura
+        boolean esFavorito
+        float calificacion
+        long fechaAdicion
+        long fechaInicioLectura
+        long fechaFinLectura
+        int paginaActual
+        string notas
+    }
+    
+    USUARIO ||--o{ USUARIO_LIBRO : tiene
+    LIBRO ||--o{ USUARIO_LIBRO : pertenece
