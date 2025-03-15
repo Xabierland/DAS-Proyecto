@@ -229,6 +229,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             intent = new Intent(this, MainActivity.class);
             // Limpiar el stack de activities si vamos al home
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            recreate();
         }
         else if (itemId == R.id.nav_search) {
             intent = new Intent(this, SearchActivity.class);
@@ -472,5 +473,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onResume();
         // Actualizar menú en cada reanudación para asegurar que refleje el estado actual
         updateNavigationMenu();
+        updateNavigationHeader();
     }
 }

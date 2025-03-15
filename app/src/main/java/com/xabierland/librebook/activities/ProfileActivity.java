@@ -110,10 +110,20 @@ public class ProfileActivity extends BaseActivity {
         } else {
             // Configurar el launcher para seleccionar imágenes
             imagePickerLauncher = registerForActivityResult(
-                    new ActivityResultContracts.StartActivityForResult(),
-                    result -> {
-                        // Código existente para manejar selección de imagen
-                    });
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Uri selectedImageUri = result.getData().getData();
+                        try {
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
+                            saveProfileImage(bitmap);
+                            imageViewProfilePic.setImageBitmap(bitmap);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Toast.makeText(this, getString(R.string.error_loading_image), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
             // Verificar sesión del usuario actual
             checkUserSession();
@@ -377,6 +387,7 @@ public class ProfileActivity extends BaseActivity {
                 runOnUiThread(() -> {
                     if (result > 0) {
                         Toast.makeText(ProfileActivity.this, getString(R.string.profile_pic_updated), Toast.LENGTH_SHORT).show();
+                        recreate();
                     } else {
                         Toast.makeText(ProfileActivity.this, getString(R.string.error_updating_profile_pic), Toast.LENGTH_SHORT).show();
                     }
