@@ -95,6 +95,12 @@
     <string name="reading_status">Irakurketa egoera</string>
     <string name="your_rating_review">Zure kalifikazioa eta iruzkina</string>
 
+    <string name="search_users">Erabiltzaileak bilatu</string>
+    <string name="search_books">Liburuak bilatu</string>
+    <string name="search_users_hint">Bilatu izenez edo emailez</string>
+    <string name="member_since">Noiztik kide: %1$s</string>
+    <string name="search_type">Bilaketa mota</string>
+
     <!-- Jakinarazpenak -->
     <string name="notification_register_title">Ongi etorri LibreBook-era!</string>
     <string name="notification_register_text">Kaixo %1$s! Zure kontua arrakastaz sortu da</string>

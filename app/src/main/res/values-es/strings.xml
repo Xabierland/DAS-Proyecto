@@ -88,6 +88,12 @@
     <string name="error_loading_user_data">Error al cargar datos del usuario</string>
     <string name="error_saving_image">Error al guardar la imagen</string>
 
+    <string name="search_users">Buscar usuarios</string>
+    <string name="search_books">Buscar libros</string>
+    <string name="search_users_hint">Buscar por nombre o email</string>
+    <string name="member_since">Miembro desde: %1$s</string>
+    <string name="search_type">Tipo de búsqueda</string>
+
     <!-- Nuevas cadenas para la funcionalidad de calificación y reseñas -->
     <string name="rating">Calificación</string>
     <string name="review">Reseña</string>

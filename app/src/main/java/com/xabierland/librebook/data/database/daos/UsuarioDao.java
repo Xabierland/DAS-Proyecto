@@ -37,4 +37,7 @@ public interface UsuarioDao {
     
     @Query("SELECT id FROM usuarios WHERE email = :email AND password = :password")
     Integer autenticarUsuario(String email, String password);
+
+    @Query("SELECT * FROM usuarios WHERE nombre LIKE '%' || :busqueda || '%' OR email LIKE '%' || :busqueda || '%'")
+    List<Usuario> buscarUsuarios(String busqueda);
 }

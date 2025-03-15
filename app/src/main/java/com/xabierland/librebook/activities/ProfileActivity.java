@@ -43,6 +43,9 @@ public class ProfileActivity extends BaseActivity {
 
     private static final int REQUEST_PERMISSION_READ_EXTERNAL_STORAGE = 101;
 
+    public static final String EXTRA_USER_ID = "user_id";
+    public static final String EXTRA_VIEW_ONLY = "view_only";
+
     // Vistas
     private CircleImageView imageViewProfilePic;
     private FloatingActionButton fabChangeProfilePic;
@@ -89,25 +92,32 @@ public class ProfileActivity extends BaseActivity {
         // Inicializar vistas
         initViews();
 
-        // Configurar el launcher para seleccionar imágenes
-        imagePickerLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        Uri selectedImageUri = result.getData().getData();
-                        try {
-                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
-                            saveProfileImage(bitmap);
-                            imageViewProfilePic.setImageBitmap(bitmap);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            Toast.makeText(this, getString(R.string.error_loading_image), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+        // Verificar si estamos viendo el perfil de otro usuario
+        if (getIntent().getBooleanExtra(EXTRA_VIEW_ONLY, false)) {
+            // Modo visualización de otro usuario
+            int otherUserId = getIntent().getIntExtra(EXTRA_USER_ID, -1);
+            if (otherUserId != -1) {
+                // Ocultar botón de cambio de foto y otras opciones de edición
+                fabChangeProfilePic.setVisibility(View.GONE);
+                
+                // Cargar datos del usuario específico
+                loadOtherUserData(otherUserId);
+            } else {
+                // ID inválido, mostrar error y volver
+                Toast.makeText(this, "Error al cargar perfil de usuario", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        } else {
+            // Configurar el launcher para seleccionar imágenes
+            imagePickerLauncher = registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+                        // Código existente para manejar selección de imagen
+                    });
 
-        // Verificar sesión del usuario
-        checkUserSession();
+            // Verificar sesión del usuario actual
+            checkUserSession();
+        }
     }
 
     @Override
@@ -388,6 +398,29 @@ public class ProfileActivity extends BaseActivity {
                 Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void loadOtherUserData(int userId) {
+        usuarioRepository.obtenerUsuarioPorId(userId, usuario -> {
+            runOnUiThread(() -> {
+                if (usuario != null) {
+                    this.usuario = usuario;
+                    this.usuarioId = usuario.getId();
+                    
+                    // Actualizar título con el nombre del usuario
+                    getSupportActionBar().setTitle(usuario.getNombre());
+                    
+                    // Actualizar interfaz con datos del usuario
+                    updateUI();
+                    
+                    // Cargar libros del usuario
+                    loadBooks();
+                } else {
+                    Toast.makeText(ProfileActivity.this, "No se encontró el usuario", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            });
+        });
     }
 
     @Override

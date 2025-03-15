@@ -13,10 +13,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.xabierland.librebook.R;
 import com.xabierland.librebook.adapters.LibroAdapter;
+import com.xabierland.librebook.adapters.UsuarioAdapter;
 import com.xabierland.librebook.data.database.entities.Libro;
+import com.xabierland.librebook.data.database.entities.Usuario;
 import com.xabierland.librebook.data.repositories.LibroRepository;
+import com.xabierland.librebook.data.repositories.UsuarioRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,36 +31,79 @@ public class SearchActivity extends BaseActivity {
     private RecyclerView recyclerViewResults;
     private ProgressBar progressBarSearch;
     private TextView textViewNoResults;
+    private SwitchMaterial switchSearchType;
     
     private LibroRepository libroRepository;
+    private UsuarioRepository usuarioRepository;
+    
     private LibroAdapter libroAdapter;
+    private UsuarioAdapter usuarioAdapter;
+    
     private List<Libro> libros = new ArrayList<>();
+    private List<Usuario> usuarios = new ArrayList<>();
+    
+    private boolean isSearchingUsers = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         
-        // Inicializar el repositorio
+        // Inicializar repositorios
         libroRepository = new LibroRepository(getApplication());
+        usuarioRepository = new UsuarioRepository(getApplication());
         
         // Inicializar vistas
         editTextSearch = findViewById(R.id.editTextSearch);
         recyclerViewResults = findViewById(R.id.recyclerViewResults);
         progressBarSearch = findViewById(R.id.progressBarSearch);
         textViewNoResults = findViewById(R.id.textViewNoResults);
+        switchSearchType = findViewById(R.id.switchSearchType);
         
-        // Configurar RecyclerView
-        setupRecyclerView();
+        editTextSearch.requestFocus();
+
+        // Inicializar adaptadores
+        libroAdapter = new LibroAdapter(libros);
+        usuarioAdapter = new UsuarioAdapter(usuarios);
+        
+        // Configurar RecyclerView inicialmente para libros
+        recyclerViewResults.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewResults.setAdapter(libroAdapter);
+        
+        // Configurar switch de tipo de búsqueda
+        switchSearchType.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            // Limpiar resultados actuales
+            clearResults();
+            
+            isSearchingUsers = isChecked;
+            
+            // Cambiar el hint del campo de búsqueda según el tipo
+            if (isSearchingUsers) {
+                editTextSearch.setHint(getString(R.string.search_users_hint));
+                recyclerViewResults.setAdapter(usuarioAdapter);
+            } else {
+                editTextSearch.setHint(getString(R.string.search_hint));
+                recyclerViewResults.setAdapter(libroAdapter);
+            }
+            
+            // Si hay texto en el campo de búsqueda, realizar la búsqueda con el nuevo tipo
+            String searchText = editTextSearch.getText().toString().trim();
+            if (searchText.length() > 2) {
+                performSearch(searchText);
+            } else {
+                showEmptyResults();
+            }
+        });
         
         // Configurar listener para el campo de búsqueda
         setupSearchListener();
     }
     
-    private void setupRecyclerView() {
-        recyclerViewResults.setLayoutManager(new LinearLayoutManager(this));
-        libroAdapter = new LibroAdapter(libros);
-        recyclerViewResults.setAdapter(libroAdapter);
+    private void clearResults() {
+        libros.clear();
+        usuarios.clear();
+        libroAdapter.notifyDataSetChanged();
+        usuarioAdapter.notifyDataSetChanged();
     }
     
     private void setupSearchListener() {
@@ -73,21 +120,30 @@ public class SearchActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+                String searchText = s.toString().trim();
+                
                 // Realizar búsqueda después de un breve retraso para evitar búsquedas excesivas
-                if (s.length() > 2) {
+                if (searchText.length() > 2) {
                     // Mostrar el indicador de progreso
                     showLoading(true);
                     
-                    // Buscar libros
-                    searchBooks(s.toString());
-                } else if (s.length() == 0) {
+                    // Realizar la búsqueda
+                    performSearch(searchText);
+                } else if (searchText.isEmpty()) {
                     // Si el campo está vacío, limpiar resultados
-                    libros.clear();
-                    libroAdapter.notifyDataSetChanged();
+                    clearResults();
                     showEmptyResults();
                 }
             }
         });
+    }
+    
+    private void performSearch(String query) {
+        if (isSearchingUsers) {
+            searchUsers(query);
+        } else {
+            searchBooks(query);
+        }
     }
     
     private void searchBooks(String query) {
@@ -101,6 +157,25 @@ public class SearchActivity extends BaseActivity {
                 if (result != null && !result.isEmpty()) {
                     libros.addAll(result);
                     libroAdapter.notifyDataSetChanged();
+                    showResults();
+                } else {
+                    showEmptyResults();
+                }
+            });
+        });
+    }
+    
+    private void searchUsers(String query) {
+        usuarioRepository.buscarUsuarios(query, result -> {
+            runOnUiThread(() -> {
+                // Ocultar el indicador de progreso
+                showLoading(false);
+                
+                // Actualizar la lista de usuarios
+                usuarios.clear();
+                if (result != null && !result.isEmpty()) {
+                    usuarios.addAll(result);
+                    usuarioAdapter.notifyDataSetChanged();
                     showResults();
                 } else {
                     showEmptyResults();
@@ -124,6 +199,13 @@ public class SearchActivity extends BaseActivity {
     private void showEmptyResults() {
         recyclerViewResults.setVisibility(View.GONE);
         textViewNoResults.setVisibility(View.VISIBLE);
+        
+        // Actualizar mensaje de no resultados según el tipo de búsqueda
+        if (isSearchingUsers) {
+            textViewNoResults.setText("No se encontraron usuarios que coincidan con tu búsqueda");
+        } else {
+            textViewNoResults.setText(getString(R.string.no_results));
+        }
     }
 
     @Override

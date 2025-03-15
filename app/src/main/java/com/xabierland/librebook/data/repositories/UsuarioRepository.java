@@ -101,6 +101,15 @@ public class UsuarioRepository {
             }
         });
     }
+
+    public void buscarUsuarios(String busqueda, final DataCallback<List<Usuario>> callback) {
+        executorService.execute(() -> {
+            List<Usuario> usuarios = usuarioDao.buscarUsuarios(busqueda);
+            if (callback != null) {
+                callback.onComplete(usuarios);
+            }
+        });
+    }
     
     // Interfaz para callbacks
     public interface DataCallback<T> {
