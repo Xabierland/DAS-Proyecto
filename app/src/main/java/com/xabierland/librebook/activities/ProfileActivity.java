@@ -423,6 +423,11 @@ public class ProfileActivity extends BaseActivity {
         });
     }
 
+    public boolean isViewingOtherProfile() {
+        // Si estamos en modo visualización de otro usuario, retornar true
+        return getIntent().getBooleanExtra(EXTRA_VIEW_ONLY, false);
+    }
+
     @Override
     protected String getActivityTitle() {
         return getString(R.string.my_profile);

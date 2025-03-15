@@ -213,7 +213,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         // Si estamos ya en la actividad seleccionada, no hacemos nada
         if ((this instanceof MainActivity && itemId == R.id.nav_home) ||
                 (this instanceof SearchActivity && itemId == R.id.nav_search) ||
-                (this instanceof ProfileActivity && itemId == R.id.nav_profile) ||
+                (this instanceof ProfileActivity && itemId == R.id.nav_profile && !((ProfileActivity)this).isViewingOtherProfile()) ||
                 (this instanceof SearchActivity && itemId == R.id.action_search) ||
                 (this instanceof LoginActivity && itemId == R.id.nav_login) ||
                 (this instanceof RegisterActivity && itemId == R.id.nav_register) ||
@@ -251,10 +251,13 @@ public abstract class BaseActivity extends AppCompatActivity {
             return;
         }
         if (intent != null) {
-            startActivity(intent);
-            // Si es la home, cerrar la activity actual
-            if (itemId == R.id.nav_home) {
-                finish();
+            // Si la actividad actual NO es MainActivity, finalizarla al navegar
+            if (!(this instanceof MainActivity)) {
+                startActivity(intent);
+                finish(); // Cerrar la actividad actual (que no es MainActivity)
+            } else {
+                // Si estamos en MainActivity, no la cerramos
+                startActivity(intent);
             }
         }
     }
