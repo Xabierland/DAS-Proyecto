@@ -1,128 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- String orokorrak -->
+    <!-- General Strings -->
     <string name="app_name">LibreBook</string>
-    <string name="navigation_drawer_open">Ireki nabigazio menua</string>
-    <string name="navigation_drawer_close">Itxi nabigazio menua</string>
+    <string name="navigation_drawer_open">Nabigazio menua ireki</string>
+    <string name="navigation_drawer_close">Nabigazio menua itxi</string>
+    <string name="book_cover">Liburuaren azala</string>
+    <string name="cancel">Utzi</string>
 
-    <!-- Nabigazio menuaren string-ak -->
+    <!-- Navigation Menu Strings -->
     <string name="menu_home">Hasiera</string>
-    <string name="menu_settings">Ezarpenak</string>
-
-    <!-- Hizkuntza ezarpenen string-ak -->
-    <string name="select_language">Hizkuntza aukeratu</string>
+    <string name="profile">Profila</string>
+    <string name="search">Bilatu</string>
     <string name="settings">Ezarpenak</string>
-    <string name="language">Hizkuntza</string>
-    <string name="change_language">Hizkuntza aldatu</string>
-    <string name="language_description">Hautatu aplikazioaren hizkuntza</string>
-
-    <!-- Erregistratzeko string-ak -->
-    <string name="register">Erregistratu</string>
-
-    <!-- Saioa hasteko string-ak -->
     <string name="login">Saioa hasi</string>
-
-    <!-- Saioa itxi string-ak -->
+    <string name="register">Erregistratu</string>
     <string name="logout">Saioa itxi</string>
 
-    <string name="search">Bilatu</string>
-    <string name="search_hint">Bilatu izenburua edo egilearen arabera</string>
-    <string name="no_results">Ez dira aurkitu zure bilaketarekin bat datozen liburuak</string>
-    <string name="book_cover">Liburuaren azala</string>
-    <string name="welcome_guest">Ongi etorri LibreBook-era! Saioa hasi zure liburutegi pertsonalera sartzeko.</string>
-    <string name="welcome_user">Ongi etorri, %1$s! Zure liburutegi pertsonala prest dago.</string>
-    <string name="email">Helbide elektronikoa</string>
+    <!-- Main Activity -->
+    <string name="welcome_guest">Ongi etorri LibreBook-era! Saioa hasi zure liburutegia eskuratzeko.</string>
+    <string name="welcome_user">Ongi etorri, %1$s! Zure liburutegia prest dago.</string>
+    <string name="recommended_books">Gomendatutako liburuak</string>
+    <string name="no_recommended_books">Ez dago gomendatutako libururik</string>
+
+    <!-- Settings Activity -->
+    <string name="select_language">Hizkuntza aukeratu</string>
+    <string name="language">Hizkuntza</string>
+    <string name="change_language">Hizkuntza aldatu</string>
+    <string name="language_description">Aplikazioaren hizkuntza hautatu</string>
+    <string name="theme">Gaia</string>
+    <string name="change_theme">Gaia aldatu</string>
+    <string name="theme_description">Aplikazioaren gaia aukeratu</string>
+    <string name="system_default">Sistemaren lehenetsia</string>
+    <string name="light_theme">Argi gaia</string>
+    <string name="dark_theme">Ilun gaia</string>
+
+    <!-- Login Activity -->
+    <string name="email">Posta elektronikoa</string>
     <string name="password">Pasahitza</string>
+    <string name="login_success">Saioa ondo hasi da</string>
+    <string name="login_error">Posta elektronikoa edo pasahitza baliogabea</string>
+    <string name="no_account_register">Ez duzu konturik? Erregistratu</string>
+    <string name="empty_fields">Mesedez, bete eremu guztiak</string>
+    <string name="invalid_email">Posta elektroniko formatua baliogabea da</string>
+
+    <!-- Register Activity -->
     <string name="confirm_password">Pasahitza berretsi</string>
     <string name="name">Izena</string>
-    <string name="no_account_register">Konturik ez duzu? Erregistratu</string>
-    <string name="already_have_account">Dagoeneko kontua duzu? Hasi saioa</string>
-    <string name="login_success">Saio-hasiera arrakastatsua</string>
-    <string name="login_error">Posta elektroniko edo pasahitz okerra</string>
-    <string name="register_success">Erregistroa arrakastatsua</string>
+    <string name="already_have_account">Kontua baduzu? Saioa hasi</string>
+    <string name="register_success">Erregistroa ondo egin da</string>
     <string name="register_error">Errorea kontua sortzean</string>
-    <string name="email_exists">Posta elektronikoa dagoeneko erabilita dago</string>
+    <string name="email_exists">Posta elektronikoa jadanik existitzen da</string>
     <string name="passwords_not_match">Pasahitzak ez datoz bat</string>
-    <string name="empty_fields">Mesedez, bete eremu guztiak</string>
-    <string name="invalid_email">Posta elektroniko formatua baliogabea</string>
     <string name="password_too_short">Pasahitzak gutxienez 6 karaktere izan behar ditu</string>
+    
+    <!-- Notifications -->
+    <string name="notification_register_title">Ongi etorri LibreBook-era!</string>
+    <string name="notification_register_text">Kaixo %1$s! Zure kontua ondo sortu da</string>
 
-    <!-- Liburuaren xehetasun jarduerarako tringak -->
-    <string name="book_detail">Liburuaren xehetasunak</string>
-    <string name="descripcion">Deskribapena</string>
-    <string name="add_to_library">Nire liburutegira gehitu</string>
-    <string name="add_to_read">Gehitu \"Irakurtzeko\" bezala</string>
-    <string name="add_reading">Gehitu \"Irakurtzen\" bezala</string>
-    <string name="add_read">Gehitu \"Irakurrita\" bezala</string>
-    <string name="book_added">Liburua zure liburutegian gehitu da</string>
-    <string name="error_adding_book">Errorea liburua gehitzean</string>
-    <string name="login_required">Saioa hasi behar duzu liburuak zure liburutegian gehitzeko</string>
-    <string name="book_already_in_library">Liburu hau dagoeneko zure liburutegian dago</string>
-    <string name="book_status_updated">Irakurketa egoera eguneratuta</string>
+    <!-- Search Activity -->
+    <string name="search_hint">Bilatu izenburu edo egilearen arabera</string>
+    <string name="no_results">Ez da bat datorren libururik aurkitu</string>
+    <string name="search_users">Erabiltzaileak bilatu</string>
+    <string name="search_books">Liburuak bilatu</string>
+    <string name="search_users_hint">Bilatu izen edo posta elektronikoaren arabera</string>
+    <string name="search_type">Bilaketa mota</string>
+    <string name="no_users_found">Ez da erabiltzailea aurkitu</string>
 
-    <!-- Liburua gehitzeko elkarrizketarako string-ak -->
-    <string name="add">Gehitu</string>
-    <string name="status_to_read">Irakurtzeko</string>
-    <string name="status_reading">Irakurtzen</string>
-    <string name="status_read">Irakurrita</string>
-    <string name="confirm_add_book">Liburu hau zure liburutegian gehitu?</string>
-
-    <!-- Erabiltzaile profilaren string-ak -->
-    <string name="profile">Profila</string>
-    <string name="my_profile">Nire Profila</string>
+    <!-- User Profile Activity -->
+    <string name="my_profile">Nire profila</string>
     <string name="reading_now">Irakurtzen</string>
-    <string name="to_read">Irakurtzeko</string>
+    <string name="to_read">Irakurri behar</string>
     <string name="read">Irakurrita</string>
-    <string name="empty_reading">Ez zaude libururik irakurtzen une honetan</string>
-    <string name="empty_to_read">Ez duzu irakurtzeko libururik</string>
-    <string name="empty_read">Ez duzu oraindik libururik irakurri</string>
-    <string name="change_profile_pic">Aldatu profilaren argazkia</string>
-    <string name="profile_pic_updated">Profilaren argazkia eguneratuta</string>
-    <string name="error_updating_profile_pic">Errorea profilaren argazkia eguneratzean</string>
+    <string name="empty_reading">Ez duzu libururik irakurtzen</string>
+    <string name="empty_to_read">Ez duzu libururik irakurri behar</string>
+    <string name="empty_read">Oraindik ez duzu libururik irakurri</string>
+    <string name="change_profile_pic">Profil argazkia aldatu</string>
+    <string name="profile_pic_updated">Profil argazkia eguneratuta</string>
+    <string name="error_updating_profile_pic">Errorea profil argazkia eguneratzean</string>
     <string name="error_loading_image">Errorea irudia kargatzean</string>
-    <string name="permission_denied">Galeria atzitzeko baimena ukatua</string>
+    <string name="permission_denied">Baimena ukatua galeriara sartzeko</string>
     <string name="login_required_profile">Zure profila ikusteko saioa hasi behar duzu</string>
     <string name="error_loading_user_data">Errorea erabiltzailearen datuak kargatzean</string>
     <string name="error_saving_image">Errorea irudia gordetzean</string>
+    <string name="member_since">Kidea: %1$s</string>
 
-    <!-- Kalifikazio eta iruzkin funtzionalitaterako kate berriak -->
-    <string name="rating">Kalifikazioa</string>
-    <string name="review">Iruzkina</string>
-    <string name="review_hint">Idatzi zure iruzkina hemen...</string>
-    <string name="update">Eguneratu</string>
-    <string name="update_in_library">Liburutegian eguneratu</string>
-    <string name="library_management">Liburutegiaren kudeaketa</string>
-    <string name="reading_status">Irakurketa egoera</string>
-    <string name="your_rating_review">Zure kalifikazioa eta iruzkina</string>
+    <!-- Book Detail Activity -->
+    <string name="book_detail">Liburuaren xehetasunak</string>
+    <string name="descripcion">Deskribapena</string>
+    <string name="add_to_library">Nire liburutegira gehitu</string>
+    <string name="add_to_read">"Irakurri behar" bezala gehitu</string>
+    <string name="add_reading">"Orain irakurtzen" bezala gehitu</string>
+    <string name="add_read">"Irakurrita" bezala gehitu</string>
+    <string name="book_added">Liburua zure liburutegian gehituta</string>
+    <string name="error_adding_book">Errorea liburua gehitzean</string>
+    <string name="login_required">Saioa hasi behar duzu liburuak gehitzeko</string>
+    <string name="book_already_in_library">Liburu hau dagoeneko zure liburutegian dago</string>
+    <string name="book_status_updated">Irakurketa egoera eguneratuta</string>
 
-    <string name="search_users">Erabiltzaileak bilatu</string>
-    <string name="search_books">Liburuak bilatu</string>
-    <string name="search_users_hint">Bilatu izenez edo emailez</string>
-    <string name="member_since">Noiztik kide: %1$s</string>
-    <string name="search_type">Bilaketa mota</string>
-
-    <!-- Jakinarazpenak -->
-    <string name="notification_register_title">Ongi etorri LibreBook-era!</string>
-    <string name="notification_register_text">Kaixo %1$s! Zure kontua arrakastaz sortu da</string>
-
-    <string name="remove_from_library">Nire liburutegitik kendu</string>
-    <string name="confirm_remove_book">Ziur zaude liburu hau zure liburutegitik kendu nahi duzula?</string>
-    <string name="remove">Kendu</string>
-    <string name="book_removed">Liburua zure liburutegitik kendu da</string>
-    <string name="error_removing_book">Errorea liburua kentzean</string>
-
-    <!-- Gaiaren ezarpenen stringak -->
-    <string name="theme">Gaia</string>
-    <string name="change_theme">Gaia aldatu</string>
-    <string name="theme_description">Hautatu aplikazioaren gaia</string>
-    <string name="system_default">Sistemaren lehenetsia</string>
-    <string name="light_theme">Gai argia</string>
-    <string name="dark_theme">Gai iluna</string>
-    
-    <!-- Baimen elkarrizketarako string-ak -->
+    <!-- Permission Dialogs -->
     <string name="permission_title">Baimena ukatua</string>
-    <string name="permission_gallery_message">Baimen hau gabe ezin izango duzu zure profileko argazkia aldatu. Aplikazioko ezarpenak ireki nahi dituzu baimena eskuz emateko?</string>
+    <string name="permission_gallery_message">Baimen hau gabe ezin izango duzu profil argazkia aldatu. Aplikazioaren ezarpenetara joan nahi duzu baimena eskuz emateko?</string>
     <string name="go_to_settings">Ezarpenetara joan</string>
-    <string name="cancel">Utzi</string>
+    <string name="loading">Kargatzen...</string>
 
+    <!-- Dialog Messages -->
+    <string name="confirm_logout">Ziur zaude saioa itxi nahi duzula?</string>
+    <string name="yes">Bai</string>
+    <string name="no">Ez</string>
+    <string name="session_closed">Saioa itxita</string>
 </resources>
