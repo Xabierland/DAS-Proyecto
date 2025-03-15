@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- General Strings -->
+    <!-- Strings generales -->
     <string name="app_name">LibreBook</string>
-    <string name="navigation_drawer_open">Abrir el menú de navegación</string>
-    <string name="navigation_drawer_close">Cerrar el menú de navegación</string>
+    <string name="navigation_drawer_open">Abrir menú de navegación</string>
+    <string name="navigation_drawer_close">Cerrar menú de navegación</string>
     <string name="book_cover">Portada del libro</string>
     <string name="cancel">Cancelar</string>
 
-    <!-- Navigation Menu Strings -->
+    <!-- Strings para el menú de navegación -->
     <string name="menu_home">Inicio</string>
     <string name="profile">Perfil</string>
     <string name="search">Buscar</string>
-    <string name="settings">Configuración</string>
+    <string name="settings">Ajustes</string>
     <string name="login">Iniciar sesión</string>
     <string name="register">Registrarse</string>
     <string name="logout">Cerrar sesión</string>
 
-    <!-- Main Activity -->
+    <!-- Actividad principal -->
     <string name="welcome_guest">¡Bienvenido a LibreBook! Inicia sesión para acceder a tu biblioteca personal.</string>
     <string name="welcome_user">¡Bienvenido, %1$s! Tu biblioteca personal está lista.</string>
     <string name="recommended_books">Libros recomendados</string>
     <string name="no_recommended_books">No hay libros recomendados disponibles</string>
 
-    <!-- Settings Activity -->
+    <!-- Actividad de ajustes -->
     <string name="select_language">Seleccionar idioma</string>
     <string name="language">Idioma</string>
     <string name="change_language">Cambiar idioma</string>
@@ -34,63 +34,63 @@
     <string name="light_theme">Tema claro</string>
     <string name="dark_theme">Tema oscuro</string>
 
-    <!-- Login Activity -->
+    <!-- Actividad de inicio de sesión -->
     <string name="email">Correo electrónico</string>
     <string name="password">Contraseña</string>
     <string name="login_success">Inicio de sesión exitoso</string>
-    <string name="login_error">Correo electrónico o contraseña inválidos</string>
-    <string name="no_account_register">¿No tienes una cuenta? Regístrate</string>
+    <string name="login_error">Correo o contraseña incorrectos</string>
+    <string name="no_account_register">¿No tienes cuenta? Regístrate</string>
     <string name="empty_fields">Por favor, completa todos los campos</string>
-    <string name="invalid_email">Formato de correo electrónico inválido</string>
+    <string name="invalid_email">Formato de correo inválido</string>
 
-    <!-- Register Activity -->
+    <!-- Actividad de registro -->
     <string name="confirm_password">Confirmar contraseña</string>
     <string name="name">Nombre</string>
-    <string name="already_have_account">¿Ya tienes una cuenta? Inicia sesión</string>
+    <string name="already_have_account">¿Ya tienes cuenta? Inicia sesión</string>
     <string name="register_success">Registro exitoso</string>
     <string name="register_error">Error al crear la cuenta</string>
-    <string name="email_exists">El correo electrónico ya existe</string>
+    <string name="email_exists">El correo ya está en uso</string>
     <string name="passwords_not_match">Las contraseñas no coinciden</string>
     <string name="password_too_short">La contraseña debe tener al menos 6 caracteres</string>
     
-    <!-- Notifications -->
+    <!-- Notificaciones -->
     <string name="notification_register_title">¡Bienvenido a LibreBook!</string>
-    <string name="notification_register_text">Hola %1$s! Tu cuenta ha sido creada exitosamente</string>
+    <string name="notification_register_text">¡Hola %1$s! Tu cuenta ha sido creada con éxito</string>
 
-    <!-- Search Activity -->
+    <!-- Actividad de búsqueda -->
     <string name="search_hint">Buscar por título o autor</string>
     <string name="no_results">No se encontraron libros que coincidan con tu búsqueda</string>
     <string name="search_users">Buscar usuarios</string>
     <string name="search_books">Buscar libros</string>
-    <string name="search_users_hint">Buscar por nombre o correo electrónico</string>
+    <string name="search_users_hint">Buscar por nombre o email</string>
     <string name="search_type">Tipo de búsqueda</string>
     <string name="no_users_found">No se encontraron usuarios que coincidan con tu búsqueda</string>
 
-    <!-- User Profile Activity -->
-    <string name="my_profile">Mi perfil</string>
+    <!-- Actividad de perfil de usuario -->
+    <string name="my_profile">Mi Perfil</string>
     <string name="reading_now">Leyendo</string>
     <string name="to_read">Por leer</string>
-    <string name="read">Leído</string>
+    <string name="read">Leídos</string>
     <string name="empty_reading">No estás leyendo ningún libro actualmente</string>
-    <string name="empty_to_read">No tienes libros por leer</string>
-    <string name="empty_read">Aún no has leído ningún libro</string>
+    <string name="empty_to_read">No tienes libros pendientes por leer</string>
+    <string name="empty_read">No has leído ningún libro aún</string>
     <string name="change_profile_pic">Cambiar foto de perfil</string>
     <string name="profile_pic_updated">Foto de perfil actualizada</string>
-    <string name="error_updating_profile_pic">Error al actualizar la foto de perfil</string>
+    <string name="error_updating_profile_pic">Error al actualizar foto de perfil</string>
     <string name="error_loading_image">Error al cargar la imagen</string>
     <string name="permission_denied">Permiso denegado para acceder a la galería</string>
     <string name="login_required_profile">Debes iniciar sesión para ver tu perfil</string>
-    <string name="error_loading_user_data">Error al cargar los datos del usuario</string>
+    <string name="error_loading_user_data">Error al cargar datos del usuario</string>
     <string name="error_saving_image">Error al guardar la imagen</string>
     <string name="member_since">Miembro desde: %1$s</string>
 
-    <!-- Book Detail Activity -->
+    <!-- Actividad de detalle del libro -->
     <string name="book_detail">Detalle del libro</string>
     <string name="descripcion">Descripción</string>
     <string name="add_to_library">Añadir a mi biblioteca</string>
-    <string name="add_to_read">Añadir como "Por leer"</string>
-    <string name="add_reading">Añadir como "Leyendo actualmente"</string>
-    <string name="add_read">Añadir como "Leído"</string>
+    <string name="add_to_read">Añadir como \"Por leer\"</string>
+    <string name="add_reading">Añadir como \"Leyendo actualmente\"</string>
+    <string name="add_read">Añadir como \"Leído\"</string>
     <string name="book_added">Libro añadido a tu biblioteca</string>
     <string name="error_adding_book">Error al añadir el libro</string>
     <string name="login_required">Debes iniciar sesión para añadir libros a tu biblioteca</string>
@@ -100,14 +100,31 @@
     <string name="status_to_read">Por leer</string>
     <string name="status_reading">Leyendo actualmente</string>
     <string name="status_read">Leído</string>
+    <string name="confirm_add_book">¿Añadir este libro a tu biblioteca?</string>
+    <string name="rating">Calificación</string>
+    <string name="review">Reseña</string>
+    <string name="review_hint">Escribe tu reseña aquí...</string>
+    <string name="update">Actualizar</string>
+    <string name="update_in_library">Actualizar en biblioteca</string>
+    <string name="library_management">Gestión de biblioteca</string>
+    <string name="reading_status">Estado de lectura</string>
+    <string name="your_rating_review">Tu calificación y reseña</string>
+    <string name="remove_from_library">Eliminar de mi biblioteca</string>
+    <string name="confirm_remove_book">¿Estás seguro de que deseas eliminar este libro de tu biblioteca?</string>
+    <string name="remove">Eliminar</string>
+    <string name="book_removed">Libro eliminado de tu biblioteca</string>
+    <string name="error_removing_book">Error al eliminar el libro</string>
+    <string name="current_page">Página actual</string>
+    <string name="current_page_hint">Introduce la página actual</string>
+    <string name="total_pages">de %1$d páginas</string>
 
-    <!-- Permission Dialogs -->
+    <!-- Diálogos de permisos -->
     <string name="permission_title">Permiso denegado</string>
-    <string name="permission_gallery_message">Sin este permiso no podrás cambiar tu foto de perfil. ¿Quieres abrir la configuración de la app para otorgar el permiso manualmente?</string>
-    <string name="go_to_settings">Ir a configuración</string>
+    <string name="permission_gallery_message">Sin este permiso no podrás cambiar tu foto de perfil. ¿Deseas abrir los ajustes de la aplicación para conceder el permiso manualmente?</string>
+    <string name="go_to_settings">Ir a Ajustes</string>
     <string name="loading">Cargando...</string>
 
-    <!-- Dialog Messages -->
+    <!-- Mensajes de diálogos -->
     <string name="confirm_logout">¿Estás seguro de que deseas cerrar sesión?</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
