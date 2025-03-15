@@ -266,9 +266,6 @@ public class DatabaseInitializer {
             } catch (Exception e) {
                 Log.e(TAG, "Error al añadir libros a Xabier", e);
             }
-            
-            // Cerrar la base de datos
-            db.close();
         });
         executor.shutdown();
     }

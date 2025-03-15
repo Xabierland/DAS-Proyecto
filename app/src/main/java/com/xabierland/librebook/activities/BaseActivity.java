@@ -315,6 +315,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         } else {
             // Si estamos en otra actividad, volvemos a MainActivity
             Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
             finish();
         }
@@ -375,7 +376,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         // Recrear todas las actividades para aplicar el nuevo idioma
         Intent intent = new Intent(this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("LANGUAGE_CHANGED", true);
         startActivity(intent);
         finish();
@@ -435,7 +436,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         // Recrear todas las actividades para aplicar el nuevo tema
         Intent intent = new Intent(this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("THEME_CHANGED", true);
         startActivity(intent);
         finish();

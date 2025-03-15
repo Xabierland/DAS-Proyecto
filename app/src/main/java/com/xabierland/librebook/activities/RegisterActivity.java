@@ -192,6 +192,7 @@ public class RegisterActivity extends BaseActivity {
                     
                     // Ir a MainActivity
                     Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivity(intent);
 
                     // Volver a la actividad principal

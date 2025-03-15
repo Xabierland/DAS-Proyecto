@@ -110,6 +110,7 @@ public class LoginActivity extends BaseActivity {
                     
                     // Ir a MainActivity
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivity(intent);
 
                     // Volver a la actividad principal
