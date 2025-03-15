@@ -16,11 +16,9 @@ local.properties
 
 # Android Studio
 .idea/
-.ideaa/
 
 # Visual Studio Code
 .vscode/
-.vscodee/
 
 # LaTeX
 *.aux
