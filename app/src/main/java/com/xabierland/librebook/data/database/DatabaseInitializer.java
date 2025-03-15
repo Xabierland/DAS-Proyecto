@@ -1,15 +1,23 @@
 package com.xabierland.librebook.data.database;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.xabierland.librebook.R;
 import com.xabierland.librebook.data.database.entities.Libro;
+import com.xabierland.librebook.data.database.entities.Usuario;
+import com.xabierland.librebook.data.database.entities.UsuarioLibro;
 import com.xabierland.librebook.data.repositories.LibroRepository;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -27,9 +35,10 @@ public class DatabaseInitializer {
             AppDatabase db = AppDatabase.getInstance(context);
             
             // Verificar si la base de datos está vacía
-            int count = db.libroDao().obtenerTodosLosLibros().size();
+            int countLibros = db.libroDao().obtenerTodosLosLibros().size();
+            int countUsuarios = db.usuarioDao().obtenerTodosLosUsuarios().size();
             
-            if (count == 0) {
+            if (countLibros == 0) {
                 Log.d(TAG, "Base de datos vacía, precargando libros...");
                 
                 // Crear lista de libros
@@ -169,10 +178,99 @@ public class DatabaseInitializer {
                 db.libroDao().insertarLibros(libros);
                 
                 Log.d(TAG, "Base de datos precargada con " + libros.size() + " libros.");
-            } else {
+            } 
+            else {
                 Log.d(TAG, "La base de datos ya contiene datos, no es necesario precargar.");
             }
+
+            if (countUsuarios == 0) {
+                Log.d(TAG, "Base de datos vacía, creando usuarios...");
+                
+                // Crear carpeta para imágenes de perfil
+                File directory = new File(context.getFilesDir(), "profile_images");
+                if (!directory.exists()) {
+                    directory.mkdirs();
+                }
+                
+                try {
+                    // Crear usuario administrador
+                    Usuario admin = new Usuario("Administrador", "admin@xabierland.com", "admin");
+                    // Guardar imagen desde drawable
+                    Bitmap bitmapAdmin = BitmapFactory.decodeResource(context.getResources(), R.drawable.admin);
+                    File fileAdmin = new File(directory, "admin_profile.jpg");
+                    FileOutputStream fosAdmin = new FileOutputStream(fileAdmin);
+                    bitmapAdmin.compress(Bitmap.CompressFormat.JPEG, 90, fosAdmin);
+                    fosAdmin.close();
+                    admin.setFotoPerfil(fileAdmin.getAbsolutePath());
+                    
+                    // Crear usuario Xabier
+                    Usuario xabier = new Usuario("Xabier Gabiña", "xabierland@gmail.com", "123456");
+                    // Guardar imagen desde drawable
+                    Bitmap bitmapXabier = BitmapFactory.decodeResource(context.getResources(), R.drawable.xabier);
+                    File fileXabier = new File(directory, "xabier_profile.jpg");
+                    FileOutputStream fosXabier = new FileOutputStream(fileXabier);
+                    bitmapXabier.compress(Bitmap.CompressFormat.JPEG, 90, fosXabier);
+                    fosXabier.close();
+                    xabier.setFotoPerfil(fileXabier.getAbsolutePath());
+                    
+                    // Insertar usuarios en la base de datos
+                    db.usuarioDao().insertarUsuario(admin);
+                    db.usuarioDao().insertarUsuario(xabier);
+                    
+                    Log.d(TAG, "Usuarios administrador y Xabier creados con éxito");
+                } catch (IOException e) {
+                    Log.e(TAG, "Error al guardar imágenes de perfil", e);
+                }
+            }
+            else {
+                Log.d(TAG, "La base de datos ya contiene usuarios, no es necesario crear.");
+            }
+
+            // Añadir libros a la biblioteca de Xabier
+            try {
+                // Primero obtenemos el ID del usuario Xabier que acabamos de crear
+                int xabierId = (int) db.usuarioDao().obtenerUsuarioPorEmail("xabierland@gmail.com").getId();
+                
+                // Crear relaciones con algunos libros
+                List<UsuarioLibro> librosXabier = new ArrayList<>();
+                
+                // Añadir "Crimen y castigo" como leído
+                UsuarioLibro libro1 = new UsuarioLibro(xabierId, 1, UsuarioLibro.ESTADO_LEIDO);
+                libro1.setCalificacion(8.0f);  // Calificación de 4.5 sobre 5
+                libro1.setNotas("Una obra maestra de la literatura rusa que explora la culpa y la redención.");
+                librosXabier.add(libro1);
+                
+                // Añadir "El idiota" como leyendo actualmente
+                UsuarioLibro libro2 = new UsuarioLibro(xabierId, 3, UsuarioLibro.ESTADO_LEYENDO);
+                libro2.setPaginaActual(250);  // Supongamos que va por la página 250
+                librosXabier.add(libro2);
+                
+                // Añadir "Los demonios" como pendiente por leer
+                UsuarioLibro libro3 = new UsuarioLibro(xabierId, 6, UsuarioLibro.ESTADO_POR_LEER);
+                libro3.setEsFavorito(true);  // Marcado como favorito
+                librosXabier.add(libro3);
+                
+                // Añadir "Noches blancas" como leído
+                UsuarioLibro libro4 = new UsuarioLibro(xabierId, 9, UsuarioLibro.ESTADO_LEIDO);
+                libro4.setCalificacion(10.0f);  // Calificación perfecta
+                libro4.setEsFavorito(true);
+                libro4.setNotas("Mi obra favorita de Dostoievski. Una historia preciosa sobre el amor y la soledad.");
+                librosXabier.add(libro4);
+                
+                // Insertar todas las relaciones en la base de datos
+                for (UsuarioLibro usuarioLibro : librosXabier) {
+                    db.usuarioLibroDao().insertarUsuarioLibro(usuarioLibro);
+                }
+                
+                Log.d(TAG, "Añadidos " + librosXabier.size() + " libros a la biblioteca de Xabier");
+            } catch (Exception e) {
+                Log.e(TAG, "Error al añadir libros a Xabier", e);
+            }
+            
+            // Cerrar la base de datos
+            db.close();
         });
+        executor.shutdown();
     }
     
     /**
