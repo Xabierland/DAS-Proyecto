@@ -37,7 +37,7 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
     public UsuarioViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         View view = LayoutInflater.from(context)
-                .inflate(R.layout.item_usuario, parent, false);
+                .inflate(R.layout.item_user, parent, false);
         return new UsuarioViewHolder(view);
     }
     
