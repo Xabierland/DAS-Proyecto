@@ -1,7 +1,7 @@
 \documentclass[a4paper,12pt]{report}
 \usepackage[spanish]{babel}
 \usepackage[utf8]{inputenc}
-\usepackage{graphicx, csquotes, longtable, array, booktabs, xparse, float, titlesec, enumitem, dingbat, soul, multicol, listings, svg}
+\usepackage{graphicx, csquotes, longtable, array, booktabs, xparse, float, titlesec, enumitem, dingbat, soul, multicol, listings, wrapfig}
 \usepackage[dvipsnames]{xcolor}
 \usepackage[margin=2cm]{geometry}
 
@@ -76,8 +76,6 @@
   \end{titlepage}
   \tableofcontents
   \listoffigures
-  \listoftables
-  \lstlistoflistings
   \chapter{Introducción}
     \paragraph*{}{
       LibreBook es una aplicación móvil para Android diseñada para los amantes de la lectura. Es una plataforma que permite a los usuarios crear una biblioteca personal digital donde pueden registrar, organizar y seguir su progreso en los libros que están leyendo o desean leer.
@@ -97,6 +95,40 @@
       %Link al binario
         \color{blue}\href{}{Archivo APK de la aplicación}
     \end{center}
+    \paragraph*{}{
+      En la aplicación existen por defecto unicamente 10 libros.
+      \begin{multicols}{2}
+        \begin{enumerate}
+          \item Crimen y Castigo
+          \item Los Hermanos Karamazov
+          \item El Idiota
+          \item Memorias del Subsuelo
+          \item El Jugador
+          \item Los Demonios
+          \item Humillados y Ofendidos
+          \item El eterno marido
+          \item Noches Blancas
+          \item El doble
+        \end{enumerate}
+      \end{multicols}
+      Todos de Dostoievski. Tenlo en cuenta a la hora de buscar los libros ya que no se pueden añadir libros directamente desde la aplicación.
+    }
+    \paragraph*{}{
+      La aplicación cuenta con dos cuentas de usuario por defectos:
+      \begin{itemize}
+        \item \textbf{Administrador}
+          \begin{itemize}
+            \item Email: admin@xabierland.com
+            \item Contraseña: admin
+          \end{itemize}
+        \item \textbf{Xabier}
+          \begin{itemize}
+            \item Email: xabierland@gmail.com
+            \item Contraseña: 123456
+          \end{itemize}
+      \end{itemize}
+      No obstante, se pueden crear nuevas cuentas de usuario mediante el registro en la aplicación.
+    }
   \chapter{Objetivos}
     \section{Elementos obligatorios}
       \begin{itemize}
@@ -193,7 +225,9 @@
     \section{Clases}
       \begin{figure}[H]
         \centering
-        \includegraphics[width=0.9\textwidth]{.img/diagrama-clases.png}
+        \href{https://raw.githubusercontent.com/Xabierland/DAS-Proyecto/refs/heads/main/Documentation/.img/diagrama-clases.svg}{%}
+          \includegraphics[width=0.9\textwidth]{.img/diagrama-clases.png} 
+        }
         \caption{Diagrama de clases de la aplicación LibreBook}
         \label{fig:diagrama-clases}
       \end{figure}
@@ -249,7 +283,7 @@
     \cpsection{Base de datos}
       \begin{figure}[H]
         \centering
-        \href{}{%
+        \href{https://raw.githubusercontent.com/Xabierland/DAS-Proyecto/refs/heads/main/Documentation/.img/diagrama-bd.svg}{%
           \includegraphics[width=0.4\textwidth]{.img/diagrama-bd.png}
         }
         \caption{Diagrama de la base de datos de la aplicación LibreBook}
@@ -316,12 +350,108 @@
         \end{itemize}
   \chapter{Manual de usuario}
     \section{Inicio}
-    \section{Registrarse}
-    \section{Iniciar sesión}
-    \section{Ver tu biblioteca}
-    \section{Buscar libros o usuarios}
-    \section{Añadir libros a tu biblioteca}
-    \section{Ajustes}
+      \begin{minipage}{0.6\textwidth}
+        \paragraph*{}{
+          Al abrir la aplicación, se muestra la pantalla de inicio con una lista de libros recomendados y un mensaje de bienvenida personalizado. Desde aquí puedes navegar a otras secciones de la aplicación usando el menú lateral, desplegable desde el icono de hamburguesa en la esquina superior izquierda, o usando la barra de herramientas.
+        }      
+      \end{minipage}
+      \hfill
+      \begin{minipage}{0.27\textwidth}
+        \begin{figure}[H]
+          \centering
+          \includegraphics[width=0.9\textwidth]{.img/inicio.png}
+          \caption{Pantalla de inicio de la aplicación}
+          \label{fig:pantalla-inicio}
+        \end{figure}
+      \end{minipage}
+      \vspace{1cm}
+      \begin{minipage}{0.6\textwidth}
+        \paragraph*{}{
+          Si el usuario ha iniciado sesión veremos su nombre en el mensaje de bienvenida.
+        }
+      \end{minipage}
+      \hfill
+      \begin{minipage}{0.27\textwidth}
+        \begin{figure}[H]
+          \centering
+          \includegraphics[width=0.9\textwidth]{.img/inicio-auth.png}
+          \caption{Pantalla de inicio con usuario autenticado}
+          \label{fig:pantalla-inicio-usuario}
+        \end{figure}
+      \end{minipage}
+    \cpsection{Menu de navegación}
+      \begin{minipage}{0.6\textwidth}
+        \paragraph*{}{
+          El munú de navegación nos permite navegar entre las diferentes secciones de la aplicación. Las opciones que se muestran dependen del estado de autenticación del usuario. Si el usuario no tiene una sesion iniciada, se mostrarán las opciones de Inicio, Buscar, Registrarse, Iniciar sesión y Ajustes. Ademas, la cabecera del menú tambien servira para iniciar sesión.
+        }
+      \end{minipage}
+      \hfill
+      \begin{minipage}{0.27\textwidth}
+        \begin{figure}[H]
+          \centering
+          \includegraphics[width=0.9\textwidth]{.img/menu.png}
+          \caption{Menú de navegación de la aplicación}
+          \label{fig:menu-navegacion}
+        \end{figure}
+      \end{minipage}
+      \begin{minipage}{0.6\textwidth}
+        \paragraph*{}{
+          Si el usuario ha iniciado sesión, se mostrarán las opciones de Inicio, Buscar, Perfil, Ajustes y Cerrar sesión. En este caso, la cabecera del menú mostrará el nombre del usuario y su foto de perfil y nos permitirá acceder a su perfil.
+        }
+      \end{minipage}
+      \hfill
+      \begin{minipage}{0.27\textwidth}
+        \begin{figure}[H]
+          \centering
+          \includegraphics[width=0.9\textwidth]{.img/menu-auth.png}
+          \caption{Menú de navegación con usuario autenticado}
+          \label{fig:menu-navegacion-usuario}
+        \end{figure}
+      \end{minipage}
+    \cpsection{Registrarse}
+      \begin{minipage}{0.4\textwidth}
+        \paragraph*{}{
+          Para registrarse en la aplicación, selecciona la opción de Registrarse en el menú de navegación. Al hacerlo te pedira permisos para enviar notificaciones, aceptalos para poder recibir notificaciones de bienvenida. A continuación, introduce tu nombre, email y contraseña y pulsa el botón de Registrarse.
+        }
+      \end{minipage}
+      \hfill
+      \begin{minipage}{0.25\textwidth}
+        \begin{figure}[H]
+          \centering
+          \includegraphics[width=0.9\textwidth]{.img/registro.png}
+          \caption{Pantalla de registro de usuario}
+          \label{fig:pantalla-registro}
+        \end{figure}
+      \end{minipage}
+      \hfill
+      \begin{minipage}{0.25\textwidth}
+        \begin{figure}[H]
+          \centering
+          \includegraphics[width=0.9\textwidth]{.img/registro-perm.png}
+          \caption{Solicitud de permisos de notificación}
+          \label{fig:registro-perm}
+        \end{figure}
+      \end{minipage}
+      \vspace{1cm}
+      \begin{minipage}{0.6\textwidth}
+        \paragraph*{}{
+          Si el registro es exitoso, se mostrará una notificación de bienvenida y se iniciará sesión automáticamente.
+        }
+      \end{minipage}
+      \hfill
+      \begin{minipage}{0.4\textwidth}
+        \begin{figure}[H]
+          \centering
+          \includegraphics[width=0.6\textwidth]{.img/registro-noti.png}
+          \caption{Notificación de bienvenida}
+          \label{fig:notificacion-registro}
+        \end{figure}
+      \end{minipage}
+    \cpsection{Iniciar sesión}
+    \cpsection{Ver tu biblioteca}
+    \cpsection{Buscar libros o usuarios}
+    \cpsection{Añadir libros a tu biblioteca}
+    \cpsection{Ajustes}
   \chapter{Dificultades}
   \chapter{Conclusiones}
 \end{document}
