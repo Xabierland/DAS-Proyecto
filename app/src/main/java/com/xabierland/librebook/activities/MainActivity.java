@@ -48,7 +48,15 @@ public class MainActivity extends BaseActivity {
         
         // Comprobar si venimos de un cambio de tema
         if (getIntent().getBooleanExtra("THEME_CHANGED", false)) {
-            // No hacemos nada especial, el tema ya se ha aplicado en BaseActivity
+            // Recargar la actividad para aplicar el cambio de tema
+            recreate();
+        }
+        if else (getIntent().getBooleanExtra("LANGUAGE_CHANGED", false)) {
+            // Recargar la actividad para aplicar el cambio de idioma
+            recreate();
+        }
+        else{
+            // NADA
         }
         
         // Inicializar vistas
