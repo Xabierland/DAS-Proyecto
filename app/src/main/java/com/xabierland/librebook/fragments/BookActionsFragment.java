@@ -2,8 +2,6 @@ package com.xabierland.librebook.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.button.MaterialButton;
@@ -26,7 +24,7 @@ import com.xabierland.librebook.R;
 import com.xabierland.librebook.data.database.entities.UsuarioLibro;
 import com.xabierland.librebook.data.models.LibroConEstado;
 
-public class BookActionsFragment extends Fragment {
+public class BookActionsFragment extends Fragment implements AddBookDialogFragment.OnBookActionListener {
 
     // Interfaz para comunicación con la actividad
     public interface OnBookActionListener {
@@ -122,7 +120,7 @@ public class BookActionsFragment extends Fragment {
     }
     
     private void showRemoveFromLibraryDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(requireContext());
         builder.setTitle(R.string.remove_from_library)
                 .setMessage(R.string.confirm_remove_book)
                 .setPositiveButton(R.string.remove, (dialog, which) -> {
@@ -206,214 +204,15 @@ public class BookActionsFragment extends Fragment {
     }
 
     private void showAddToLibraryDialog() {
-        // Inflar el layout personalizado para el diálogo
-        View view = getLayoutInflater().inflate(R.layout.dialog_add_book, null);
-        
-        // Crear el diálogo con el layout personalizado
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setView(view);
-        builder.setCancelable(false); // Evitar que se cierre al tocar fuera
-        
-        AlertDialog dialog = builder.create();
-        
-        // Referencias a las vistas del diálogo
-        TextView textViewDialogTitle = view.findViewById(R.id.textViewDialogTitle);
-        RadioGroup radioGroupEstado = view.findViewById(R.id.radioGroupEstado);
-        RadioButton radioButtonPorLeer = view.findViewById(R.id.radioButtonPorLeer);
-        RadioButton radioButtonLeyendo = view.findViewById(R.id.radioButtonLeyendo);
-        RadioButton radioButtonLeido = view.findViewById(R.id.radioButtonLeido);
-        
-        // Para la funcionalidad de cambiar campos según estado de lectura
-        LinearLayout layoutPaginaActual = view.findViewById(R.id.layoutPaginaActual);
-        LinearLayout layoutCalificacion = view.findViewById(R.id.layoutCalificacion);
-        LinearLayout layoutReview = view.findViewById(R.id.layoutReview);
-        
-        TextView textViewTotalPaginas = view.findViewById(R.id.textViewTotalPaginas);
-        TextInputEditText editTextPaginaActual = view.findViewById(R.id.editTextPaginaActual);
-        RatingBar ratingBarStars = view.findViewById(R.id.ratingBarStars);
-        TextView textViewRatingValue = view.findViewById(R.id.textViewRatingValue);
-        TextInputEditText editTextReview = view.findViewById(R.id.editTextReview);
-        
-        Button buttonCancel = view.findViewById(R.id.buttonCancel);
-        Button buttonConfirm = view.findViewById(R.id.buttonConfirm);
-        
-        // Actualizar texto con el número total de páginas
-        textViewTotalPaginas.setText(String.format(getString(R.string.total_pages), numPaginasTotal));
-        
-        // Configurar el título según si el libro ya está en la biblioteca o no
-        if (libroYaEnBiblioteca) {
-            textViewDialogTitle.setText(R.string.update_in_library);
-            buttonConfirm.setText(R.string.update);
-            
-            // Preseleccionar el estado actual
-            if (estadoActual != null) {
-                switch (estadoActual) {
-                    case UsuarioLibro.ESTADO_POR_LEER:
-                        radioButtonPorLeer.setChecked(true);
-                        break;
-                    case UsuarioLibro.ESTADO_LEYENDO:
-                        radioButtonLeyendo.setChecked(true);
-                        // Mostrar campo de página actual
-                        layoutPaginaActual.setVisibility(View.VISIBLE);
-                        if (paginaActual != null) {
-                            editTextPaginaActual.setText(String.valueOf(paginaActual));
-                        }
-                        break;
-                    case UsuarioLibro.ESTADO_LEIDO:
-                        radioButtonLeido.setChecked(true);
-                        // Mostrar calificación y reseña
-                        layoutCalificacion.setVisibility(View.VISIBLE);
-                        layoutReview.setVisibility(View.VISIBLE);
-                        break;
-                }
-            }
-            
-            // Establecer la calificación actual si existe
-            if (calificacionActual != null && UsuarioLibro.ESTADO_LEIDO.equals(estadoActual)) {
-                // Convertir la calificación de 0-10 a 0-5 estrellas
-                float ratingStars = calificacionActual / 2;
-                ratingBarStars.setRating(ratingStars);
-                textViewRatingValue.setText(formatRating(calificacionActual));
-            }
-            
-            // Establecer la reseña actual si existe
-            if (notasActuales != null && UsuarioLibro.ESTADO_LEIDO.equals(estadoActual)) {
-                editTextReview.setText(notasActuales);
-            }
-        }
-        
-        // Configurar el listener para el RadioGroup
-        radioGroupEstado.setOnCheckedChangeListener((group, checkedId) -> {
-            // Ocultar todos los campos adicionales primero
-            layoutPaginaActual.setVisibility(View.GONE);
-            layoutCalificacion.setVisibility(View.GONE);
-            layoutReview.setVisibility(View.GONE);
-            
-            // Mostrar campos según el estado seleccionado
-            if (checkedId == R.id.radioButtonPorLeer) {
-                // No mostrar campos adicionales
-            } else if (checkedId == R.id.radioButtonLeyendo) {
-                // Mostrar solo el campo de página actual
-                layoutPaginaActual.setVisibility(View.VISIBLE);
-            } else if (checkedId == R.id.radioButtonLeido) {
-                // Mostrar calificación y reseña
-                layoutCalificacion.setVisibility(View.VISIBLE);
-                layoutReview.setVisibility(View.VISIBLE);
-            }
-        });
-        
-        // Validación de entrada para el campo de página actual
-        editTextPaginaActual.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // No necesario
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // No necesario
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.length() > 0) {
-                    try {
-                        int paginaValue = Integer.parseInt(s.toString());
-                        if (paginaValue > numPaginasTotal) {
-                            editTextPaginaActual.setError(String.format(getString(R.string.page_error_too_large), numPaginasTotal));
-                        } else if (paginaValue < 1) {
-                            editTextPaginaActual.setError(getString(R.string.page_error_min));
-                        } else {
-                            editTextPaginaActual.setError(null);
-                        }
-                    } catch (NumberFormatException e) {
-                        editTextPaginaActual.setError(getString(R.string.page_error_invalid));
-                    }
-                }
-            }
-        });
-        
-        // Configurar el listener para el ratingBar de estrellas
-        ratingBarStars.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
-            // Convertir la calificación de 0-5 estrellas a 0-10
-            float ratingValue = rating * 2;
-            textViewRatingValue.setText(formatRating(ratingValue));
-        });
-        
-        // Configurar listeners para los botones
-        buttonCancel.setOnClickListener(v -> dialog.dismiss());
-        
-        buttonConfirm.setOnClickListener(v -> {
-            // Determinar qué estado fue seleccionado
-            int selectedId = radioGroupEstado.getCheckedRadioButtonId();
-            String estadoLectura;
-            
-            if (selectedId == R.id.radioButtonLeyendo) {
-                estadoLectura = UsuarioLibro.ESTADO_LEYENDO;
-            } else if (selectedId == R.id.radioButtonLeido) {
-                estadoLectura = UsuarioLibro.ESTADO_LEIDO;
-            } else {
-                // Por defecto, Por leer
-                estadoLectura = UsuarioLibro.ESTADO_POR_LEER;
-            }
-            
-            // Valores por defecto
-            float calificacion = 0;
-            String review = "";
-            Integer pagina = null;
-            
-            // Obtener valores según el estado
-            if (estadoLectura.equals(UsuarioLibro.ESTADO_LEIDO)) {
-                // Obtener calificación (convertir de 0-5 estrellas a 0-10)
-                calificacion = ratingBarStars.getRating() * 2;
-                // Obtener reseña
-                review = editTextReview.getText().toString().trim();
-            } else if (estadoLectura.equals(UsuarioLibro.ESTADO_LEYENDO)) {
-                // Obtener página actual
-                String paginaStr = editTextPaginaActual.getText().toString().trim();
-                if (!paginaStr.isEmpty()) {
-                    try {
-                        int paginaValue = Integer.parseInt(paginaStr);
-                        
-                        // Validar que el número de página esté dentro del rango válido
-                        if (paginaValue < 1) {
-                            Toast.makeText(getContext(), getString(R.string.page_error_min), Toast.LENGTH_SHORT).show();
-                            return;
-                        } else if (paginaValue > numPaginasTotal) {
-                            Toast.makeText(getContext(), String.format(getString(R.string.page_error_too_large), numPaginasTotal), Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        
-                        pagina = paginaValue;
-                    } catch (NumberFormatException e) {
-                        Toast.makeText(getContext(), getString(R.string.page_error_invalid), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
-            }
-            
-            // Cerrar el diálogo
-            dialog.dismiss();
-            
-            // Añadir o actualizar el libro en la biblioteca
-            if (libroYaEnBiblioteca) {
-                listener.onUpdateInLibrary(estadoLectura, calificacion, review, pagina);
-            } else {
-                listener.onAddToLibrary(estadoLectura, calificacion, review, pagina);
-            }
-        });
-        
-        // Ejecutar el listener inicial para configurar la visibilidad según el estado actual
-        int selectedId = radioGroupEstado.getCheckedRadioButtonId();
-        radioGroupEstado.clearCheck(); // Limpiar para forzar el evento
-        if (selectedId != -1) {
-            ((RadioButton)view.findViewById(selectedId)).setChecked(true);
-        } else {
-            radioButtonPorLeer.setChecked(true);
-        }
-        
-        // Mostrar el diálogo
-        dialog.show();
+        AddBookDialogFragment dialogFragment = AddBookDialogFragment.newInstance(
+            numPaginasTotal,
+            libroYaEnBiblioteca,
+            estadoActual,
+            calificacionActual,
+            notasActuales,
+            paginaActual
+        );
+        dialogFragment.show(getChildFragmentManager(), "AddBookDialog");
     }
 
     private String formatRating(float rating) {
@@ -422,6 +221,23 @@ public class BookActionsFragment extends Fragment {
             return String.format("%.0f/10", rating);
         } else {
             return String.format("%.1f/10", rating);
+        }
+    }
+    
+    // Implementación de los métodos de la interfaz AddBookDialogFragment.OnBookActionListener
+    @Override
+    public void onAddToLibrary(String estadoLectura, float calificacion, String review, Integer paginaActual) {
+        // Redirigir al listener original
+        if (listener != null) {
+            listener.onAddToLibrary(estadoLectura, calificacion, review, paginaActual);
+        }
+    }
+    
+    @Override
+    public void onUpdateInLibrary(String estadoLectura, float calificacion, String review, Integer paginaActual) {
+        // Redirigir al listener original
+        if (listener != null) {
+            listener.onUpdateInLibrary(estadoLectura, calificacion, review, paginaActual);
         }
     }
 }
