@@ -141,7 +141,7 @@
         \end{itemize}
         \item \textbf{Usar una base de datos local, para listar, añadir y modificar elementos y características de cada elemento.}
         \begin{itemize}
-          \item Se implementa Room para gestionar la base de datos SQLite (AppDatabase.java)\cite{sqlite_android}.
+          \item Se implementa Room para gestionar la base de datos SQLite (AppDatabase.java).
           \item Se han creado entidades como Libro.java, Usuario.java y UsuarioLibro.java con sus respectivas relaciones.
           \item Los DAOs correspondientes (LibroDao.java, UsuarioDao.java, UsuarioLibroDao.java) contienen métodos para insertar, actualizar, eliminar y consultar datos.
           \item Los repositorios (LibroRepository.java, UsuarioRepository.java, BibliotecaRepository.java) proporcionan una capa adicional de abstracción para el acceso a datos.
@@ -289,7 +289,7 @@
         \caption{Diagrama de la base de datos de la aplicación LibreBook}
         \label{fig:diagrama-bd}
       \end{figure}
-      Como se ilustra en la Figura~\ref{fig:diagrama-bd}, la aplicación utiliza Room como una capa de abstracción sobre SQLite para proporcionar un acceso más sencillo y seguro a los datos\cite{sqlite_android}.
+      Como se ilustra en la Figura~\ref{fig:diagrama-bd}, la aplicación utiliza Room como una capa de abstracción sobre SQLite para proporcionar un acceso más sencillo y seguro a los datos.
       \subsection{Estructura de la base de datos}
         La base de datos está definida por la clase \textbf{AppDatabase}, que extiende de RoomDatabase\cite{room_documentation}, y contiene las siguientes entidades:
         \begin{itemize}
@@ -405,7 +405,7 @@
         \includegraphics[width=0.25\textwidth]{.img/registro.png}
         \hspace{2cm}
         \includegraphics[width=0.25\textwidth]{.img/registro-noti.png}
-        \caption{Pantalla de registro con formulario de datos}
+        \caption{Pantalla de registro con formulario de datos (izquierda) y notificación de bienvenida (derecha)}
         \label{fig:registro}
       \end{figure}
       
@@ -497,7 +497,7 @@
         \includegraphics[width=0.25\textwidth]{.img/libro.png}
         \hspace{1cm}
         \includegraphics[width=0.5\textwidth]{.img/libro-land.png}
-        \caption{Pantalla de detalle de libro con información completa}
+        \caption{Pantalla de detalle de libro con información completa (izquierda) y vista horizontal (derecha)}
         \label{fig:libro}
       \end{figure}
       
@@ -511,6 +511,7 @@
         \item Descripción completa
         \item Opciones para gestionar el libro en tu biblioteca
       \end{itemize}
+      Amba información se muestra en orientación vertical y horizontal, como se muestra en la Figura~\ref{fig:libro}.
     
     \cpsubsection{Añadir Libro a la Biblioteca}
     
@@ -625,9 +626,9 @@
 
       Este enfoque mejoró significativamente la experiencia del usuario, pero añadió complejidad al código con múltiples niveles de callbacks anidados.
   \chapter{Conclusiones}
-    \paragraph*{}{Hacer esta aplicación me ha servido para aprender mucho sobre programación en Android. He podido juntar varias cosas que había aprendido por separado y ver cómo funcionan todas juntas en un proyecto real\cite{android_programming}.}
-    \paragraph*{}{Ordenar bien el código desde el principio me ayudó bastante\cite{effective_java}. Cuando tenía que arreglar algo o añadir una función nueva, no tenía que tocar todo el proyecto. Si empezara de nuevo, cambiaría algunas cosas, pero en general estoy contento con cómo quedó organizado.}
-    \paragraph*{}{La parte más difícil fue la base de datos. No había trabajado con Room antes y me costó entender cómo funcionaba. Al final, creo que conseguí hacerlo bien y me siento más cómodo con el manejo de bases de datos en Android\cite{sqlite_android}.}
+    \paragraph*{}{Hacer esta aplicación me ha servido para aprender mucho sobre programación en Android. He podido juntar varias cosas que había aprendido por separado y ver cómo funcionan todas juntas en un proyecto real.}
+    \paragraph*{}{Ordenar bien el código desde el principio me ayudó bastante. Cuando tenía que arreglar algo o añadir una función nueva, no tenía que tocar todo el proyecto. Si empezara de nuevo, cambiaría algunas cosas, pero en general estoy contento con cómo quedó organizado.}
+    \paragraph*{}{La parte más difícil fue la base de datos. No había trabajado con Room antes y me costó entender cómo funcionaba. Al final, creo que conseguí hacerlo bien y me siento más cómodo con el manejo de bases de datos en Android.}
     \paragraph*{}{Me hubiera gustado poder añadir funcionalidades para que los usuarios pudieran seguirse entre ellos y compartir sus opiniones sobre los libros. No obstante no he tenido tiempo suficiente para implementarlas.}
     \paragraph*{}{En general, estoy satisfecho con el resultado y creo que he cumplido con los objetivos del proyecto. Espero que esta aplicación sea útil para los amantes de la lectura y que pueda seguir mejorándola en el futuro.}
   
