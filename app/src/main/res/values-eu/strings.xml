@@ -5,6 +5,7 @@
     <string name="navigation_drawer_open">Ireki nabigazio menua</string>
     <string name="navigation_drawer_close">Itxi nabigazio menua</string>
     <string name="book_cover">Liburuaren azala</string>
+    <string name="accept">Onartu</string>
     <string name="cancel">Utzi</string>
 
     <!-- Nabigazio menuaren string-ak -->

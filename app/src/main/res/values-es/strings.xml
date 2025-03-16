@@ -5,6 +5,7 @@
     <string name="navigation_drawer_open">Abrir menú de navegación</string>
     <string name="navigation_drawer_close">Cerrar menú de navegación</string>
     <string name="book_cover">Portada del libro</string>
+    <string name="accept">Aceptar</string>
     <string name="cancel">Cancelar</string>
 
     <!-- Strings para el menú de navegación -->
