@@ -84,6 +84,8 @@
     <string name="error_loading_user_data">Errorea erabiltzailearen datuak kargatzean</string>
     <string name="error_saving_image">Errorea irudia gordetzean</string>
     <string name="member_since">Noiztik kide: %1$s</string>
+    <string name="permission_needed">Beharrezko baimena</string>
+    <string name="permission_gallery_explanation">Zure profileko argazkia aldatzeko, zure irudietara sarbidea behar dugu.</string>
 
     <!-- Liburuaren xehetasun jarduera -->
     <string name="book_detail">Liburuaren xehetasunak</string>

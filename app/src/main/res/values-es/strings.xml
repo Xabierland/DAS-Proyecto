@@ -84,6 +84,8 @@
     <string name="error_loading_user_data">Error al cargar datos del usuario</string>
     <string name="error_saving_image">Error al guardar la imagen</string>
     <string name="member_since">Miembro desde: %1$s</string>
+    <string name="permission_needed">Permiso necesario</string>
+    <string name="permission_gallery_explanation">Para cambiar tu foto de perfil, necesitamos acceso a tus imágenes.</string>
 
     <!-- Actividad de detalle del libro -->
     <string name="book_detail">Detalle del libro</string>

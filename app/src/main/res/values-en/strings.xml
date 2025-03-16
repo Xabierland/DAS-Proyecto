@@ -84,6 +84,8 @@
     <string name="error_loading_user_data">Error loading user data</string>
     <string name="error_saving_image">Error saving image</string>
     <string name="member_since">Member since: %1$s</string>
+    <string name="permission_needed">Permission needed</string>
+    <string name="permission_gallery_explanation">To change your profile picture, we need access to your images.</string>
 
     <!-- Book Detail Activity -->
     <string name="book_detail">Book Detail</string>

@@ -300,15 +300,15 @@ public class ProfileActivity extends BaseActivity {
                         Manifest.permission.READ_MEDIA_IMAGES)) {
                     // Muestra una explicación al usuario
                     new AlertDialog.Builder(this)
-                        .setTitle("Permiso necesario")
-                        .setMessage("Para cambiar tu foto de perfil, necesitamos acceso a tus imágenes.")
-                        .setPositiveButton("Aceptar", (dialog, which) -> {
+                        .setTitle(getString(R.string.permission_needed))
+                        .setMessage(getString(R.string.permission_gallery_explanation))
+                        .setPositiveButton(getString(R.string.accept), (dialog, which) -> {
                             // Solicita el permiso después de que el usuario vea la explicación
                             ActivityCompat.requestPermissions(ProfileActivity.this,
                                     new String[]{Manifest.permission.READ_MEDIA_IMAGES},
                                     REQUEST_PERMISSION_READ_EXTERNAL_STORAGE);
                         })
-                        .setNegativeButton("Cancelar", null)
+                        .setNegativeButton(getString(R.string.cancel), null)
                         .create()
                         .show();
                 } else {
@@ -330,15 +330,15 @@ public class ProfileActivity extends BaseActivity {
                         Manifest.permission.READ_EXTERNAL_STORAGE)) {
                     // Muestra una explicación al usuario
                     new AlertDialog.Builder(this)
-                        .setTitle("Permiso necesario")
-                        .setMessage("Para cambiar tu foto de perfil, necesitamos acceso a tus imágenes.")
-                        .setPositiveButton("Aceptar", (dialog, which) -> {
+                        .setTitle(getString(R.string.permission_needed))
+                        .setMessage(getString(R.string.permission_gallery_explanation))
+                        .setPositiveButton(getString(R.string.accept), (dialog, which) -> {
                             // Solicita el permiso después de que el usuario vea la explicación
                             ActivityCompat.requestPermissions(ProfileActivity.this,
                                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                                     REQUEST_PERMISSION_READ_EXTERNAL_STORAGE);
                         })
-                        .setNegativeButton("Cancelar", null)
+                        .setNegativeButton(getString(R.string.cancel), null)
                         .create()
                         .show();
                 } else {
