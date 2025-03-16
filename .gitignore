@@ -32,3 +32,6 @@ local.properties
 *.run.xml
 *.synctex.gz
 *.toc
+*.bbl
+*.bcf
+*.blg
