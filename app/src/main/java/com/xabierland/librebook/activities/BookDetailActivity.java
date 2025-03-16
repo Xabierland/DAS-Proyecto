@@ -272,12 +272,12 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
     public void showLoginRequiredDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.login_required)
-                .setMessage("Para añadir libros a tu biblioteca, necesitas iniciar sesión.")
-                .setPositiveButton("Iniciar sesión", (dialog, which) -> {
+                .setMessage(R.string.login_required)
+                .setPositiveButton(R.string.login, (dialog, which) -> {
                     // Navegar a la pantalla de login
                     handleNavigationItemSelected(R.id.nav_login);
                 })
-                .setNegativeButton("Cancelar", null)
+                .setNegativeButton(R.string.cancel, null)
                 .show();
     }
 }
