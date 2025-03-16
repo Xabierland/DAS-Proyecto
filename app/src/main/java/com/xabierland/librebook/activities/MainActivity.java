@@ -58,27 +58,6 @@ public class MainActivity extends BaseActivity {
         // Cargar libros recomendados
         loadRecommendedBooks();
     }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        
-        // Importante: actualiza el intent actual de la actividad
-        setIntent(intent);
-        
-        // Comprueba si venimos de un cambio de tema o idioma
-        boolean themeChanged = intent.getBooleanExtra("THEME_CHANGED", false);
-        boolean languageChanged = intent.getBooleanExtra("LANGUAGE_CHANGED", false);
-        
-        if (themeChanged || languageChanged) {
-            // Limpiar los flags para evitar ciclos
-            intent.removeExtra("THEME_CHANGED");
-            intent.removeExtra("LANGUAGE_CHANGED");
-            
-            // Recrear la actividad para aplicar los cambios
-            recreate();
-        }
-    }
     
     private void initViews() {
         textViewWelcome = findViewById(R.id.textViewWelcome);

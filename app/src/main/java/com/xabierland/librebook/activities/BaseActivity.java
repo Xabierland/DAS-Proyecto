@@ -79,6 +79,35 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        
+        // Importante: actualiza el intent actual de la actividad
+        setIntent(intent);
+        
+        // Comprueba si venimos de un cambio de tema o idioma
+        boolean themeChanged = intent.getBooleanExtra("THEME_CHANGED", false);
+        boolean languageChanged = intent.getBooleanExtra("LANGUAGE_CHANGED", false);
+        
+        if (themeChanged || languageChanged) {
+            // Limpiar los flags para evitar ciclos
+            intent.removeExtra("THEME_CHANGED");
+            intent.removeExtra("LANGUAGE_CHANGED");
+            
+            // Recrear la actividad para aplicar los cambios
+            recreate();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Actualizar menú en cada reanudación para asegurar que refleje el estado actual
+        updateNavigationMenu();
+        updateNavigationHeader();
+    }
+
+    @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
         // Esto hace que el toolbar y el menu lateral se añadan a todas las actividades de la app
@@ -468,12 +497,4 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     //! ================= Lógica de las actividades =================
     protected abstract String getActivityTitle();
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Actualizar menú en cada reanudación para asegurar que refleje el estado actual
-        updateNavigationMenu();
-        updateNavigationHeader();
-    }
 }
