@@ -348,13 +348,13 @@
           \item Los callbacks permiten notificar a la UI cuando las operaciones se completan.
           \item Room maneja automáticamente las transacciones para asegurar la integridad de los datos.
         \end{itemize}
-        \chapter{Manual de usuario}
-        \setlength{\intextsep}{2pt}        % Espacio entre texto y figuras
-        \setlength{\abovecaptionskip}{1pt}  % Espacio sobre las leyendas
-        \setlength{\belowcaptionskip}{1pt}  % Espacio bajo las leyendas
-        \setlength{\parskip}{2pt}          % Espacio entre párrafos
-        \setlength{\topsep}{1pt}           % Espacio en listas y entornos
-        \begin{multicols}{2}
+  \chapter{Manual de usuario}
+    \setlength{\intextsep}{2pt}        % Espacio entre texto y figuras
+    \setlength{\abovecaptionskip}{1pt}  % Espacio sobre las leyendas
+    \setlength{\belowcaptionskip}{1pt}  % Espacio bajo las leyendas
+    \setlength{\parskip}{2pt}          % Espacio entre párrafos
+    \setlength{\topsep}{1pt}           % Espacio en listas y entornos
+    \begin{multicols}{2}
         % Ajustes de espaciado global para esta sección
         \vspace{-1.5em}  % Reduce espacio después del título del capítulo
         \section{Inicio}
@@ -472,7 +472,51 @@
           \includegraphics[width=0.47\linewidth]{.img/logout.png}
           \caption{Ajustes (izq.) y diálogo de cierre de sesión (der.)}
         \end{figure}
-        \end{multicols}   
+    \end{multicols}   
   \chapter{Dificultades}
+    Durante el desarrollo de LibreBook, me enfrenté a varios desafíos técnicos que requirieron soluciones específicas:
+    
+    \section{Implementación de Room y arquitectura de datos}
+      Una de las primeras dificultades fue diseñar correctamente la estructura de la base de datos Room. La relación entre usuarios y libros requería un esquema que permitiera:
+      \begin{itemize}
+          \item Mantener la integridad referencial entre tablas
+          \item Almacenar metadatos específicos de la relación (estado de lectura, calificaciones, notas)
+          \item Realizar consultas eficientes para obtener libros por estado o características
+      \end{itemize}
+
+      La solución implicó crear la entidad intermedia \texttt{UsuarioLibro} con claves foráneas y definir consultas SQL complejas, especialmente para la obtención de datos combinados (como en \texttt{LibroConEstado}). La anotación \texttt{@RewriteQueriesToDropUnusedColumns} fue crucial para manejar correctamente las proyecciones en las consultas JOIN.
+
+    \section{Manejo de multi-idioma y temas}
+      Implementar soporte para múltiples idiomas (inglés, español y euskera) presentó desafíos como:
+      \begin{itemize}
+          \item Traducir correctamente todas las cadenas de texto manteniendo la coherencia
+          \item Gestionar el cambio dinámico de idioma sin reiniciar la aplicación completa
+          \item Manejar configuraciones regionales específicas y valores por defecto
+      \end{itemize}
+      
+      De manera similar, la implementación de temas personalizados (claro, oscuro y modo sistema) requirió:
+      \begin{itemize}
+          \item Definir atributos personalizados en \texttt{attrs.xml}
+          \item Crear variantes de temas en \texttt{themes.xml} y \texttt{themes-night.xml}
+          \item Implementar un mecanismo para aplicar los cambios de tema inmediatamente
+      \end{itemize}
+      
+      La solución implicó utilizar \texttt{recreate()} para reiniciar las actividades, pero manteniendo el estado mediante \texttt{Intent extras}.
+      
+    \section{Concurrencia y operaciones asíncronas}
+      Un desafío constante fue evitar bloquear la interfaz de usuario durante operaciones de base de datos. La solución adoptada fue:
+      \begin{itemize}
+          \item Implementar un patrón de repositorio con ExecutorService para todas las operaciones de I/O
+          \item Utilizar callbacks para notificar a la UI cuando las operaciones se completaban
+          \item Actualizar la interfaz de usuario en el hilo principal mediante \texttt{runOnUiThread()}
+      \end{itemize}
+
+      Este enfoque mejoró significativamente la experiencia del usuario, pero añadió complejidad al código con múltiples niveles de callbacks anidados.
+
   \chapter{Conclusiones}
+    \paragraph*{}{Hacer esta aplicación me ha servido para aprender mucho sobre programación en Android. He podido juntar varias cosas que había aprendido por separado y ver cómo funcionan todas juntas en un proyecto real.}
+    \paragraph*{}{Ordenar bien el código desde el principio me ayudó bastante. Cuando tenía que arreglar algo o añadir una función nueva, no tenía que tocar todo el proyecto. Si empezara de nuevo, cambiaría algunas cosas, pero en general estoy contento con cómo quedó organizado.}
+    \paragraph*{}{La parte más difícil fue la base de datos. No había trabajado con Room antes y me costó entender cómo funcionaba. Al final, creo que conseguí hacerlo bien y me siento más cómodo con el manejo de bases de datos en Android.}
+    \paragraph*{}{Me hubiera gustado poder añadir funcionalidades para que los usuarios pudieran seguirse entre ellos y compartir sus opiniones sobre los libros. No obstante no he tenido tiempo suficiente para implementarlas.}
+    \paragraph*{}{En general, estoy satisfecho con el resultado y creo que he cumplido con los objetivos del proyecto. Espero que esta aplicación sea útil para los amantes de la lectura y que pueda seguir mejorándola en el futuro.}
 \end{document}
