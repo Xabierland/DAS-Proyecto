@@ -1,4 +1,4 @@
-\documentclass[a4paper,12pt]{report}
+\documentclass[a4paper,10pt]{report}
 \usepackage[spanish]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx, csquotes, longtable, array, booktabs, xparse, float, titlesec, enumitem, dingbat, soul, multicol, listings, wrapfig}
@@ -349,39 +349,37 @@
           \item Room maneja automáticamente las transacciones para asegurar la integridad de los datos.
         \end{itemize}
   \chapter{Manual de usuario}
-  \setlength{\intextsep}{10pt}        % Espacio entre texto y figuras
-  \setlength{\abovecaptionskip}{5pt}  % Espacio sobre las leyendas
-  \setlength{\belowcaptionskip}{10pt}  % Espacio bajo las leyendas
-  \setlength{\parskip}{8pt}           % Espacio entre párrafos
+    \setlength{\intextsep}{10pt}        % Espacio entre texto y figuras
+    \setlength{\abovecaptionskip}{5pt}  % Espacio sobre las leyendas
+    \setlength{\belowcaptionskip}{10pt}  % Espacio bajo las leyendas
+    \setlength{\parskip}{8pt}           % Espacio entre párrafos
   
-  \section{Pantalla de Inicio}
-  
-    Al abrir la aplicación, se muestra la pantalla de inicio con libros recomendados y un mensaje de bienvenida. Desde aquí, puedes acceder a todas las funcionalidades principales de la aplicación.
-    
-    \begin{figure}[H]
-      \centering
-      \includegraphics[width=0.4\textwidth]{.img/inicio.png}
-      \caption{Pantalla de inicio con recomendaciones de libros}
-      \label{fig:inicio}
-    \end{figure}
-    
-    Como se observa en la Figura~\ref{fig:inicio}, la pantalla principal muestra:
-    \begin{itemize}
-      \item Un mensaje personalizado de bienvenida
-      \item Una selección de libros recomendados
-      \item Acceso al menú lateral mediante el icono superior izquierdo
-      \item Acceso a la función de búsqueda mediante el icono de lupa
-    \end{itemize}
-  
+    \section{Pantalla de Inicio}
+      Al abrir la aplicación, se muestra la pantalla de inicio con libros recomendados y un mensaje de bienvenida. Desde aquí, puedes acceder a todas las funcionalidades principales de la aplicación.
+      
+      \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.25\textwidth]{.img/inicio.png}
+        \caption{Pantalla de inicio con recomendaciones de libros}
+        \label{fig:inicio}
+      \end{figure}
+      
+      Como se observa en la Figura~\ref{fig:inicio}, la pantalla principal muestra:
+      \begin{itemize}
+        \item Un mensaje personalizado de bienvenida
+        \item Una selección de libros recomendados
+        \item Acceso al menú lateral mediante el icono superior izquierdo
+        \item Acceso a la función de búsqueda mediante el icono de lupa
+      \end{itemize} 
     \cpsection{Menú de Navegación Lateral}
     
       El menú lateral permite acceder a todas las funciones de la aplicación. Las opciones disponibles varían según si has iniciado sesión o no.
       
       \begin{figure}[H]
         \centering
-        \includegraphics[width=0.35\textwidth]{.img/menu.png}
+        \includegraphics[width=0.25\textwidth]{.img/menu.png}
         \hspace{2cm}
-        \includegraphics[width=0.35\textwidth]{.img/menu-auth.png}
+        \includegraphics[width=0.25\textwidth]{.img/menu-auth.png}
         \caption{Menú para usuario anónimo (izquierda) y usuario autenticado (derecha)}
         \label{fig:menu}
       \end{figure}
@@ -395,8 +393,7 @@
         \item \textbf{Iniciar sesión}: Para acceder con cuenta existente (solo visitantes)
         \item \textbf{Ajustes}: Configuración de idioma y tema
         \item \textbf{Cerrar sesión}: Disponible solo para usuarios autenticados
-      \end{itemize}
-    
+      \end{itemize}   
     \cpsection{Creación de Cuenta e Inicio de Sesión}
     
     Para acceder a todas las funcionalidades de la aplicación, debes crear una cuenta o iniciar sesión con credenciales existentes.
@@ -405,7 +402,9 @@
     
       \begin{figure}[H]
         \centering
-        \includegraphics[width=0.4\textwidth]{.img/registro.png}
+        \includegraphics[width=0.25\textwidth]{.img/registro.png}
+        \hspace{2cm}
+        \includegraphics[width=0.25\textwidth]{.img/registro-noti.png}
         \caption{Pantalla de registro con formulario de datos}
         \label{fig:registro}
       \end{figure}
@@ -424,19 +423,12 @@
       \end{enumerate}
       
       Después de completar el registro exitosamente, recibirás una notificación de bienvenida:
-      
-      \begin{figure}[H]
-        \centering
-        \includegraphics[width=0.4\textwidth]{.img/registro-noti.png}
-        \caption{Notificación de bienvenida tras registro exitoso}
-        \label{fig:notificacion}
-      \end{figure}
     
     \subsection{Inicio de Sesión}
     
     \begin{figure}[H]
       \centering
-      \includegraphics[width=0.4\textwidth]{.img/login.png}
+      \includegraphics[width=0.25\textwidth]{.img/login.png}
       \caption{Pantalla de inicio de sesión}
       \label{fig:login}
     \end{figure}
@@ -447,15 +439,14 @@
       \item Introduce tu correo electrónico registrado
       \item Introduce tu contraseña
       \item Presiona el botón ``Iniciar sesión''
-    \end{enumerate}
-    
+    \end{enumerate}    
     \cpsection{Perfil de Usuario y Biblioteca Personal}
     
     Una vez que has iniciado sesión, puedes acceder a tu perfil donde se muestran tus estadísticas de lectura y tus libros organizados en tres categorías.
     
     \begin{figure}[H]
       \centering
-      \includegraphics[width=0.5\textwidth]{.img/profile.png}
+      \includegraphics[width=0.25\textwidth]{.img/profile.png}
       \caption{Pantalla de perfil de usuario con biblioteca organizada}
       \label{fig:perfil}
     \end{figure}
@@ -476,17 +467,16 @@
       \item Pulsa el botón de cámara junto a tu foto actual
       \item Otorga permisos de acceso a la galería cuando se soliciten
       \item Selecciona una imagen de tu dispositivo
-    \end{enumerate}
-    
+    \end{enumerate}    
     \cpsection{Búsqueda de Libros y Usuarios}
     
     La función de búsqueda te permite encontrar libros por título o autor, así como buscar otros usuarios de la aplicación.
     
     \begin{figure}[H]
       \centering
-      \includegraphics[width=0.4\textwidth]{.img/buscador-libros.png}
+      \includegraphics[width=0.25\textwidth]{.img/buscador-libros.png}
       \hspace{1cm}
-      \includegraphics[width=0.4\textwidth]{.img/buscador-usuarios.png}
+      \includegraphics[width=0.25\textwidth]{.img/buscador-usuarios.png}
       \caption{Búsqueda de libros (izquierda) y usuarios (derecha)}
       \label{fig:busqueda}
     \end{figure}
@@ -497,15 +487,16 @@
       \item Selecciona el tipo de búsqueda mediante el interruptor superior (libros o usuarios)
       \item Escribe los términos de búsqueda en el campo de texto
       \item Los resultados se mostrarán automáticamente a medida que escribes
-    \end{enumerate}
-    
+    \end{enumerate}   
     \cpsection{Detalles de Libro y Gestión de Biblioteca}
     
       Al seleccionar un libro, puedes ver su información detallada y gestionarlo en tu biblioteca personal.
     
       \begin{figure}[H]
         \centering
-        \includegraphics[width=0.5\textwidth]{.img/libro.png}
+        \includegraphics[width=0.25\textwidth]{.img/libro.png}
+        \hspace{1cm}
+        \includegraphics[width=0.5\textwidth]{.img/libro-land.png}
         \caption{Pantalla de detalle de libro con información completa}
         \label{fig:libro}
       \end{figure}
@@ -521,15 +512,15 @@
         \item Opciones para gestionar el libro en tu biblioteca
       \end{itemize}
     
-    \subsection{Añadir Libro a la Biblioteca}
+    \cpsubsection{Añadir Libro a la Biblioteca}
     
       Para añadir un libro a tu biblioteca, presiona el botón ``Añadir a mi biblioteca'' y selecciona uno de los tres estados posibles:
       
       \begin{figure}[H]
         \centering
-        \includegraphics[width=0.3\textwidth]{.img/libro-porleer.png}
-        \includegraphics[width=0.3\textwidth]{.img/libro-leyendo.png}
-        \includegraphics[width=0.3\textwidth]{.img/libro-leido.png}
+        \includegraphics[width=0.25\textwidth]{.img/libro-porleer.png}
+        \includegraphics[width=0.25\textwidth]{.img/libro-leyendo.png}
+        \includegraphics[width=0.25\textwidth]{.img/libro-leido.png}
         \caption{Diálogo para añadir libros}
         \label{fig:libro-porleer}
       \end{figure}
@@ -540,31 +531,13 @@
         \item \textbf{Leído}: Para libros que ya has terminado
       \end{enumerate}
     
-    \subsection{Vista horizontal adaptativa}
-    
-    En pantallas grandes o en orientación horizontal, la interfaz se adapta automáticamente para mostrar más información:
-    
-    \begin{figure}[H]
-      \centering
-      \includegraphics[width=0.8\textwidth]{.img/libro-land.png}
-      \caption{Vista adaptativa en orientación horizontal}
-      \label{fig:libro-land}
-    \end{figure}
-    
-    En esta vista:
-    \begin{itemize}
-      \item La información del libro se muestra a la izquierda
-      \item Las opciones de gestión aparecen a la derecha
-      \item Se aprovecha mejor el espacio disponible en pantalla
-    \end{itemize}
-    
     \cpsection{Ajustes de la Aplicación}
     
     La aplicación permite personalizar el idioma y el tema visual según tus preferencias.
     
     \begin{figure}[H]
       \centering
-      \includegraphics[width=0.4\textwidth]{.img/ajustes.png}
+      \includegraphics[width=0.25\textwidth]{.img/ajustes.png}
       \caption{Pantalla de ajustes con opciones de personalización}
       \label{fig:ajustes}
     \end{figure}
@@ -596,8 +569,7 @@
         \item Tema claro
         \item Tema oscuro
       \end{itemize}
-    \end{enumerate}
-    
+    \end{enumerate}    
     \cpsection{Cierre de Sesión}
     
     Para salir de tu cuenta:
@@ -609,7 +581,7 @@
     
     \begin{figure}[H]
       \centering
-      \includegraphics[width=0.4\textwidth]{.img/logout.png}
+      \includegraphics[width=0.25\textwidth]{.img/logout.png}
       \caption{Diálogo de confirmación de cierre de sesión}
       \label{fig:logout}
     \end{figure} 
