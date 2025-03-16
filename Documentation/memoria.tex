@@ -36,7 +36,7 @@
     }%
 }
 
-% Elimina la palabra "Capítulo" de los títulos de los capítulos
+% Elimina la palabra 'Capítulo' de los títulos de los capítulos
 \titleformat{\chapter}[display]
   {\normalfont\bfseries}{}{0pt}{\Huge\thechapter.\space}
 
@@ -46,7 +46,7 @@
 \titlespacing*{\chapter}{0pt}{-50pt}{20pt}
 
 % Personalización del índice de listados
-\renewcommand{\lstlistingname}{Código}  % Cambiar el nombre de "Listing" a "Código"
+\renewcommand{\lstlistingname}{Código}  % Cambiar el nombre de 'Listing' a 'Código'
 \renewcommand{\lstlistlistingname}{Índice de códigos}
 
 % Añade numeración a los subsubsections y los añade al índice
@@ -348,110 +348,131 @@
           \item Los callbacks permiten notificar a la UI cuando las operaciones se completan.
           \item Room maneja automáticamente las transacciones para asegurar la integridad de los datos.
         \end{itemize}
-  \chapter{Manual de usuario}
-    \section{Inicio}
-      \begin{minipage}{0.6\textwidth}
-        Al abrir la aplicación, se muestra la pantalla de inicio con una lista de libros recomendados y un mensaje de bienvenida personalizado. Desde aquí puedes navegar a otras secciones de la aplicación usando el menú lateral, desplegable desde el icono de hamburguesa en la esquina superior izquierda, o usando la barra de herramientas.  
-      \end{minipage}
-      \hfill
-      \begin{minipage}{0.27\textwidth}
+        \chapter{Manual de usuario}
+        \setlength{\intextsep}{2pt}        % Espacio entre texto y figuras
+        \setlength{\abovecaptionskip}{1pt}  % Espacio sobre las leyendas
+        \setlength{\belowcaptionskip}{1pt}  % Espacio bajo las leyendas
+        \setlength{\parskip}{2pt}          % Espacio entre párrafos
+        \setlength{\topsep}{1pt}           % Espacio en listas y entornos
+        \begin{multicols}{2}
+        % Ajustes de espaciado global para esta sección
+        \vspace{-1.5em}  % Reduce espacio después del título del capítulo
+        \section{Inicio}
+        \vspace{-0.8em}  % Reduce espacio después del título de sección
+        Al abrir la aplicación, se muestra la pantalla de inicio con libros recomendados y un mensaje de bienvenida. Puedes acceder al menú lateral mediante el icono de hamburguesa.
+        
         \begin{figure}[H]
           \centering
-          \includegraphics[width=0.9\textwidth]{.img/inicio.png}
-          \caption{Pantalla de inicio de la aplicación}
-          \label{fig:pantalla-inicio}
+          \includegraphics[width=0.95\linewidth]{.img/inicio.png}
+          \caption{Pantalla de inicio}
         \end{figure}
-      \end{minipage}
-      \vspace{1cm}
-      \begin{minipage}{0.6\textwidth}
-          Si el usuario ha iniciado sesión veremos su nombre en el mensaje de bienvenida.
-      \end{minipage}
-      \hfill
-      \begin{minipage}{0.27\textwidth}
+        \vspace{-0.8em}  % Reduce espacio después de la figura
+        
+        \section{Menú de navegación}
+        \vspace{-0.8em}  % Reduce espacio después del título
+        El menú lateral permite acceder a todas las funciones de la aplicación. Las opciones varían según si has iniciado sesión o no.
+        
         \begin{figure}[H]
           \centering
-          \includegraphics[width=0.9\textwidth]{.img/inicio-auth.png}
-          \caption{Pantalla de inicio con usuario autenticado}
-          \label{fig:pantalla-inicio-usuario}
+          \includegraphics[width=0.47\linewidth]{.img/menu.png}\hfill
+          \includegraphics[width=0.47\linewidth]{.img/menu-auth.png}
+          \caption{Menú para usuario anónimo (izq.) y autenticado (der.)}
         \end{figure}
-      \end{minipage}
-    \cpsection{Menu de navegación}
-      \begin{minipage}{0.6\textwidth}
-        El menú de navegación nos permite navegar entre las diferentes secciones de la aplicación. Las opciones que se muestran dependen del estado de autenticación del usuario. Si el usuario no tiene una sesion iniciada, se mostrarán las opciones de Inicio, Buscar, Registrarse, Iniciar sesión y Ajustes. Ademas, la cabecera del menú tambien servira para iniciar sesión.
-      \end{minipage}
-      \hfill
-      \begin{minipage}{0.27\textwidth}
+        \vspace{-0.8em}  % Reduce espacio después de la figura
+        
+        \section{Registrarse e iniciar sesión}
+        \vspace{-0.8em}  % Reduce espacio después del título
+        Para acceder a toda la funcionalidad, necesitas crear una cuenta o iniciar sesión con credenciales existentes.
+        
         \begin{figure}[H]
           \centering
-          \includegraphics[width=0.9\textwidth]{.img/menu.png}
-          \caption{Menú de navegación de la aplicación}
-          \label{fig:menu-navegacion}
+          \includegraphics[width=0.47\linewidth]{.img/registro.png}\hfill
+          \includegraphics[width=0.47\linewidth]{.img/login.png}
+          \caption{Pantallas de registro (izq.) e inicio de sesión (der.)}
         \end{figure}
-      \end{minipage}
-      \begin{minipage}{0.6\textwidth}
-        Si el usuario ha iniciado sesión, se mostrarán las opciones de Inicio, Buscar, Perfil, Ajustes y Cerrar sesión. En este caso, la cabecera del menú mostrará el nombre del usuario y su foto de perfil y nos permitirá acceder a su perfil.
-      \end{minipage}
-      \hfill
-      \begin{minipage}{0.27\textwidth}
+        
+        Al registrarte, recibirás una notificación de bienvenida.
+        
         \begin{figure}[H]
           \centering
-          \includegraphics[width=0.9\textwidth]{.img/menu-auth.png}
-          \caption{Menú de navegación con usuario autenticado}
-          \label{fig:menu-navegacion-usuario}
-        \end{figure}
-      \end{minipage}
-    \cpsection{Registrarse}
-      \begin{minipage}{0.4\textwidth}
-          Para registrarse en la aplicación, selecciona la opción de Registrarse en el menú de navegación. Al hacerlo te pedira permisos para enviar notificaciones, aceptalos para poder recibir notificaciones de bienvenida. A continuación, introduce tu nombre, email y contraseña y pulsa el botón de Registrarse.
-      \end{minipage}
-      \hfill
-      \begin{minipage}{0.25\textwidth}
-        \begin{figure}[H]
-          \centering
-          \includegraphics[width=0.9\textwidth]{.img/registro.png}
-          \caption{Pantalla de registro de usuario}
-          \label{fig:pantalla-registro}
-        \end{figure}
-      \end{minipage}
-      \hfill
-      \begin{minipage}{0.25\textwidth}
-        \begin{figure}[H]
-          \centering
-          \includegraphics[width=0.9\textwidth]{.img/registro-perm.png}
-          \caption{Solicitud de permisos de notificación}
-          \label{fig:registro-perm}
-        \end{figure}
-      \end{minipage}
-      \vspace{1cm}
-      \begin{minipage}{0.6\textwidth}
-        Si el registro es exitoso, se mostrará una notificación de bienvenida y se iniciará sesión automáticamente.
-      \end{minipage}
-      \hfill
-      \begin{minipage}{0.4\textwidth}
-        \begin{figure}[H]
-          \centering
-          \includegraphics[width=0.6\textwidth]{.img/registro-noti.png}
+          \includegraphics[width=0.65\linewidth]{.img/registro-noti.png}
           \caption{Notificación de bienvenida}
-          \label{fig:notificacion-registro}
         \end{figure}
-      \end{minipage}
-    \cpsection{Iniciar sesión}
-      \begin{minipage}{0.6\textwidth}
-          Para iniciar sesión en la aplicación, selecciona la opción de Iniciar sesión en el menú de navegación. A continuación, introduce tu email y contraseña y pulsa el botón de Iniciar sesión.
-      \end{minipage}
-      \hfill
-      \begin{minipage}{0.4\textwidth}
+        \vspace{-0.8em}  % Reduce espacio después de la figura
+        
+        \section{Ver tu biblioteca}
+        \vspace{-0.8em}  % Reduce espacio después del título
+        Tu perfil muestra tus estadísticas de lectura y tus libros organizados en tres categorías: Leyendo, Por leer y Leídos.
+        
         \begin{figure}[H]
           \centering
-          \includegraphics[width=0.9\textwidth]{.img/login.png}
-          \caption{Pantalla de inicio de sesión}
-          \label{fig:pantalla-login}
+          \includegraphics[width=0.95\linewidth]{.img/profile.png}
+          \caption{Perfil del usuario}
         \end{figure}
-      \end{minipage}
-    \cpsection{Ver tu biblioteca}
-    \cpsection{Buscar libros o usuarios}
-    \cpsection{Añadir libros a tu biblioteca}
-    \cpsection{Ajustes}
+        
+        Puedes cambiar tu foto de perfil pulsando el icono de cámara, para lo cual la aplicación solicitará permisos.
+        
+        \columnbreak
+        
+        \section{Buscar libros o usuarios}
+        \vspace{-0.8em}  % Reduce espacio después del título
+        La función de búsqueda permite encontrar libros por título o autor, así como otros usuarios.
+        
+        \begin{figure}[H]
+          \centering
+          \includegraphics[width=0.47\linewidth]{.img/buscador-libros.png}\hfill
+          \includegraphics[width=0.47\linewidth]{.img/buscador-usuarios.png}
+          \caption{Búsqueda de libros (izq.) y usuarios (der.)}
+        \end{figure}
+        \vspace{-0.8em}  % Reduce espacio después de la figura
+        
+        \section{Añadir libros a tu biblioteca}
+        \vspace{-0.8em}  % Reduce espacio después del título
+        Al encontrar un libro, puedes ver sus detalles y añadirlo a tu biblioteca en diferentes estados.
+        
+        \begin{figure}[H]
+          \centering
+          \includegraphics[width=0.95\linewidth]{.img/libro.png}
+          \caption{Pantalla de detalle de libro}
+        \end{figure}
+        
+        \begin{figure}[H]
+          \centering
+          \includegraphics[width=0.47\linewidth]{.img/libro-porleer.png}\hfill
+          \includegraphics[width=0.47\linewidth]{.img/libro-leyendo.png}
+          \caption{Añadir libro como "Por leer" (izq.) o "Leyendo" (der.)}
+        \end{figure}
+        
+        Al añadir un libro como "Leído", puedes incluir una calificación y reseña.
+        
+        \begin{figure}[H]
+          \centering
+          \includegraphics[width=0.47\linewidth]{.img/libro-leido.png}\hfill
+          \includegraphics[width=0.47\linewidth]{.img/libro-leido-datos.png}
+          \caption{Añadir libro como "Leído" (izq.) y su visualización (der.)}
+        \end{figure}
+        \vspace{-0.8em}  % Reduce espacio después de la figura
+        
+        En pantallas grandes o en orientación horizontal, la interfaz se adapta para mostrar más información.
+        
+        \begin{figure}[H]
+          \centering
+          \includegraphics[width=0.95\linewidth]{.img/libro-land.png}
+          \caption{Vista de detalles en horizontal}
+        \end{figure}
+        \vspace{-0.8em}  % Reduce espacio después de la figura
+        
+        \section{Ajustes y cierre de sesión}
+        \vspace{-0.8em}  % Reduce espacio después del título
+        Puedes configurar el idioma (inglés, español o euskera) y el tema de la aplicación (claro, oscuro o sistema).
+        
+        \begin{figure}[H]
+          \centering
+          \includegraphics[width=0.47\linewidth]{.img/ajustes.png}\hfill
+          \includegraphics[width=0.47\linewidth]{.img/logout.png}
+          \caption{Ajustes (izq.) y diálogo de cierre de sesión (der.)}
+        \end{figure}
+        \end{multicols}   
   \chapter{Dificultades}
   \chapter{Conclusiones}
 \end{document}
