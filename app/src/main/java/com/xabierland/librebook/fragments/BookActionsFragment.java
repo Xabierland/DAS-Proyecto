@@ -238,7 +238,7 @@ public class BookActionsFragment extends Fragment {
         Button buttonConfirm = view.findViewById(R.id.buttonConfirm);
         
         // Actualizar texto con el número total de páginas
-        textViewTotalPaginas.setText(" (de " + numPaginasTotal + " páginas)");
+        textViewTotalPaginas.setText(String.format(getString(R.string.total_pages), numPaginasTotal));
         
         // Configurar el título según si el libro ya está en la biblioteca o no
         if (libroYaEnBiblioteca) {
@@ -320,14 +320,14 @@ public class BookActionsFragment extends Fragment {
                     try {
                         int paginaValue = Integer.parseInt(s.toString());
                         if (paginaValue > numPaginasTotal) {
-                            editTextPaginaActual.setError("La página no puede ser mayor que " + numPaginasTotal);
+                            editTextPaginaActual.setError(String.format(getString(R.string.page_error_too_large), numPaginasTotal));
                         } else if (paginaValue < 1) {
-                            editTextPaginaActual.setError("La página debe ser mayor o igual a 1");
+                            editTextPaginaActual.setError(getString(R.string.page_error_min));
                         } else {
                             editTextPaginaActual.setError(null);
                         }
                     } catch (NumberFormatException e) {
-                        editTextPaginaActual.setError("Introduce un número válido");
+                        editTextPaginaActual.setError(getString(R.string.page_error_invalid));
                     }
                 }
             }
@@ -377,16 +377,16 @@ public class BookActionsFragment extends Fragment {
                         
                         // Validar que el número de página esté dentro del rango válido
                         if (paginaValue < 1) {
-                            Toast.makeText(getContext(), "La página debe ser mayor o igual a 1", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.page_error_min), Toast.LENGTH_SHORT).show();
                             return;
                         } else if (paginaValue > numPaginasTotal) {
-                            Toast.makeText(getContext(), "La página no puede ser mayor que " + numPaginasTotal, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), String.format(getString(R.string.page_error_too_large), numPaginasTotal), Toast.LENGTH_SHORT).show();
                             return;
                         }
                         
                         pagina = paginaValue;
                     } catch (NumberFormatException e) {
-                        Toast.makeText(getContext(), "Introduce un número válido para la página", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.page_error_invalid), Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }

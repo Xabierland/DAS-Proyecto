@@ -65,7 +65,7 @@ public class BookCardAdapter extends RecyclerView.Adapter<BookCardAdapter.BookVi
             holder.layoutProgress.setVisibility(View.VISIBLE);
             int progress = book.getProgresoLectura();
             holder.progressBarReading.setProgress(progress);
-            holder.textViewProgress.setText(progress + "%");
+            holder.textViewProgress.setText(String.format(context.getString(R.string.progress_percentage), progress));
         } else {
             holder.layoutProgress.setVisibility(View.GONE);
         }

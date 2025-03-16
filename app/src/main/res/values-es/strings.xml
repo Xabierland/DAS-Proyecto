@@ -8,6 +8,7 @@
     <string name="cancel">Cancelar</string>
 
     <!-- Strings para el menú de navegación -->
+    <string name="library_access_prompt">Inicia sesión para acceder a tu biblioteca</string>
     <string name="menu_home">Inicio</string>
     <string name="profile">Perfil</string>
     <string name="search">Buscar</string>
@@ -117,6 +118,17 @@
     <string name="current_page">Página actual</string>
     <string name="current_page_hint">Introduce la página actual</string>
     <string name="total_pages">de %1$d páginas</string>
+    <string name="progress_percentage">%d%%</string>
+    <string name="rating_default">0/10</string>
+    <string name="page_error_too_large">La página no puede ser mayor que %d</string>
+    <string name="page_error_min">La página debe ser mayor o igual a 1</string>
+    <string name="page_error_invalid">Introduce un número válido</string>
+    <string name="year_format">Año: %d</string>
+    <string name="publisher_format">Editorial: %s</string>
+    <string name="isbn_format">ISBN: %s</string>
+    <string name="pages_format">Páginas: %d</string>
+    <string name="no_description">No hay descripción disponible.</string>
+    <string name="progress_default">50%</string>
 
     <!-- Diálogos de permisos -->
     <string name="permission_title">Permiso denegado</string>

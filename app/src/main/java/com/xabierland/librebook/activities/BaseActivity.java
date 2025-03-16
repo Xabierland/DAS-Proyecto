@@ -196,7 +196,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     } else {
                         // Si hay un error al obtener el usuario, mostrar valores por defecto
                         textViewNavHeaderName.setText(R.string.app_name);
-                        textViewNavHeaderEmail.setText("Inicia sesión para acceder a tu biblioteca");
+                        textViewNavHeaderEmail.setText(getString(R.string.library_access_prompt));
                         imageViewNavHeaderProfile.setImageResource(R.drawable.default_profile_image);
                     }
                 });
@@ -204,7 +204,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         } else {
             // Usuario no conectado, mostrar valores por defecto
             textViewNavHeaderName.setText(R.string.app_name);
-            textViewNavHeaderEmail.setText("Inicia sesión para acceder a tu biblioteca");
+            textViewNavHeaderEmail.setText(getString(R.string.library_access_prompt));
             imageViewNavHeaderProfile.setImageResource(R.drawable.default_profile_image);
         }
     }

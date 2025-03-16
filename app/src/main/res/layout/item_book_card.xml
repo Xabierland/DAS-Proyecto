@@ -71,7 +71,7 @@
                     android:id="@+id/textViewProgress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="50%"
+                    android:text="@string/progress_default"
                     android:textSize="10sp"
                     android:textColor="?attr/textColor"
                     android:gravity="end" />

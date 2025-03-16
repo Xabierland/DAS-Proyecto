@@ -45,7 +45,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Libros recomendados"
+                    android:text="@string/recommended_books"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="?attr/textColor"
@@ -65,7 +65,7 @@
                     android:id="@+id/textViewNoRecommended"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="No hay libros recomendados disponibles"
+                    android:text="@string/no_recommended_books"
                     android:textAlignment="center"
                     android:textColor="?attr/textColor"
                     android:padding="16dp"

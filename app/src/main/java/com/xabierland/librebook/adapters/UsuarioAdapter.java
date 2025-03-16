@@ -51,8 +51,8 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
         // Formatear y mostrar la fecha de registro
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         String fechaFormateada = sdf.format(new Date(usuario.getFechaRegistro()));
-        holder.textViewFechaRegistro.setText("Miembro desde: " + fechaFormateada);
-        
+        holder.textViewFechaRegistro.setText(String.format(context.getString(R.string.member_since), fechaFormateada));
+                
         // Cargar foto de perfil si existe
         if (usuario.getFotoPerfil() != null && !usuario.getFotoPerfil().isEmpty()) {
             File imgFile = new File(usuario.getFotoPerfil());

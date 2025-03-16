@@ -8,6 +8,7 @@
     <string name="cancel">Utzi</string>
 
     <!-- Nabigazio menuaren string-ak -->
+    <string name="library_access_prompt">Hasi saioa zure liburutegira sartzeko</string>
     <string name="menu_home">Hasiera</string>
     <string name="profile">Profila</string>
     <string name="search">Bilatu</string>
@@ -117,6 +118,17 @@
     <string name="current_page">Uneko orria</string>
     <string name="current_page_hint">Sartu uneko orria</string>
     <string name="total_pages">%1$d orrietatik</string>
+    <string name="progress_percentage">%d%%</string>
+    <string name="rating_default">0/10</string>
+    <string name="page_error_too_large">Orria ezin da %d baino handiagoa izan</string>
+    <string name="page_error_min">Orria 1 edo handiagoa izan behar da</string>
+    <string name="page_error_invalid">Sartu baliozko zenbaki bat</string>
+    <string name="year_format">Urtea: %d</string>
+    <string name="publisher_format">Argitaletxea: %s</string>
+    <string name="isbn_format">ISBN: %s</string>
+    <string name="pages_format">Orriak: %d</string>
+    <string name="no_description">Ez dago deskribapenik eskuragarri.</string>
+    <string name="progress_default">50%</string>
 
     <!-- Baimen elkarrizketak -->
     <string name="permission_title">Baimena ukatua</string>

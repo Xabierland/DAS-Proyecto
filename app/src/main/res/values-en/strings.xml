@@ -8,6 +8,7 @@
     <string name="cancel">Cancel</string>
 
     <!-- Navigation Menu Strings -->
+    <string name="library_access_prompt">Log in to access your library</string>
     <string name="menu_home">Home</string>
     <string name="profile">Profile</string>
     <string name="search">Search</string>
@@ -117,6 +118,17 @@
     <string name="current_page">Current page</string>
     <string name="current_page_hint">Enter current page</string>
     <string name="total_pages">of %1$d pages</string>
+    <string name="progress_percentage">%d%%</string>
+    <string name="rating_default">0/10</string>
+    <string name="page_error_too_large">Page cannot be greater than %d</string>
+    <string name="page_error_min">Page must be greater than or equal to 1</string>
+    <string name="page_error_invalid">Enter a valid number</string>
+    <string name="year_format">Year: %d</string>
+    <string name="publisher_format">Publisher: %s</string>
+    <string name="isbn_format">ISBN: %s</string>
+    <string name="pages_format">Pages: %d</string>
+    <string name="no_description">No description available.</string>
+    <string name="progress_default">50%</string>
 
     <!-- Permission Dialogs -->
     <string name="permission_title">Permission denied</string>

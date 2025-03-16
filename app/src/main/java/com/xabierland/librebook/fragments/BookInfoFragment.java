@@ -94,28 +94,28 @@ public class BookInfoFragment extends Fragment {
             textViewGenero.setVisibility(View.GONE);
         }
         
-        textViewAnio.setText(String.format("Año: %d", libro.getAnioPublicacion()));
-        
+        textViewAnio.setText(String.format(getString(R.string.year_format), libro.getAnioPublicacion()));
+
         if (libro.getEditorial() != null && !libro.getEditorial().isEmpty()) {
-            textViewEditorial.setText(String.format("Editorial: %s", libro.getEditorial()));
+            textViewEditorial.setText(String.format(getString(R.string.publisher_format), libro.getEditorial()));
             textViewEditorial.setVisibility(View.VISIBLE);
         } else {
             textViewEditorial.setVisibility(View.GONE);
         }
         
         if (libro.getIsbn() != null && !libro.getIsbn().isEmpty()) {
-            textViewIsbn.setText(String.format("ISBN: %s", libro.getIsbn()));
+            textViewIsbn.setText(String.format(getString(R.string.isbn_format), libro.getIsbn()));
             textViewIsbn.setVisibility(View.VISIBLE);
         } else {
             textViewIsbn.setVisibility(View.GONE);
         }
         
-        textViewPaginas.setText(String.format("Páginas: %d", libro.getNumPaginas()));
+        textViewPaginas.setText(String.format(getString(R.string.pages_format), libro.getNumPaginas()));
         
         if (libro.getDescripcion() != null && !libro.getDescripcion().isEmpty()) {
             textViewDescripcion.setText(libro.getDescripcion());
         } else {
-            textViewDescripcion.setText("No hay descripción disponible.");
+            textViewDescripcion.setText(getString(R.string.no_description));
         }
         
         // Cargar la imagen de la portada

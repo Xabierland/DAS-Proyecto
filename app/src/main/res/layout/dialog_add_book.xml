@@ -79,7 +79,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Página actual"
+                    android:text="@string/current_page"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="?attr/textColor"/>
@@ -103,7 +103,7 @@
                     android:id="@+id/editTextPaginaActual"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Introduce la página actual"
+                    android:hint="@string/current_page_hint"
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
@@ -140,7 +140,7 @@
                 android:id="@+id/textViewRatingValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0.0/10"
+                android:text="@string/rating_default"
                 android:textColor="?attr/textColor"
                 android:textSize="16sp"
                 android:layout_marginTop="8dp"/>

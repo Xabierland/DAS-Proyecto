@@ -38,7 +38,7 @@
         android:id="@+id/textViewNavHeaderEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Inicia sesión para acceder a tu biblioteca"
+        android:text="@string/library_access_prompt"
         android:textAlignment="center"
         android:textSize="14sp" />
 
