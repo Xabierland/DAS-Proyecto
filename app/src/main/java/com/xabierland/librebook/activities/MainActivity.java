@@ -74,10 +74,13 @@ public class MainActivity extends BaseActivity {
     
     private void verificarEstadoLibros() {
         libroRepository.obtenerTodosLosLibros(libros -> {
-            Log.d(TAG, "Número de libros en la base de datos: " + libros.size());
-            
-            // Si quieres mostrar un mensaje para verificar, descomenta esta línea
-            // runOnUiThread(() -> Toast.makeText(MainActivity.this, "Libros en la BD: " + libros.size(), Toast.LENGTH_SHORT).show());
+            if (libros != null) {
+                Log.d(TAG, "Número de libros en la base de datos: " + libros.size());
+                // Resto del código...
+            } else {
+                Log.e(TAG, "Error al obtener los libros: la lista es nula");
+                // Manejo de error
+            }
         });
     }
     
