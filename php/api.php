@@ -1,6 +1,13 @@
 <?php
 // api.php - API Gateway para LibreBook
 
+// Opcional: Descomentar para depuración
+// file_put_contents('debug.log', 
+//     "REQUEST_URI: " . $_SERVER['REQUEST_URI'] . "\n" .
+//     "QUERY_STRING: " . $_SERVER['QUERY_STRING'] . "\n" .
+//     "GET: " . print_r($_GET, true) . "\n\n", 
+//     FILE_APPEND);
+
 header('Content-Type: application/json');
 
 // Configuración de la base de datos
@@ -24,8 +31,34 @@ $conn->set_charset("utf8");
 // Obtener método HTTP y ruta
 $method = $_SERVER['REQUEST_METHOD'];
 $request = $_SERVER['REQUEST_URI'];
-$params = explode('/', trim($request, '/'));
-$endpoint = isset($params[0]) ? $params[0] : '';
+
+// Determinar endpoint
+$endpoint = '';
+$params = [];
+
+// Método 1: Comprobar parámetro de consulta 'endpoint'
+if (isset($_GET['endpoint'])) {
+    $endpoint = $_GET['endpoint'];
+    // Preparar $params para uso posterior
+    $params = [$endpoint];
+    if (isset($_GET['id'])) {
+        $params[] = $_GET['id'];
+    }
+} 
+// Método 2: Extraer endpoint de la URL (api.php/usuarios)
+else {
+    if (preg_match('#/api\.php/([^?]*)#', $request, $matches)) {
+        $path = $matches[1];
+        $params = explode('/', trim($path, '/'));
+        $endpoint = isset($params[0]) && !empty($params[0]) ? $params[0] : '';
+    }
+}
+
+// Si no hay endpoint, mostrar error
+if (empty($endpoint)) {
+    sendResponse(404, ["error" => "Endpoint no encontrado"]);
+    exit;
+}
 
 // Rutas API
 switch ($endpoint) {
@@ -480,12 +513,17 @@ function handleBiblioteca($method, $params, $conn) {
             
         case 'POST':
             // Agregar libro a la biblioteca
-            if (!$usuarioId || !isset($_POST['libro_id'])) {
-                sendResponse(400, ["error" => "Se requiere ID de usuario y libro"]);
+            if (!$usuarioId) {
+                sendResponse(400, ["error" => "Se requiere ID de usuario"]);
                 break;
             }
             
             $data = json_decode(file_get_contents('php://input'), true);
+            
+            if (!isset($data['libroId'])) {
+                sendResponse(400, ["error" => "Se requiere ID de libro"]);
+                break;
+            }
             
             if (!isset($data['estadoLectura'])) {
                 $data['estadoLectura'] = 'por_leer'; // Valor por defecto
