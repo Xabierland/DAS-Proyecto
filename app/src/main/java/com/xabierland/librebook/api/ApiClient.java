@@ -182,6 +182,22 @@ public class ApiClient {
         return response.toString();
     }
 
+    // Método para manejar errores de respuesta
+    private static <T> void handleErrorResponse(HttpURLConnection urlConnection, ApiCallback<T> callback) {
+        try {
+            int responseCode = urlConnection.getResponseCode();
+            String errorResponse = "";
+            try {
+                errorResponse = readStream(urlConnection.getErrorStream());
+            } catch (IOException e) {
+                errorResponse = "No se pudo leer el mensaje de error";
+            }
+            callback.onError("Error " + responseCode + ": " + errorResponse);
+        } catch (IOException e) {
+            callback.onError("Error de conexión: " + e.getMessage());
+        }
+    }
+
     // Interfaz para parsear respuestas
     public interface ApiResponseParser<T> {
         T parse(String jsonResponse) throws JSONException;

@@ -105,7 +105,6 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
                         if (libroConEstado != null) {
                             // El libro ya está en la biblioteca del usuario
                             libroYaEnBiblioteca = true;
-                            
                             runOnUiThread(() -> {
                                 // Actualizar fragments con los datos del libro
                                 bookInfoFragment.setLibro(libro);

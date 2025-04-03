@@ -87,9 +87,18 @@ public class BibliotecaRepository {
             
             @Override
             public void onError(String errorMessage) {
-                Log.e(TAG, "Error al obtener libro de biblioteca: " + errorMessage);
-                if (callback != null) {
-                    callback.onComplete(null);
+                // Verificar si es un error 404 (recurso no encontrado)
+                if (errorMessage.contains("404")) {
+                    // No es realmente un error, simplemente el libro no está en la biblioteca
+                    if (callback != null) {
+                        callback.onComplete(null);
+                    }
+                } else {
+                    // Para otros errores, registrarlos como antes
+                    Log.e(TAG, "Error al obtener libro de biblioteca: " + errorMessage);
+                    if (callback != null) {
+                        callback.onComplete(null);
+                    }
                 }
             }
         });
