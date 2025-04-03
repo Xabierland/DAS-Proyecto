@@ -4,7 +4,7 @@
 header('Content-Type: application/json');
 
 // Configuración de la base de datos
-$servername = "ec2-51-44-167-78.eu-west-3.compute.amazonaws.com";
+$servername = "localhost";
 $username = "Xxgabina001"; // Reemplazar con tu usuario de MySQL
 $password = "BPKrbjdfP"; // Reemplazar con tu contraseña
 $dbname = "Xxgabina001_librebook_db";
