@@ -87,6 +87,11 @@
     <string name="member_since">Noiztik kide: %1$s</string>
     <string name="permission_needed">Beharrezko baimena</string>
     <string name="permission_gallery_explanation">Zure profileko argazkia aldatzeko, zure irudietara sarbidea behar dugu.</string>
+    <string name="take_photo">Argazkia atera</string>
+    <string name="choose_from_gallery">Galeriatik aukeratu</string>
+    <string name="change_profile_pic_title">Profilaren argazkia aldatu</string>
+    <string name="error_create_temp_file">Aldi baterako fitxategia sortzeko errorea</string>
+    <string name="camera_permission_needed">Kamerarako sarbidea behar da</string>
 
     <!-- Liburuaren xehetasun jarduera -->
     <string name="book_detail">Liburuaren xehetasunak</string>

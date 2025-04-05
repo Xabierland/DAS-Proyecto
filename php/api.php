@@ -16,6 +16,12 @@ $username = "Xxgabina001"; // Reemplazar con tu usuario de MySQL
 $password = "BPKrbjdfP"; // Reemplazar con tu contraseña
 $dbname = "Xxgabina001_librebook_db";
 
+// Crear directorio de uploads si no existe
+$uploads_dir = __DIR__ . '/../uploads';
+if (!file_exists($uploads_dir)) {
+    mkdir($uploads_dir, 0755, true);
+}
+
 // Crear conexión
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -242,6 +248,7 @@ function handleLibros($method, $params, $conn) {
 
 // Manejador de usuarios
 function handleUsuarios($method, $params, $conn) {
+    global $uploads_dir;
     $id = isset($params[1]) ? $params[1] : null;
     
     switch ($method) {
@@ -350,15 +357,35 @@ function handleUsuarios($method, $params, $conn) {
                 }
                 $stmt->close();
                 
+                // Procesar imagen si está en base64
+                $fotoPerfilUrl = '';
+                if (isset($data['fotoPerfil']) && !empty($data['fotoPerfil'])) {
+                    if (preg_match('/^data:image\/(\w+);base64,/', $data['fotoPerfil'], $matches)) {
+                        $imageType = $matches[1];
+                        $base64Data = substr($data['fotoPerfil'], strpos($data['fotoPerfil'], ',') + 1);
+                        $decodedImage = base64_decode($base64Data);
+                        
+                        if ($decodedImage !== false) {
+                            $filename = 'profile_' . uniqid() . '.' . $imageType;
+                            $filepath = $uploads_dir . '/' . $filename;
+                            
+                            if (file_put_contents($filepath, $decodedImage)) {
+                                $fotoPerfilUrl = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/../uploads/' . $filename;
+                            }
+                        }
+                    } else {
+                        $fotoPerfilUrl = $data['fotoPerfil'];
+                    }
+                }
+                
                 // Crear usuario
                 $stmt = $conn->prepare("INSERT INTO usuarios (nombre, email, password, foto_perfil, fecha_registro) VALUES (?, ?, ?, ?, ?)");
                 $fechaRegistro = time() * 1000; // Convertir a milisegundos como en la app
-                $fotoPerfilDefault = $data['fotoPerfil'] ?? '';
                 $stmt->bind_param("ssssi", 
                     $data['nombre'],
                     $data['email'],
                     $data['password'],
-                    $fotoPerfilDefault,
+                    $fotoPerfilUrl,
                     $fechaRegistro
                 );
                 
@@ -372,44 +399,87 @@ function handleUsuarios($method, $params, $conn) {
             }
             break;
             
-        case 'PUT':
-            // Actualizar usuario
-            if (!$id) {
-                sendResponse(400, ["error" => "Se requiere ID para actualizar"]);
-                break;
-            }
-            
-            $data = json_decode(file_get_contents('php://input'), true);
-            
-            // Verificar que el usuario existe
-            $stmt = $conn->prepare("SELECT id FROM usuarios WHERE id = ?");
-            $stmt->bind_param("i", $id);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            
-            if ($result->num_rows === 0) {
-                sendResponse(404, ["error" => "Usuario no encontrado"]);
+            case 'PUT':
+                // Actualizar usuario
+                if (!$id) {
+                    sendResponse(400, ["error" => "Se requiere ID para actualizar"]);
+                    break;
+                }
+                
+                $data = json_decode(file_get_contents('php://input'), true);
+                
+                // Verificar que el usuario existe
+                $stmt = $conn->prepare("SELECT id FROM usuarios WHERE id = ?");
+                $stmt->bind_param("i", $id);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                
+                if ($result->num_rows === 0) {
+                    sendResponse(404, ["error" => "Usuario no encontrado"]);
+                    $stmt->close();
+                    break;
+                }
+                $stmt->close();
+                
+                // Procesar imagen si está en base64
+                $fotoPerfilUrl = null;
+                if (isset($data['fotoPerfil']) && strpos($data['fotoPerfil'], 'data:image') === 0) {
+                    // Extraer el tipo y datos de la imagen
+                    $img_parts = explode(";base64,", $data['fotoPerfil']);
+                    $img_type_aux = explode("image/", $img_parts[0]);
+                    $img_type = $img_type_aux[1];
+                    $img_base64 = $img_parts[1];
+                    
+                    // Decodificar la imagen
+                    $imgData = base64_decode($img_base64);
+                    
+                    // Crear directorio si no existe
+                    $upload_dir = 'uploads/';
+                    if (!file_exists($upload_dir)) {
+                        mkdir($upload_dir, 0755, true);
+                    }
+                    
+                    // Crear nombre de archivo único
+                    $file_name = 'profile_' . $id . '_' . time() . '.' . $img_type;
+                    $file_path = $upload_dir . $file_name;
+                    
+                    // Guardar la imagen
+                    if (file_put_contents($file_path, $imgData)) {
+                        // Crear URL pública
+                        $server_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
+                        $base_dir = dirname($_SERVER['PHP_SELF']);
+                        $fotoPerfilUrl = $server_url . $base_dir . '/../uploads/' . $file_name;
+                        
+                        // Actualizar la base de datos con la nueva URL
+                        $stmt = $conn->prepare("UPDATE usuarios SET foto_perfil = ? WHERE id = ?");
+                        $stmt->bind_param("si", $fotoPerfilUrl, $id);
+                        $stmt->execute();
+                        $stmt->close();
+                    }
+                }
+                
+                // Actualizar resto de datos del usuario
+                $stmt = $conn->prepare("UPDATE usuarios SET nombre = ?, email = ? WHERE id = ?");
+                $stmt->bind_param("ssi", 
+                    $data['nombre'],
+                    $data['email'],
+                    $id
+                );
+                
+                if ($stmt->execute()) {
+                    $response = ["mensaje" => "Usuario actualizado con éxito"];
+                    
+                    // Incluir la URL de la foto en la respuesta si se subió una nueva
+                    if ($fotoPerfilUrl !== null) {
+                        $response["foto_perfil"] = $fotoPerfilUrl;
+                    }
+                    
+                    sendResponse(200, $response);
+                } else {
+                    sendResponse(500, ["error" => "Error al actualizar usuario: " . $stmt->error]);
+                }
                 $stmt->close();
                 break;
-            }
-            $stmt->close();
-            
-            // Preparar actualización
-            $stmt = $conn->prepare("UPDATE usuarios SET nombre = ?, email = ?, foto_perfil = ? WHERE id = ?");
-            $stmt->bind_param("sssi", 
-                $data['nombre'],
-                $data['email'],
-                $data['fotoPerfil'] ?? '',
-                $id
-            );
-            
-            if ($stmt->execute()) {
-                sendResponse(200, ["mensaje" => "Usuario actualizado con éxito"]);
-            } else {
-                sendResponse(500, ["error" => "Error al actualizar usuario: " . $stmt->error]);
-            }
-            $stmt->close();
-            break;
             
         case 'DELETE':
             // Eliminar usuario
@@ -604,136 +674,136 @@ function handleBiblioteca($method, $params, $conn) {
             $stmt->close();
             break;
             
-        case 'PUT':
-            // Actualizar libro en biblioteca
-            if (!$usuarioId || !$libroId) {
-                sendResponse(400, ["error" => "Se requiere ID de usuario y libro"]);
-                break;
-            }
-            
-            $data = json_decode(file_get_contents('php://input'), true);
-            
-            // Verificar que existe
-            $stmt = $conn->prepare("SELECT id FROM usuarios_libros WHERE usuario_id = ? AND libro_id = ?");
-            $stmt->bind_param("ii", $usuarioId, $libroId);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            
-            if ($result->num_rows === 0) {
-                sendResponse(404, ["error" => "Libro no encontrado en la biblioteca del usuario"]);
+            case 'PUT':
+                // Actualizar libro en biblioteca
+                if (!$usuarioId || !$libroId) {
+                    sendResponse(400, ["error" => "Se requiere ID de usuario y libro"]);
+                    break;
+                }
+                
+                $data = json_decode(file_get_contents('php://input'), true);
+                
+                // Verificar que existe
+                $stmt = $conn->prepare("SELECT id FROM usuarios_libros WHERE usuario_id = ? AND libro_id = ?");
+                $stmt->bind_param("ii", $usuarioId, $libroId);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                
+                if ($result->num_rows === 0) {
+                    sendResponse(404, ["error" => "Libro no encontrado en la biblioteca del usuario"]);
+                    $stmt->close();
+                    break;
+                }
+                $row = $result->fetch_assoc();
+                $id = $row['id'];
+                $stmt->close();
+                
+                // Construir actualización dinámica basada en campos proporcionados
+                $updates = [];
+                $types = "";
+                $values = [];
+                
+                if (isset($data['estadoLectura'])) {
+                    $updates[] = "estado_lectura = ?";
+                    $types .= "s";
+                    $values[] = $data['estadoLectura'];
+                    
+                    // Actualizar fechas según estado
+                    if ($data['estadoLectura'] == 'leyendo') {
+                        $updates[] = "fecha_inicio_lectura = ?";
+                        $types .= "i";
+                        $values[] = time() * 1000;
+                    } else if ($data['estadoLectura'] == 'leido') {
+                        $updates[] = "fecha_fin_lectura = ?";
+                        $types .= "i";
+                        $values[] = time() * 1000;
+                    }
+                }
+                
+                if (isset($data['esFavorito'])) {
+                    $updates[] = "es_favorito = ?";
+                    $types .= "i";
+                    $values[] = $data['esFavorito'] ? 1 : 0;
+                }
+                
+                if (isset($data['calificacion'])) {
+                    $updates[] = "calificacion = ?";
+                    $types .= "d";
+                    $values[] = $data['calificacion'];
+                }
+                
+                if (isset($data['paginaActual'])) {
+                    $updates[] = "pagina_actual = ?";
+                    $types .= "i";
+                    $values[] = $data['paginaActual'];
+                }
+                
+                if (isset($data['notas'])) {
+                    $updates[] = "notas = ?";
+                    $types .= "s";
+                    $values[] = $data['notas'];
+                }
+                
+                if (empty($updates)) {
+                    sendResponse(400, ["error" => "No se proporcionaron campos para actualizar"]);
+                    break;
+                }
+                
+                // Preparar consulta
+                $sql = "UPDATE usuarios_libros SET " . implode(", ", $updates) . " WHERE usuario_id = ? AND libro_id = ?";
+                $stmt = $conn->prepare($sql);
+                
+                // Añadir los parámetros de usuario y libro
+                $types .= "ii";
+                $values[] = $usuarioId;
+                $values[] = $libroId;
+                
+                // Usar callback para bind_param con array
+                $stmt->bind_param($types, ...$values);
+                
+                if ($stmt->execute()) {
+                    sendResponse(200, ["mensaje" => "Biblioteca actualizada con éxito"]);
+                } else {
+                    sendResponse(500, ["error" => "Error al actualizar biblioteca: " . $stmt->error]);
+                }
                 $stmt->close();
                 break;
-            }
-            $row = $result->fetch_assoc();
-            $id = $row['id'];
-            $stmt->close();
-            
-            // Construir actualización dinámica basada en campos proporcionados
-            $updates = [];
-            $types = "";
-            $values = [];
-            
-            if (isset($data['estadoLectura'])) {
-                $updates[] = "estado_lectura = ?";
-                $types .= "s";
-                $values[] = $data['estadoLectura'];
                 
-                // Actualizar fechas según estado
-                if ($data['estadoLectura'] == 'leyendo') {
-                    $updates[] = "fecha_inicio_lectura = ?";
-                    $types .= "i";
-                    $values[] = time() * 1000;
-                } else if ($data['estadoLectura'] == 'leido') {
-                    $updates[] = "fecha_fin_lectura = ?";
-                    $types .= "i";
-                    $values[] = time() * 1000;
+            case 'DELETE':
+                // Eliminar libro de la biblioteca
+                if (!$usuarioId || !$libroId) {
+                    sendResponse(400, ["error" => "Se requiere ID de usuario y libro"]);
+                    break;
                 }
-            }
-            
-            if (isset($data['esFavorito'])) {
-                $updates[] = "es_favorito = ?";
-                $types .= "i";
-                $values[] = $data['esFavorito'] ? 1 : 0;
-            }
-            
-            if (isset($data['calificacion'])) {
-                $updates[] = "calificacion = ?";
-                $types .= "d";
-                $values[] = $data['calificacion'];
-            }
-            
-            if (isset($data['paginaActual'])) {
-                $updates[] = "pagina_actual = ?";
-                $types .= "i";
-                $values[] = $data['paginaActual'];
-            }
-            
-            if (isset($data['notas'])) {
-                $updates[] = "notas = ?";
-                $types .= "s";
-                $values[] = $data['notas'];
-            }
-            
-            if (empty($updates)) {
-                sendResponse(400, ["error" => "No se proporcionaron campos para actualizar"]);
-                break;
-            }
-            
-            // Preparar consulta
-            $sql = "UPDATE usuarios_libros SET " . implode(", ", $updates) . " WHERE usuario_id = ? AND libro_id = ?";
-            $stmt = $conn->prepare($sql);
-            
-            // Añadir los parámetros de usuario y libro
-            $types .= "ii";
-            $values[] = $usuarioId;
-            $values[] = $libroId;
-            
-            // Usar callback para bind_param con array
-            $stmt->bind_param($types, ...$values);
-            
-            if ($stmt->execute()) {
-                sendResponse(200, ["mensaje" => "Biblioteca actualizada con éxito"]);
-            } else {
-                sendResponse(500, ["error" => "Error al actualizar biblioteca: " . $stmt->error]);
-            }
-            $stmt->close();
-            break;
-            
-        case 'DELETE':
-            // Eliminar libro de la biblioteca
-            if (!$usuarioId || !$libroId) {
-                sendResponse(400, ["error" => "Se requiere ID de usuario y libro"]);
-                break;
-            }
-            
-            $stmt = $conn->prepare("DELETE FROM usuarios_libros WHERE usuario_id = ? AND libro_id = ?");
-            $stmt->bind_param("ii", $usuarioId, $libroId);
-            
-            if ($stmt->execute()) {
-                if ($stmt->affected_rows > 0) {
-                    sendResponse(200, ["mensaje" => "Libro eliminado de la biblioteca con éxito"]);
+                
+                $stmt = $conn->prepare("DELETE FROM usuarios_libros WHERE usuario_id = ? AND libro_id = ?");
+                $stmt->bind_param("ii", $usuarioId, $libroId);
+                
+                if ($stmt->execute()) {
+                    if ($stmt->affected_rows > 0) {
+                        sendResponse(200, ["mensaje" => "Libro eliminado de la biblioteca con éxito"]);
+                    } else {
+                        sendResponse(404, ["error" => "Libro no encontrado en la biblioteca del usuario"]);
+                    }
                 } else {
-                    sendResponse(404, ["error" => "Libro no encontrado en la biblioteca del usuario"]);
+                    sendResponse(500, ["error" => "Error al eliminar libro de la biblioteca: " . $stmt->error]);
                 }
-            } else {
-                sendResponse(500, ["error" => "Error al eliminar libro de la biblioteca: " . $stmt->error]);
-            }
-            $stmt->close();
-            break;
-            
-        default:
-            sendResponse(405, ["error" => "Método no permitido"]);
-            break;
+                $stmt->close();
+                break;
+                
+            default:
+                sendResponse(405, ["error" => "Método no permitido"]);
+                break;
+        }
     }
-}
-
-// Función para enviar respuestas JSON con código de estado
-function sendResponse($statusCode, $data) {
-    http_response_code($statusCode);
-    echo json_encode($data);
-    exit;
-}
-
-// Cerrar conexión
-$conn->close();
-?>
+    
+    // Función para enviar respuestas JSON con código de estado
+    function sendResponse($statusCode, $data) {
+        http_response_code($statusCode);
+        echo json_encode($data);
+        exit;
+    }
+    
+    // Cerrar conexión
+    $conn->close();
+    ?>

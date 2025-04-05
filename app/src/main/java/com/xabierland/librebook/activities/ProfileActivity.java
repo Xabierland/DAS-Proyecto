@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,6 +33,10 @@ import com.xabierland.librebook.data.repositories.BibliotecaRepository;
 import com.xabierland.librebook.data.repositories.UsuarioRepository;
 import com.xabierland.librebook.utils.FileUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -41,7 +47,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends BaseActivity {
 
-    private static final int REQUEST_PERMISSION_READ_EXTERNAL_STORAGE = 101;
+    private static final int REQUEST_PERMISSION_PROFILE_PIC = 101;
 
     public static final String EXTRA_USER_ID = "user_id";
     public static final String EXTRA_VIEW_ONLY = "view_only";
@@ -77,8 +83,12 @@ public class ProfileActivity extends BaseActivity {
     private List<LibroConEstado> toReadBooks = new ArrayList<>();
     private List<LibroConEstado> readBooks = new ArrayList<>();
 
-    // Launcher para selección de foto
+    // URI para las fotos tomadas con la cámara
+    private Uri photoURI;
+
+    // Launchers para selección de foto y cámara
     private ActivityResultLauncher<Intent> imagePickerLauncher;
+    private ActivityResultLauncher<Intent> cameraLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,26 +118,46 @@ public class ProfileActivity extends BaseActivity {
                 finish();
             }
         } else {
-            // Configurar el launcher para seleccionar imágenes
-            imagePickerLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        Uri selectedImageUri = result.getData().getData();
-                        try {
-                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
-                            saveProfileImage(bitmap);
-                            imageViewProfilePic.setImageBitmap(bitmap);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            Toast.makeText(this, getString(R.string.error_loading_image), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
+            // Configurar los launchers para seleccionar imágenes y tomar fotos
+            setupLaunchers();
+            
             // Verificar sesión del usuario actual
             checkUserSession();
         }
+    }
+
+    private void setupLaunchers() {
+        // Launcher para seleccionar imágenes de la galería
+        imagePickerLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    Uri selectedImageUri = result.getData().getData();
+                    try {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
+                        uploadProfileImage(bitmap);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(this, getString(R.string.error_loading_image), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        
+        // Launcher para tomar fotos con la cámara
+        cameraLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    try {
+                        // La imagen se guarda en photoURI
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), photoURI);
+                        uploadProfileImage(bitmap);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(this, getString(R.string.error_loading_image), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
     }
 
     @Override
@@ -168,7 +198,7 @@ public class ProfileActivity extends BaseActivity {
         setupRecyclerViews();
 
         // Configurar botón de cambio de foto
-        fabChangeProfilePic.setOnClickListener(v -> checkPermissionAndOpenGallery());
+        fabChangeProfilePic.setOnClickListener(v -> checkPermissionAndShowOptions());
     }
 
     private void setupRecyclerViews() {
@@ -226,9 +256,17 @@ public class ProfileActivity extends BaseActivity {
 
         // Cargar foto de perfil si existe
         if (usuario.getFotoPerfil() != null && !usuario.getFotoPerfil().isEmpty()) {
-            File imgFile = new File(usuario.getFotoPerfil());
-            if (imgFile.exists()) {
-                imageViewProfilePic.setImageURI(Uri.fromFile(imgFile));
+            if (usuario.getFotoPerfil().startsWith("http")) {
+                // Es una URL remota
+                imageViewProfilePic.setImageURI(null); // Limpiar imagen anterior
+                // Usar ImageLoader para cargar desde URL
+                com.xabierland.librebook.utils.ImageLoader.loadImage(usuario.getFotoPerfil(), imageViewProfilePic);
+            } else {
+                // Es un archivo local
+                File imgFile = new File(usuario.getFotoPerfil());
+                if (imgFile.exists()) {
+                    imageViewProfilePic.setImageURI(Uri.fromFile(imgFile));
+                }
             }
         }
 
@@ -289,66 +327,74 @@ public class ProfileActivity extends BaseActivity {
         });
     }
 
-    private void checkPermissionAndOpenGallery() {
+    private void checkPermissionAndShowOptions() {
+        List<String> permissions = new ArrayList<>();
+        
+        // Verificar permiso de cámara
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) 
+                != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.CAMERA);
+        }
+        
+        // Verificar permiso de almacenamiento según la versión de Android
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            // Android 13+: Necesitamos READ_MEDIA_IMAGES
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES)
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES) 
                     != PackageManager.PERMISSION_GRANTED) {
-                
-                // Verifica si debemos mostrar una explicación
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, 
-                        Manifest.permission.READ_MEDIA_IMAGES)) {
-                    // Muestra una explicación al usuario
-                    new AlertDialog.Builder(this)
-                        .setTitle(getString(R.string.permission_needed))
-                        .setMessage(getString(R.string.permission_gallery_explanation))
-                        .setPositiveButton(getString(R.string.accept), (dialog, which) -> {
-                            // Solicita el permiso después de que el usuario vea la explicación
-                            ActivityCompat.requestPermissions(ProfileActivity.this,
-                                    new String[]{Manifest.permission.READ_MEDIA_IMAGES},
-                                    REQUEST_PERMISSION_READ_EXTERNAL_STORAGE);
-                        })
-                        .setNegativeButton(getString(R.string.cancel), null)
-                        .create()
-                        .show();
-                } else {
-                    // No necesita explicación, solicita directamente
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.READ_MEDIA_IMAGES},
-                            REQUEST_PERMISSION_READ_EXTERNAL_STORAGE);
-                }
-            } else {
-                openGallery();
+                permissions.add(Manifest.permission.READ_MEDIA_IMAGES);
             }
         } else {
-            // Android 12 y versiones anteriores: Usamos READ_EXTERNAL_STORAGE
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) 
                     != PackageManager.PERMISSION_GRANTED) {
-                
-                // Verifica si debemos mostrar una explicación
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, 
-                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    // Muestra una explicación al usuario
-                    new AlertDialog.Builder(this)
-                        .setTitle(getString(R.string.permission_needed))
-                        .setMessage(getString(R.string.permission_gallery_explanation))
-                        .setPositiveButton(getString(R.string.accept), (dialog, which) -> {
-                            // Solicita el permiso después de que el usuario vea la explicación
-                            ActivityCompat.requestPermissions(ProfileActivity.this,
-                                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                    REQUEST_PERMISSION_READ_EXTERNAL_STORAGE);
-                        })
-                        .setNegativeButton(getString(R.string.cancel), null)
-                        .create()
-                        .show();
-                } else {
-                    // No necesita explicación, solicita directamente
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                            REQUEST_PERMISSION_READ_EXTERNAL_STORAGE);
-                }
-            } else {
+                permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+            }
+        }
+        
+        if (!permissions.isEmpty()) {
+            ActivityCompat.requestPermissions(this, 
+                    permissions.toArray(new String[0]), 
+                    REQUEST_PERMISSION_PROFILE_PIC);
+        } else {
+            // Mostrar opciones si ya tenemos permisos
+            showImageSourceOptions();
+        }
+    }
+
+    private void showImageSourceOptions() {
+        final CharSequence[] options = {"Tomar foto", "Elegir de la galería", "Cancelar"};
+        
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Cambiar foto de perfil");
+        builder.setItems(options, (dialog, item) -> {
+            if (options[item].equals("Tomar foto")) {
+                openCamera();
+            } else if (options[item].equals("Elegir de la galería")) {
                 openGallery();
+            } else if (options[item].equals("Cancelar")) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+    }
+
+    private void openCamera() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Verificar que hay una actividad de cámara disponible
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Crear archivo para la foto
+            File photoFile = null;
+            try {
+                photoFile = FileUtils.createTempImageFile(this);
+            } catch (IOException ex) {
+                Toast.makeText(this, "Error al crear archivo temporal", Toast.LENGTH_SHORT).show();
+            }
+            
+            // Si el archivo se creó correctamente
+            if (photoFile != null) {
+                photoURI = FileProvider.getUriForFile(this,
+                        "com.xabierland.librebook.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                cameraLauncher.launch(takePictureIntent);
             }
         }
     }
@@ -358,42 +404,43 @@ public class ProfileActivity extends BaseActivity {
         imagePickerLauncher.launch(intent);
     }
 
-    private void saveProfileImage(Bitmap bitmap) {
-        if (usuario == null) return;
-
+    private void uploadProfileImage(Bitmap bitmap) {
+        // Mostrar diálogo de carga
+        AlertDialog loadingDialog = createLoadingDialog();
+        loadingDialog.show();
+        
         try {
-            // Crear directorio para imágenes si no existe
-            File directory = new File(getFilesDir(), "profile_images");
-            if (!directory.exists()) {
-                directory.mkdirs();
-            }
-
-            // Crear archivo para la imagen
-            String fileName = "profile_" + usuario.getId() + ".jpg";
-            File file = new File(directory, fileName);
-
-            // Guardar imagen en el archivo
-            FileOutputStream fos = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
-            fos.flush();
-            fos.close();
-
-            // Actualizar ruta de la imagen en el usuario
-            String filePath = file.getAbsolutePath();
-            usuario.setFotoPerfil(filePath);
-
-            // Actualizar usuario en la base de datos
-            usuarioRepository.actualizarUsuario(usuario, result -> {
-                runOnUiThread(() -> {
-                    if (result > 0) {
+            // Convertir bitmap a base64
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+            String base64Image = "data:image/jpeg;base64," + Base64.encodeToString(byteArray, Base64.DEFAULT);
+            
+            // Actualizar la UI con la nueva imagen temporalmente
+            imageViewProfilePic.setImageBitmap(bitmap);
+            
+            // Enviar la imagen al servidor
+            usuarioRepository.actualizarUsuario(usuario, base64Image, result -> {
+                loadingDialog.dismiss();
+                
+                if (result > 0) {
+                    runOnUiThread(() -> {
                         Toast.makeText(ProfileActivity.this, getString(R.string.profile_pic_updated), Toast.LENGTH_SHORT).show();
-                        recreate();
-                    } else {
+                        
+                        // Actualizar header del navigation menu
+                        updateNavigationHeader();
+                        
+                        // Actualizar la información del usuario con la URL recibida desde el servidor
+                        loadUserData();
+                    });
+                } else {
+                    runOnUiThread(() -> {
                         Toast.makeText(ProfileActivity.this, getString(R.string.error_updating_profile_pic), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    });
+                }
             });
-        } catch (IOException e) {
+        } catch (Exception e) {
+            loadingDialog.dismiss();
             e.printStackTrace();
             Toast.makeText(this, getString(R.string.error_saving_image), Toast.LENGTH_SHORT).show();
         }
@@ -402,9 +449,9 @@ public class ProfileActivity extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_PERMISSION_READ_EXTERNAL_STORAGE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                openGallery();
+        if (requestCode == REQUEST_PERMISSION_PROFILE_PIC) {
+            if (grantResults.length > 0 && allPermissionsGranted(grantResults)) {
+                showImageSourceOptions();
             } else {
                 // Mostrar un diálogo preguntando si quiere ir a los ajustes
                 new AlertDialog.Builder(this)
@@ -423,6 +470,23 @@ public class ProfileActivity extends BaseActivity {
                 Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private boolean allPermissionsGranted(int[] grantResults) {
+        for (int result : grantResults) {
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private AlertDialog createLoadingDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_loading, null);
+        builder.setView(dialogView);
+        builder.setCancelable(false);
+        return builder.create();
     }
 
     private void loadOtherUserData(int userId) {
