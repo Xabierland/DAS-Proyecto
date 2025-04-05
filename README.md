@@ -30,7 +30,7 @@ Puedes ver la API de la aplicacion esta alojada en el siguiente enlace:
 
 [http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/api.php](http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/api.php/)
 
-Puedes acceder al servidor API mediante SFTP con el usuario `xgabina001` y la siguiente clave privada
+Puedes acceder a la API mediante SFTP con el usuario `xgabina001` y la siguiente clave privada
 
 ```gpg
 -----BEGIN RSA PRIVATE KEY-----

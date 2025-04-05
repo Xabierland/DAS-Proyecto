@@ -87,11 +87,6 @@
     <string name="member_since">Member since: %1$s</string>
     <string name="permission_needed">Permission needed</string>
     <string name="permission_gallery_explanation">To change your profile picture, we need access to your images.</string>
-    <string name="take_photo">Take photo</string>
-    <string name="choose_from_gallery">Choose from gallery</string>
-    <string name="change_profile_pic_title">Change profile picture</string>
-    <string name="error_create_temp_file">Error creating temporary file</string>
-    <string name="camera_permission_needed">Camera access is required</string>
 
     <!-- Book Detail Activity -->
     <string name="book_detail">Book Detail</string>

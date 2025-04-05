@@ -87,11 +87,6 @@
     <string name="member_since">Miembro desde: %1$s</string>
     <string name="permission_needed">Permiso necesario</string>
     <string name="permission_gallery_explanation">Para cambiar tu foto de perfil, necesitamos acceso a tus imágenes.</string>
-    <string name="take_photo">Tomar foto</string>
-    <string name="choose_from_gallery">Elegir de la galería</string>
-    <string name="change_profile_pic_title">Cambiar foto de perfil</string>
-    <string name="error_create_temp_file">Error al crear archivo temporal</string>
-    <string name="camera_permission_needed">Se necesita acceso a la cámara</string>
 
     <!-- Actividad de detalle del libro -->
     <string name="book_detail">Detalle del libro</string>

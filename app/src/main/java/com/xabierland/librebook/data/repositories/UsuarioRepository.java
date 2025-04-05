@@ -137,30 +137,19 @@ public class UsuarioRepository {
         });
     }
     
-    // Método para actualizar los datos de un usuario con imagen base64
-    public void actualizarUsuario(Usuario usuario, String base64Image, final DataCallback<Integer> callback) {
+    // Método para actualizar los datos de un usuario
+    public void actualizarUsuario(Usuario usuario, final DataCallback<Integer> callback) {
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("nombre", usuario.getNombre());
             jsonObject.put("email", usuario.getEmail());
-            
-            // Añadir imagen en base64 si existe
-            if (base64Image != null && !base64Image.isEmpty()) {
-                jsonObject.put("fotoPerfil", base64Image);
+            if (usuario.getFotoPerfil() != null) {
+                jsonObject.put("fotoPerfil", usuario.getFotoPerfil());
             }
             
             ApiClient.put("usuarios/" + usuario.getId(), jsonObject, response -> {
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    // Actualizar la URL de la foto en el objeto Usuario
-                    if (jsonResponse.has("foto_perfil")) {
-                        usuario.setFotoPerfil(jsonResponse.getString("foto_perfil"));
-                    }
-                    return 1;
-                } catch (JSONException e) {
-                    Log.e(TAG, "Error al procesar respuesta JSON", e);
-                    return 1; // Devolvemos éxito aunque haya error al procesar la respuesta
-                }
+                // La respuesta no es importante, solo nos interesa si fue exitoso
+                return 1;
             }, new ApiClient.ApiCallback<Integer>() {
                 @Override
                 public void onSuccess(Integer result) {
@@ -183,11 +172,6 @@ public class UsuarioRepository {
                 callback.onComplete(0);
             }
         }
-    }
-    
-    // Método para actualizar los datos de un usuario (mantener compatibilidad)
-    public void actualizarUsuario(Usuario usuario, final DataCallback<Integer> callback) {
-        actualizarUsuario(usuario, null, callback);
     }
     
     // Método para eliminar un usuario
