@@ -18,6 +18,48 @@
             android:background="?attr/colorPrimary"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
+        <!-- Contenedor del mapa con altura fija -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginBottom="16dp">
+
+            <!-- Mapa OpenStreetMap -->
+            <org.osmdroid.views.MapView
+                android:id="@+id/mapView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- Indicador de carga para el mapa -->
+            <ProgressBar
+                android:id="@+id/progressBarMap"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+            <!-- Mensaje para cuando no hay tiendas cercanas -->
+            <TextView
+                android:id="@+id/textViewNoBookstores"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="@string/no_nearby_bookstores"
+                android:textColor="?attr/textColor"
+                android:visibility="gone" />
+
+            <!-- Botón para centrar en la ubicación actual -->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabMyLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="16dp"
+                android:contentDescription="@string/my_location"
+                android:src="@android:drawable/ic_menu_mylocation" />
+        </FrameLayout>
+
         <!-- Contenido de la actividad -->
         <ScrollView
             android:layout_width="match_parent"
@@ -73,49 +115,6 @@
 
             </LinearLayout>
         </ScrollView>
-
-        <!-- Contenedor del mapa con altura fija -->
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginBottom="16dp">
-
-            <!-- Mapa OpenStreetMap -->
-            <org.osmdroid.views.MapView
-                android:id="@+id/mapView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <!-- Indicador de carga para el mapa -->
-            <ProgressBar
-                android:id="@+id/progressBarMap"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="gone" />
-
-            <!-- Mensaje para cuando no hay tiendas cercanas -->
-            <TextView
-                android:id="@+id/textViewNoBookstores"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:padding="16dp"
-                android:text="@string/no_nearby_bookstores"
-                android:textColor="?attr/textColor"
-                android:visibility="gone" />
-
-            <!-- Botón para centrar en la ubicación actual -->
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fabMyLocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:layout_margin="16dp"
-                android:contentDescription="@string/my_location"
-                android:src="@android:drawable/ic_menu_mylocation" />
-        </FrameLayout>
-
     </LinearLayout>
 
     <!-- Menú lateral -->
