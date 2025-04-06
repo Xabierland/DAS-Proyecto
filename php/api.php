@@ -255,6 +255,10 @@ function handleUsuarios($method, $params, $conn) {
                 $usuario = $result->fetch_assoc();
                 
                 if ($usuario) {
+                    // Convertir BLOB a base64 si existe
+                    if ($usuario['foto_perfil'] !== null) {
+                        $usuario['foto_perfil'] = base64_encode($usuario['foto_perfil']);
+                    }
                     sendResponse(200, $usuario);
                 } else {
                     sendResponse(404, ["error" => "Usuario no encontrado"]);
@@ -270,6 +274,10 @@ function handleUsuarios($method, $params, $conn) {
                 $usuario = $result->fetch_assoc();
                 
                 if ($usuario) {
+                    // Convertir BLOB a base64 si existe
+                    if ($usuario['foto_perfil'] !== null) {
+                        $usuario['foto_perfil'] = base64_encode($usuario['foto_perfil']);
+                    }
                     sendResponse(200, $usuario);
                 } else {
                     sendResponse(404, ["error" => "Usuario no encontrado"]);
@@ -285,6 +293,10 @@ function handleUsuarios($method, $params, $conn) {
                 $usuarios = [];
                 
                 while ($row = $result->fetch_assoc()) {
+                    // Convertir BLOB a base64 si existe
+                    if ($row['foto_perfil'] !== null) {
+                        $row['foto_perfil'] = base64_encode($row['foto_perfil']);
+                    }
                     $usuarios[] = $row;
                 }
                 
@@ -298,6 +310,10 @@ function handleUsuarios($method, $params, $conn) {
                 $usuarios = [];
                 
                 while ($row = $result->fetch_assoc()) {
+                    // Convertir BLOB a base64 si existe
+                    if ($row['foto_perfil'] !== null) {
+                        $row['foto_perfil'] = base64_encode($row['foto_perfil']);
+                    }
                     $usuarios[] = $row;
                 }
                 
@@ -350,15 +366,21 @@ function handleUsuarios($method, $params, $conn) {
                 }
                 $stmt->close();
                 
-                // Crear usuario
+                // Preparar la imagen si existe
+                $fotoPerfilData = null;
+                if (isset($data['fotoPerfil']) && !empty($data['fotoPerfil'])) {
+                    // Decodificar la imagen base64
+                    $fotoPerfilData = base64_decode($data['fotoPerfil']);
+                }
+                
+                // Crear usuario con la imagen BLOB
                 $stmt = $conn->prepare("INSERT INTO usuarios (nombre, email, password, foto_perfil, fecha_registro) VALUES (?, ?, ?, ?, ?)");
                 $fechaRegistro = time() * 1000; // Convertir a milisegundos como en la app
-                $fotoPerfilDefault = $data['fotoPerfil'] ?? '';
-                $stmt->bind_param("ssssi", 
+                $stmt->bind_param("sssbi", 
                     $data['nombre'],
                     $data['email'],
                     $data['password'],
-                    $fotoPerfilDefault,
+                    $fotoPerfilData,
                     $fechaRegistro
                 );
                 
@@ -394,14 +416,33 @@ function handleUsuarios($method, $params, $conn) {
             }
             $stmt->close();
             
-            // Preparar actualización
-            $stmt = $conn->prepare("UPDATE usuarios SET nombre = ?, email = ?, foto_perfil = ? WHERE id = ?");
-            $stmt->bind_param("sssi", 
-                $data['nombre'],
-                $data['email'],
-                $data['fotoPerfil'] ?? '',
-                $id
-            );
+            // Preparar la imagen si existe
+            $fotoPerfilData = null;
+            $hasImage = false;
+            if (isset($data['fotoPerfil']) && !empty($data['fotoPerfil'])) {
+                // Decodificar la imagen base64
+                $fotoPerfilData = base64_decode($data['fotoPerfil']);
+                $hasImage = true;
+            }
+            
+            // Preparar actualización con o sin imagen
+            if ($hasImage) {
+                $stmt = $conn->prepare("UPDATE usuarios SET nombre = ?, email = ?, foto_perfil = ? WHERE id = ?");
+                $stmt->bind_param("ssbi", 
+                    $data['nombre'],
+                    $data['email'],
+                    $fotoPerfilData,
+                    $id
+                );
+            } else {
+                // Si no hay nueva imagen, no actualizamos ese campo
+                $stmt = $conn->prepare("UPDATE usuarios SET nombre = ?, email = ? WHERE id = ?");
+                $stmt->bind_param("ssi", 
+                    $data['nombre'],
+                    $data['email'],
+                    $id
+                );
+            }
             
             if ($stmt->execute()) {
                 sendResponse(200, ["mensaje" => "Usuario actualizado con éxito"]);

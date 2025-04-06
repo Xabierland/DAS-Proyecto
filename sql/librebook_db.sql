@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     nombre VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
-    foto_perfil VARCHAR(255) DEFAULT '',
+    foto_perfil MEDIUMBLOB,
     fecha_registro BIGINT NOT NULL,
     UNIQUE INDEX (email)
 ) ENGINE=InnoDB;
