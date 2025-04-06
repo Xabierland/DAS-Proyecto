@@ -442,8 +442,8 @@ public class ProfileActivity extends BaseActivity {
     
     private void openCamera() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Asegurarse de que hay una actividad de cámara para manejar el intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+        
+        try {
             // Crear el archivo donde debería ir la foto
             File photoFile = null;
             try {
@@ -451,6 +451,7 @@ public class ProfileActivity extends BaseActivity {
             } catch (IOException ex) {
                 // Error al crear el archivo
                 Toast.makeText(this, getString(R.string.error_camera_file), Toast.LENGTH_SHORT).show();
+                return;
             }
             
             // Continuar solo si el archivo se creó correctamente
@@ -461,8 +462,9 @@ public class ProfileActivity extends BaseActivity {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 cameraLauncher.launch(takePictureIntent);
             }
-        } else {
+        } catch (Exception e) {
             Toast.makeText(this, getString(R.string.no_camera_app), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
     }
 
