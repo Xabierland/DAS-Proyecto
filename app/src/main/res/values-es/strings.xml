@@ -87,6 +87,14 @@
     <string name="member_since">Miembro desde: %1$s</string>
     <string name="permission_needed">Permiso necesario</string>
     <string name="permission_gallery_explanation">Para cambiar tu foto de perfil, necesitamos acceso a tus imágenes.</string>
+    <string name="gallery">Galería</string>
+    <string name="camera">Cámara</string>
+    <string name="select_image_source">Seleccionar origen de la imagen</string>
+    <string name="permission_camera_explanation">Para tomar una foto de perfil, necesitamos acceso a tu cámara.</string>
+    <string name="permission_camera_message">Sin este permiso no podrás usar la cámara para cambiar tu foto de perfil. ¿Deseas abrir los ajustes de la aplicación para conceder el permiso manualmente?</string>
+    <string name="permission_denied_camera">Permiso denegado para acceder a la cámara</string>
+    <string name="error_camera_file">Error al crear archivo para la cámara</string>
+    <string name="no_camera_app">No hay aplicación de cámara disponible</string>
 
     <!-- Actividad de detalle del libro -->
     <string name="book_detail">Detalle del libro</string>

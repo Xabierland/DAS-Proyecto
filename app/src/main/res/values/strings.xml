@@ -87,6 +87,15 @@
     <string name="member_since">Member since: %1$s</string>
     <string name="permission_needed">Permission needed</string>
     <string name="permission_gallery_explanation">To change your profile picture, we need access to your images.</string>
+    <string name="gallery">Gallery</string>
+    <string name="camera">Camera</string>
+    <string name="select_image_source">Select image source</string>
+    <string name="permission_camera_explanation">To take a profile picture, we need access to your camera.</string>
+    <string name="permission_camera_message">Without this permission you won\'t be able to use the camera to change your profile picture. Do you want to open app settings to grant permission manually?</string>
+    <string name="permission_denied_camera">Permission denied to access camera</string>
+    <string name="error_camera_file">Error creating file for camera</string>
+    <string name="no_camera_app">No camera application available</string>
+
 
     <!-- Book Detail Activity -->
     <string name="book_detail">Book Detail</string>

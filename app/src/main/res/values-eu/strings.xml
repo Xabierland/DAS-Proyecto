@@ -87,6 +87,14 @@
     <string name="member_since">Noiztik kide: %1$s</string>
     <string name="permission_needed">Beharrezko baimena</string>
     <string name="permission_gallery_explanation">Zure profileko argazkia aldatzeko, zure irudietara sarbidea behar dugu.</string>
+    <string name="gallery">Galeria</string>
+    <string name="camera">Kamera</string>
+    <string name="select_image_source">Irudiaren jatorria aukeratu</string>
+    <string name="permission_camera_explanation">Profileko argazkia ateratzeko, zure kamerarako sarbidea behar dugu.</string>
+    <string name="permission_camera_message">Baimen hau gabe ezin izango duzu kamera erabili zure profileko argazkia aldatzeko. Aplikazioaren ezarpenak ireki nahi dituzu baimena eskuz emateko?</string>
+    <string name="permission_denied_camera">Kamerarako sarbidea ukatu da</string>
+    <string name="error_camera_file">Errorea kamerarako fitxategia sortzean</string>
+    <string name="no_camera_app">Ez dago kamera aplikaziorik erabilgarri</string>
 
     <!-- Liburuaren xehetasun jarduera -->
     <string name="book_detail">Liburuaren xehetasunak</string>

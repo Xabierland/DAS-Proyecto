@@ -22,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,6 +36,7 @@ import com.xabierland.librebook.data.repositories.UsuarioRepository;
 import com.xabierland.librebook.utils.FileUtils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,9 +46,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfileActivity extends BaseActivity {
 
     private static final int REQUEST_PERMISSION_READ_EXTERNAL_STORAGE = 101;
+    private static final int REQUEST_PERMISSION_CAMERA = 103;
 
     public static final String EXTRA_USER_ID = "user_id";
     public static final String EXTRA_VIEW_ONLY = "view_only";
+
+    private Uri photoURI;
 
     // Vistas
     private CircleImageView imageViewProfilePic;
@@ -81,6 +86,7 @@ public class ProfileActivity extends BaseActivity {
 
     // Launcher para selección de foto
     private ActivityResultLauncher<Intent> imagePickerLauncher;
+    private ActivityResultLauncher<Intent> cameraLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +116,26 @@ public class ProfileActivity extends BaseActivity {
                 finish();
             }
         } else {
+            cameraLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        try {
+                            // La foto se guardó en photoURI
+                            Bitmap bitmap = BitmapFactory.decodeStream(
+                                    getContentResolver().openInputStream(photoURI));
+                            // Procesar y guardar la imagen
+                            if (bitmap != null) {
+                                saveProfileImage(bitmap);
+                                imageViewProfilePic.setImageBitmap(bitmap);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(this, getString(R.string.error_loading_image), 
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             // Configurar el launcher para seleccionar imágenes
             imagePickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -298,6 +324,25 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void checkPermissionAndOpenGallery() {
+        // Mostrar diálogo de opciones para seleccionar fuente de imagen
+        String[] options = {getString(R.string.camera), getString(R.string.gallery)};
+        
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.select_image_source));
+        builder.setItems(options, (dialog, which) -> {
+            if (which == 0) {
+                // Opción de cámara
+                checkCameraPermissionAndOpen();
+            } else {
+                // Opción de galería
+                checkGalleryPermissionAndOpen();
+            }
+        });
+        builder.show();
+    }
+
+    private void checkGalleryPermissionAndOpen() {
+        // Este es tu código actual de verificación de permisos de galería
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             // Android 13+: Necesitamos READ_MEDIA_IMAGES
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES)
@@ -360,10 +405,65 @@ public class ProfileActivity extends BaseActivity {
             }
         }
     }
-
+    
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         imagePickerLauncher.launch(intent);
+    }
+
+    private void checkCameraPermissionAndOpen() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, 
+                    Manifest.permission.CAMERA)) {
+                // Mostrar explicación
+                new AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.permission_needed))
+                    .setMessage(getString(R.string.permission_camera_explanation))
+                    .setPositiveButton(getString(R.string.accept), (dialog, which) -> {
+                        ActivityCompat.requestPermissions(ProfileActivity.this,
+                                new String[]{Manifest.permission.CAMERA},
+                                REQUEST_PERMISSION_CAMERA);
+                    })
+                    .setNegativeButton(getString(R.string.cancel), null)
+                    .create()
+                    .show();
+            } else {
+                // Solicitar permiso directamente
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.CAMERA},
+                        REQUEST_PERMISSION_CAMERA);
+            }
+        } else {
+            openCamera();
+        }
+    }
+    
+    private void openCamera() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Asegurarse de que hay una actividad de cámara para manejar el intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Crear el archivo donde debería ir la foto
+            File photoFile = null;
+            try {
+                photoFile = FileUtils.createTempImageFile(this);
+            } catch (IOException ex) {
+                // Error al crear el archivo
+                Toast.makeText(this, getString(R.string.error_camera_file), Toast.LENGTH_SHORT).show();
+            }
+            
+            // Continuar solo si el archivo se creó correctamente
+            if (photoFile != null) {
+                photoURI = FileProvider.getUriForFile(this,
+                        "com.xabierland.librebook.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                cameraLauncher.launch(takePictureIntent);
+            }
+        } else {
+            Toast.makeText(this, getString(R.string.no_camera_app), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void saveProfileImage(Bitmap bitmap) {
@@ -426,6 +526,25 @@ public class ProfileActivity extends BaseActivity {
                     .create()
                     .show();
                 Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == REQUEST_PERMISSION_CAMERA) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openCamera();
+            } else {
+                // Mostrar un diálogo preguntando si quiere ir a los ajustes
+                new AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.permission_title))
+                    .setMessage(getString(R.string.permission_camera_message))
+                    .setPositiveButton(getString(R.string.go_to_settings), (dialog, which) -> {
+                        Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", getPackageName(), null);
+                        intent.setData(uri);
+                        startActivity(intent);
+                    })
+                    .setNegativeButton(getString(R.string.cancel), null)
+                    .create()
+                    .show();
+                Toast.makeText(this, getString(R.string.permission_denied_camera), Toast.LENGTH_SHORT).show();
             }
         }
     }
