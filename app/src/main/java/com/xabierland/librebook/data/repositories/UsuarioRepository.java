@@ -144,6 +144,7 @@ public class UsuarioRepository {
             jsonObject.put("nombre", usuario.getNombre());
             jsonObject.put("email", usuario.getEmail());
             if (usuario.getFotoPerfil() != null) {
+                // La ruta de la foto de perfil ahora contiene la imagen en base64
                 jsonObject.put("fotoPerfil", usuario.getFotoPerfil());
             }
             

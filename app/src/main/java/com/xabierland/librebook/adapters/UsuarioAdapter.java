@@ -2,7 +2,11 @@ package com.xabierland.librebook.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +45,7 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
         return new UsuarioViewHolder(view);
     }
     
+    // Modificar el método onBindViewHolder en com.xabierland.librebook.adapters.UsuarioAdapter.java
     @Override
     public void onBindViewHolder(@NonNull UsuarioViewHolder holder, int position) {
         Usuario usuario = usuarios.get(position);
@@ -55,9 +60,15 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
                 
         // Cargar foto de perfil si existe
         if (usuario.getFotoPerfil() != null && !usuario.getFotoPerfil().isEmpty()) {
-            File imgFile = new File(usuario.getFotoPerfil());
-            if (imgFile.exists()) {
-                holder.imageViewUserPhoto.setImageURI(Uri.fromFile(imgFile));
+            try {
+                // Decodificar la cadena base64 a un bitmap
+                byte[] decodedString = Base64.decode(usuario.getFotoPerfil(), Base64.DEFAULT);
+                Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                holder.imageViewUserPhoto.setImageBitmap(decodedBitmap);
+            } catch (Exception e) {
+                Log.e("UsuarioAdapter", "Error al decodificar imagen base64", e);
+                // Usar imagen por defecto en caso de error
+                holder.imageViewUserPhoto.setImageResource(R.drawable.default_profile_image);
             }
         } else {
             // Usar imagen predeterminada

@@ -394,63 +394,64 @@ function handleUsuarios($method, $params, $conn) {
             }
             break;
             
-        case 'PUT':
-            // Actualizar usuario
-            if (!$id) {
-                sendResponse(400, ["error" => "Se requiere ID para actualizar"]);
-                break;
-            }
-            
-            $data = json_decode(file_get_contents('php://input'), true);
-            
-            // Verificar que el usuario existe
-            $stmt = $conn->prepare("SELECT id FROM usuarios WHERE id = ?");
-            $stmt->bind_param("i", $id);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            
-            if ($result->num_rows === 0) {
-                sendResponse(404, ["error" => "Usuario no encontrado"]);
+            case 'PUT':
+                // Actualizar usuario
+                if (!$id) {
+                    sendResponse(400, ["error" => "Se requiere ID para actualizar"]);
+                    break;
+                }
+                
+                $data = json_decode(file_get_contents('php://input'), true);
+                
+                // Verificar que el usuario existe
+                $stmt = $conn->prepare("SELECT id FROM usuarios WHERE id = ?");
+                $stmt->bind_param("i", $id);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                
+                if ($result->num_rows === 0) {
+                    sendResponse(404, ["error" => "Usuario no encontrado"]);
+                    $stmt->close();
+                    break;
+                }
+                $stmt->close();
+                
+                // Verificar si hay imagen
+                $hasImage = isset($data['fotoPerfil']) && !empty($data['fotoPerfil']);
+                
+                if ($hasImage) {
+                    // Decodificar la imagen base64
+                    $fotoPerfilData = base64_decode($data['fotoPerfil']);
+                    
+                    // Convertir a formato hexadecimal para UNHEX
+                    $hexData = bin2hex($fotoPerfilData);
+                    
+                    // Construir consulta con UNHEX para datos binarios
+                    $query = "UPDATE usuarios SET nombre = ?, email = ?, foto_perfil = UNHEX(?) WHERE id = ?";
+                    $stmt = $conn->prepare($query);
+                    $stmt->bind_param("sssi", 
+                        $data['nombre'],
+                        $data['email'],
+                        $hexData,
+                        $id
+                    );
+                } else {
+                    // Si no hay nueva imagen, no actualizamos ese campo
+                    $stmt = $conn->prepare("UPDATE usuarios SET nombre = ?, email = ? WHERE id = ?");
+                    $stmt->bind_param("ssi", 
+                        $data['nombre'],
+                        $data['email'],
+                        $id
+                    );
+                }
+                
+                if ($stmt->execute()) {
+                    sendResponse(200, ["mensaje" => "Usuario actualizado con éxito"]);
+                } else {
+                    sendResponse(500, ["error" => "Error al actualizar usuario: " . $stmt->error]);
+                }
                 $stmt->close();
                 break;
-            }
-            $stmt->close();
-            
-            // Preparar la imagen si existe
-            $fotoPerfilData = null;
-            $hasImage = false;
-            if (isset($data['fotoPerfil']) && !empty($data['fotoPerfil'])) {
-                // Decodificar la imagen base64
-                $fotoPerfilData = base64_decode($data['fotoPerfil']);
-                $hasImage = true;
-            }
-            
-            // Preparar actualización con o sin imagen
-            if ($hasImage) {
-                $stmt = $conn->prepare("UPDATE usuarios SET nombre = ?, email = ?, foto_perfil = ? WHERE id = ?");
-                $stmt->bind_param("ssbi", 
-                    $data['nombre'],
-                    $data['email'],
-                    $fotoPerfilData,
-                    $id
-                );
-            } else {
-                // Si no hay nueva imagen, no actualizamos ese campo
-                $stmt = $conn->prepare("UPDATE usuarios SET nombre = ?, email = ? WHERE id = ?");
-                $stmt->bind_param("ssi", 
-                    $data['nombre'],
-                    $data['email'],
-                    $id
-                );
-            }
-            
-            if ($stmt->execute()) {
-                sendResponse(200, ["mensaje" => "Usuario actualizado con éxito"]);
-            } else {
-                sendResponse(500, ["error" => "Error al actualizar usuario: " . $stmt->error]);
-            }
-            $stmt->close();
-            break;
             
         case 'DELETE':
             // Eliminar usuario

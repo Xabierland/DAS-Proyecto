@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,8 +34,7 @@ import com.xabierland.librebook.data.repositories.BibliotecaRepository;
 import com.xabierland.librebook.data.repositories.UsuarioRepository;
 import com.xabierland.librebook.utils.FileUtils;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -223,15 +225,21 @@ public class ProfileActivity extends BaseActivity {
         // Actualizar información básica del usuario
         textViewUserName.setText(usuario.getNombre());
         textViewUserEmail.setText(usuario.getEmail());
-
+    
         // Cargar foto de perfil si existe
         if (usuario.getFotoPerfil() != null && !usuario.getFotoPerfil().isEmpty()) {
-            File imgFile = new File(usuario.getFotoPerfil());
-            if (imgFile.exists()) {
-                imageViewProfilePic.setImageURI(Uri.fromFile(imgFile));
+            try {
+                // Decodificar la cadena base64 a un bitmap
+                byte[] decodedString = Base64.decode(usuario.getFotoPerfil(), Base64.DEFAULT);
+                Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                imageViewProfilePic.setImageBitmap(decodedBitmap);
+            } catch (Exception e) {
+                Log.e("ProfileActivity", "Error al decodificar imagen base64", e);
+                // Usar imagen por defecto en caso de error
+                imageViewProfilePic.setImageResource(R.drawable.default_profile_image);
             }
         }
-
+    
         // Cargar listas de libros
         loadBooks();
     }
@@ -360,40 +368,37 @@ public class ProfileActivity extends BaseActivity {
 
     private void saveProfileImage(Bitmap bitmap) {
         if (usuario == null) return;
-
+    
         try {
-            // Crear directorio para imágenes si no existe
-            File directory = new File(getFilesDir(), "profile_images");
-            if (!directory.exists()) {
-                directory.mkdirs();
-            }
-
-            // Crear archivo para la imagen
-            String fileName = "profile_" + usuario.getId() + ".jpg";
-            File file = new File(directory, fileName);
-
-            // Guardar imagen en el archivo
-            FileOutputStream fos = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
-            fos.flush();
-            fos.close();
-
-            // Actualizar ruta de la imagen en el usuario
-            String filePath = file.getAbsolutePath();
-            usuario.setFotoPerfil(filePath);
-
-            // Actualizar usuario en la base de datos
+            // Convertir el bitmap a base64
+            String base64Image = FileUtils.bitmapToBase64(bitmap);
+            
+            // Guardar la representación base64 en el usuario
+            usuario.setFotoPerfil(base64Image);
+            
+            // Mostrar un diálogo de carga
+            AlertDialog loadingDialog = createLoadingDialog();
+            loadingDialog.show();
+    
+            // Actualizar usuario en la base de datos con la nueva imagen
             usuarioRepository.actualizarUsuario(usuario, result -> {
                 runOnUiThread(() -> {
+                    loadingDialog.dismiss();
+                    
                     if (result > 0) {
                         Toast.makeText(ProfileActivity.this, getString(R.string.profile_pic_updated), Toast.LENGTH_SHORT).show();
-                        recreate();
+                        
+                        // Actualizar la UI con la nueva imagen
+                        imageViewProfilePic.setImageBitmap(bitmap);
+                        
+                        // Actualizar también el menú de navegación
+                        updateNavigationHeader();
                     } else {
                         Toast.makeText(ProfileActivity.this, getString(R.string.error_updating_profile_pic), Toast.LENGTH_SHORT).show();
                     }
                 });
             });
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, getString(R.string.error_saving_image), Toast.LENGTH_SHORT).show();
         }
@@ -446,6 +451,14 @@ public class ProfileActivity extends BaseActivity {
                 }
             });
         });
+    }
+
+    private AlertDialog createLoadingDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_loading, null);
+        builder.setView(dialogView);
+        builder.setCancelable(false);
+        return builder.create();
     }
 
     public boolean isViewingOtherProfile() {
