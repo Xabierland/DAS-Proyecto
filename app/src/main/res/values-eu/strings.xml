@@ -23,6 +23,19 @@
     <string name="welcome_user">Ongi etorri, %1$s! Zure liburutegi pertsonala prest dago.</string>
     <string name="recommended_books">Gomendatutako liburuak</string>
     <string name="no_recommended_books">Ez dago gomendatutako libururik eskuragarri</string>
+    <string name="nearby_bookstores">Inguruko liburudendak</string>
+    <string name="no_nearby_bookstores">Ez da inguruko liburudendarik aurkitu</string>
+    <string name="my_location">Nire kokapena</string>
+    <string name="location_permission_needed">Kokapen baimena behar da inguruko liburudendak erakusteko</string>
+    <string name="bookstore_marker">Liburudenda</string>
+    <string name="distance_format">%1$.1f km-ra</string>
+    <string name="bookstore_search_radius">5</string><!-- Bilaketa erradioa km-tan -->
+    <string name="searching_bookstores">Inguruko liburudendak bilatzen...</string>
+    <string name="error_location">Errorea kokapena lortzean</string>
+    <string name="location_settings">Kokapen ezarpenak</string>
+    <string name="location_required">Kokapena beharrezkoa da funtzio honetarako</string>
+    <string name="enable_location">Mesedez, aktibatu kokapen zerbitzuak inguruko liburudendak ikusteko</string>
+
 
     <!-- Ezarpen jarduera -->
     <string name="select_language">Hizkuntza aukeratu</string>

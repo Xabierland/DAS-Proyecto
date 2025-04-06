@@ -23,6 +23,18 @@
     <string name="welcome_user">¡Bienvenido, %1$s! Tu biblioteca personal está lista.</string>
     <string name="recommended_books">Libros recomendados</string>
     <string name="no_recommended_books">No hay libros recomendados disponibles</string>
+    <string name="nearby_bookstores">Librerías cercanas</string>
+    <string name="no_nearby_bookstores">No se encontraron librerías cercanas</string>
+    <string name="my_location">Mi ubicación</string>
+    <string name="location_permission_needed">Se necesita permiso de ubicación para mostrar librerías cercanas</string>
+    <string name="bookstore_marker">Librería</string>
+    <string name="distance_format">a %1$.1f km</string>
+    <string name="bookstore_search_radius">5</string><!-- Radio de búsqueda en km -->
+    <string name="searching_bookstores">Buscando librerías cercanas...</string>
+    <string name="error_location">Error al obtener la ubicación</string>
+    <string name="location_settings">Configuración de ubicación</string>
+    <string name="location_required">La ubicación es necesaria para esta función</string>
+    <string name="enable_location">Por favor, activa los servicios de ubicación para ver librerías cercanas</string>
 
     <!-- Actividad de ajustes -->
     <string name="select_language">Seleccionar idioma</string>
