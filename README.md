@@ -16,7 +16,7 @@ La aplicacion se trata de una red social para compartir lecturas en la que puede
 - MySQL
 - PHP
 
-## Base de datos en MySQL
+### Base de datos en MySQL
 
 La base de datos se puede encontrar en el siguiente enlace:
 
@@ -24,7 +24,7 @@ La base de datos se puede encontrar en el siguiente enlace:
 
 El usuario es `Xxgabina001` y la contraseña es `BPKrbjdfP`
 
-## API
+### API
 
 Puedes ver la API de la aplicacion esta alojada en el siguiente enlace:
 
@@ -61,3 +61,10 @@ eerqLpcfeQICXkxr5cFPAr3cK3TKbSF8tCvAqszm1Js27MWP1XwMTKw6yFVC4XYK
 1TDDfLEjxlmnWWpYeKYtjGsoiV6VDnoBR0Jfdb0+Ylv7M+6bhrWeOQ==
 -----END RSA PRIVATE KEY-----
 ```
+
+## TODO
+
+- Alarma (Probablemente para actualizar la lista de recomendaciones del MainActivity)
+- ContentProvider (Boton en el perfil para compartir los libros marcados como favoritos)
+- Servicio en primer plano (Contador de tiempo de lectura)
+- FCM (Mostrar una notificacion cuando se envie un mensaje a un archivo PHP)
