@@ -167,4 +167,10 @@
     <string name="yes">Sí</string>
     <string name="no">No</string>
     <string name="session_closed">Sesión cerrada</string>
+
+    <!--  Widget -->
+    <string name="widget_recommendation_text">Recomendación del día</string>
+    <string name="widget_config_title">Configuración del widget</string>
+    <string name="widget_description">Muestra recomendaciones de libros que cambian cada 15 segundos</string>
+    <string name="no_books_available">No hay libros disponibles</string>
 </resources>

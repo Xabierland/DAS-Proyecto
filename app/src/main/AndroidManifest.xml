@@ -34,6 +34,18 @@
             android:resource="@xml/file_paths" />
     </provider>
 
+    <receiver
+        android:name=".widget.BookRecommendationWidgetProvider"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            <action android:name="com.xabierland.librebook.widget.UPDATE_WIDGET" />
+        </intent-filter>
+        <meta-data
+            android:name="android.appwidget.provider"
+            android:resource="@xml/widget_book_recommendation_info" />
+    </receiver>
+
     <activity
         android:name=".activities.MainActivity"
         android:exported="true">
