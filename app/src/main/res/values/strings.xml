@@ -35,6 +35,9 @@
     <string name="location_settings">Location Settings</string>
     <string name="location_required">Location is required for this feature</string>
     <string name="enable_location">Please enable location services to see nearby bookstores</string>
+    <string name="bookstores_description">Discover bookstores near your location</string>
+    <string name="open_map">Open map</string>
+    <string name="close">Close</string>
 
     <!-- Settings Activity -->
     <string name="select_language">Select language</string>

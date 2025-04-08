@@ -35,6 +35,9 @@
     <string name="location_settings">Kokapen ezarpenak</string>
     <string name="location_required">Kokapena beharrezkoa da funtzio honetarako</string>
     <string name="enable_location">Mesedez, aktibatu kokapen zerbitzuak inguruko liburudendak ikusteko</string>
+    <string name="bookstores_description">Aurkitu zure kokapenetik gertu dauden liburudendak</string>
+    <string name="open_map">Mapa ireki</string>
+    <string name="close">Itxi</string>
 
 
     <!-- Ezarpen jarduera -->

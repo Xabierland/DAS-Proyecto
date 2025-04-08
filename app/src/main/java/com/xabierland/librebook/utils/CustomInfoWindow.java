@@ -16,15 +16,10 @@ import org.osmdroid.views.overlay.infowindow.InfoWindow;
 public class CustomInfoWindow extends InfoWindow {
     
     private final Activity activity;
-    private BookstoreFinder.Bookstore bookstore;
     
     public CustomInfoWindow(MapView mapView, Activity activity) {
         super(R.layout.marker_info_window, mapView);
         this.activity = activity;
-    }
-    
-    public void setBookstore(BookstoreFinder.Bookstore bookstore) {
-        this.bookstore = bookstore;
     }
     
     @Override
@@ -34,6 +29,9 @@ public class CustomInfoWindow extends InfoWindow {
         // Obtener referencias a las vistas
         TextView tvTitle = mView.findViewById(R.id.bubble_title);
         TextView tvDescription = mView.findViewById(R.id.bubble_description);
+        
+        // Obtener la librería del marcador
+        BookstoreFinder.Bookstore bookstore = (BookstoreFinder.Bookstore) marker.getRelatedObject();
         
         // Colocar los datos de la librería
         if (bookstore != null) {

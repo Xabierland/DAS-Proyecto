@@ -35,6 +35,9 @@
     <string name="location_settings">Configuración de ubicación</string>
     <string name="location_required">La ubicación es necesaria para esta función</string>
     <string name="enable_location">Por favor, activa los servicios de ubicación para ver librerías cercanas</string>
+    <string name="bookstores_description">Descubre librerías cercanas a tu ubicación</string>
+    <string name="open_map">Abrir mapa</string>
+    <string name="close">Cerrar</string>
 
     <!-- Actividad de ajustes -->
     <string name="select_language">Seleccionar idioma</string>
