@@ -1,6 +1,7 @@
 <?php
-// Incluir archivo de configuración
+// Incluir archivo de configuración y clase FirebaseAdmin
 require_once 'config.php';
+require_once 'FirebaseAdmin.php';
 
 // Definir variables para mensajes y resultados
 $message = '';
@@ -23,93 +24,56 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($title) || empty($body)) {
         $message = "Por favor, completa todos los campos";
     } else {
-        // Datos para la API de FCM
-        $serverKey = FCM_SERVER_KEY;
-        $topic = FCM_TOPIC;
-        
-        // Crear payload para FCM
-        $notification = [
-            'title' => $title,
-            'body' => $body,
-            'sound' => 'default',
-            'badge' => '1'
-        ];
-        
-        $data = [
-            'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
-            'screen' => 'main',
-            'type' => 'general_notification'
-        ];
-        
-        $fields = [
-            'to' => '/topics/' . $topic,
-            'notification' => $notification,
-            'data' => $data,
-            'priority' => 'high'
-        ];
-        
-        // Convertir a JSON
-        $payload = json_encode($fields);
-        
-        // URL de la API de FCM
-        $url = 'https://fcm.googleapis.com/fcm/send';
-        
-        // Inicializar cURL
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, [
-            'Authorization: key=' . $serverKey,
-            'Content-Type: application/json'
-        ]);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $payload);
-        
-        // Ejecutar la solicitud
-        $result = curl_exec($curl);
-        
-        // Verificar errores
-        if ($result === false) {
-            $message = 'Error en cURL: ' . curl_error($curl);
-        } else {
-            // Decodificar respuesta
-            $response = json_decode($result, true);
+        try {
+            // Inicializar Firebase Admin con el archivo de credenciales
+            $firebase = new FirebaseAdmin(FCM_CREDENTIALS_FILE);
             
-            // Verificar respuesta
-            if (isset($response['message_id']) || (isset($response['success']) && $response['success'] > 0)) {
-                $message = "Notificación enviada exitosamente";
-                $success = true;
-                
-                // Guardar en el historial
-                $notification_history[] = [
-                    'title' => $title,
-                    'body' => $body,
-                    'date' => date('Y-m-d H:i:s'),
-                    'status' => 'success'
-                ];
-                
-                // Guardar historial en archivo
-                file_put_contents($history_file, json_encode($notification_history));
-            } else {
-                $message = "Error al enviar la notificación: " . (isset($response['error']) ? $response['error'] : $result);
-                
-                // Guardar en el historial (error)
-                $notification_history[] = [
-                    'title' => $title,
-                    'body' => $body,
-                    'date' => date('Y-m-d H:i:s'),
-                    'status' => 'error',
-                    'error_message' => isset($response['error']) ? $response['error'] : $result
-                ];
-                
-                // Guardar historial en archivo
-                file_put_contents($history_file, json_encode($notification_history));
-            }
+            // Crear datos de notificación
+            $notification = [
+                'title' => $title,
+                'body' => $body
+            ];
+            
+            // Datos adicionales para la notificación
+            $data = [
+                'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+                'screen' => 'main',
+                'type' => 'general_notification'
+            ];
+            
+            // Enviar notificación al tema
+            $response = $firebase->sendToTopic(FCM_TOPIC, $notification, $data);
+            
+            // Verificar respuesta exitosa (normalmente, si no hay excepción, es exitoso)
+            $message = "Notificación enviada exitosamente";
+            $success = true;
+            
+            // Guardar en el historial
+            $notification_history[] = [
+                'title' => $title,
+                'body' => $body,
+                'date' => date('Y-m-d H:i:s'),
+                'status' => 'success'
+            ];
+            
+            // Guardar historial en archivo
+            file_put_contents($history_file, json_encode($notification_history));
+            
+        } catch (Exception $e) {
+            $message = "Error al enviar la notificación: " . $e->getMessage();
+            
+            // Guardar en el historial (error)
+            $notification_history[] = [
+                'title' => $title,
+                'body' => $body,
+                'date' => date('Y-m-d H:i:s'),
+                'status' => 'error',
+                'error_message' => $e->getMessage()
+            ];
+            
+            // Guardar historial en archivo
+            file_put_contents($history_file, json_encode($notification_history));
         }
-        
-        // Cerrar cURL
-        curl_close($curl);
     }
 }
 

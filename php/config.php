@@ -1,9 +1,9 @@
 <?php
-// Configuración para Firebase Cloud Messaging
-define('FCM_SERVER_KEY', 'TU_CLAVE_DE_SERVIDOR_FCM'); // Reemplazar con la clave real
-define('FCM_TOPIC', 'all_devices'); // Tema predeterminado
+// Configuración para Firebase Cloud Messaging usando Firebase Admin SDK
+define('FCM_CREDENTIALS_FILE', 'das-proyecto-17eb7-83f16823bf89.json');
+define('FCM_TOPIC', 'all_devices');
 
 // Otros ajustes
 define('APP_NAME', 'LibreBook');
-define('ADMIN_EMAIL', 'admin@librebook.example.com');
+define('ADMIN_EMAIL', 'admin@xabierland.com');
 ?>
