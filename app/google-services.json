@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "802123390135",
+    "project_id": "das-proyecto-17eb7",
+    "storage_bucket": "das-proyecto-17eb7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:802123390135:android:64ab775b4388d6b3304132",
+        "android_client_info": {
+          "package_name": "com.xabierland.librebook"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1pHGs5NZVnAPVSdoMumKYPfs3VZbCkwI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
