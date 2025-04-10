@@ -174,4 +174,9 @@
     <string name="widget_config_title">Widget konfigurazioa</string>
     <string name="widget_description">15 segundoro aldatzen diren liburu gomendioak erakusten ditu</string>
     <string name="no_books_available">Ez dago libururik eskuragarri</string>
+
+    <!-- Firebase Cloud Messaging -->
+    <string name="notification_channel_name">LibreBook Jakinarazpenak</string>
+    <string name="notification_channel_description">LibreBook jakinarazpenak jasotzeko kanala</string>
+    <string name="fcm_message">FCM Mezua</string>
 </resources>

@@ -21,6 +21,8 @@ import com.xabierland.librebook.data.repositories.LibroRepository;
 import com.xabierland.librebook.data.repositories.UsuarioRepository;
 import com.xabierland.librebook.fragments.MapFragment;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -65,6 +67,16 @@ public class MainActivity extends BaseActivity implements MapFragment.MapFragmen
         
         // Cargar libros recomendados
         loadRecommendedBooks();
+
+        // Suscribirse al tema "all_devices" para recibir notificaciones
+        FirebaseMessaging.getInstance().subscribeToTopic("all_devices")
+        .addOnCompleteListener(task -> {
+            String msg = "Suscripción exitosa al tema all_devices";
+            if (!task.isSuccessful()) {
+                msg = "Error al suscribirse al tema all_devices";
+            }
+            Log.d("FCM", msg);
+        });
     }
 
     private void initViews() {

@@ -1,5 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
+    // Añadir el plugin de Google Services para Firebase
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -36,6 +38,10 @@ dependencies {
 
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
+    // Firebase Cloud Messaging
+    implementation platform('com.google.firebase:firebase-bom:32.7.2')
+    implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.firebase:firebase-analytics'
 
     implementation "androidx.cardview:cardview:1.0.0"
 
@@ -48,7 +54,7 @@ dependencies {
 
      // OSMdroid (OpenStreetMaps)
     implementation 'org.osmdroid:osmdroid-android:6.1.16'
-    implementation 'com.squareup.okhttp3:okhttp:4.9.3'                      // Dependencia para realizar peticiones HTTP
-    implementation 'com.google.code.gson:gson:2.10.1'                       // Dependencia para convertir JSON a objetos Java
-    implementation 'com.google.android.gms:play-services-location:21.0.1'   // Dependencia para obtener la ubicación del dispositivo
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
 }

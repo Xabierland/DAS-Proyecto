@@ -174,4 +174,9 @@
     <string name="widget_config_title">Widget configuration</string>
     <string name="widget_description">Shows book recommendations that change every 15 seconds</string>
     <string name="no_books_available">No books available</string>
+
+    <!-- Firebase Cloud Messaging -->
+    <string name="notification_channel_name">LibreBook Notifications</string>
+    <string name="notification_channel_description">Channel for receiving LibreBook notifications</string>
+    <string name="fcm_message">FCM Message</string>
 </resources>
