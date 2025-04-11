@@ -101,6 +101,11 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected String getActivityTitle() {
+        return "";
+    }
+
     // Método para mostrar las opciones de compartir
     private void showShareOptions() {
         // Crear un diálogo con las opciones

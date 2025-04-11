@@ -2,6 +2,7 @@ package com.xabierland.librebook.providers;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.MatrixCursor;
@@ -73,8 +74,10 @@ public class LibreBooksProvider extends ContentProvider {
     
     @Override
     public boolean onCreate() {
-        libroRepository = new LibroRepository(getContext().getApplicationContext());
-        bibliotecaRepository = new BibliotecaRepository(getContext().getApplicationContext());
+        Context appContext = getContext().getApplicationContext();
+        // Corregir creando un constructor alternativo o modificando el constructor existente
+        libroRepository = new LibroRepository((android.app.Application) appContext);
+        bibliotecaRepository = new BibliotecaRepository((android.app.Application) appContext);
         return true;
     }
 
