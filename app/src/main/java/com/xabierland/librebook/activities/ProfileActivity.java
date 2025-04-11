@@ -1,5 +1,7 @@
 package com.xabierland.librebook.activities;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
+
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -121,18 +123,28 @@ public class ProfileActivity extends BaseActivity {
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
                         try {
-                            // La foto se guardó en photoURI
-                            Bitmap bitmap = BitmapFactory.decodeStream(
-                                    getContentResolver().openInputStream(photoURI));
+                            // En lugar de decodificar directamente, usamos nuestro método mejorado
+                            // que corrige la orientación de la imagen
+                            Bitmap bitmap = FileUtils.getAndFixImageOrientation(ProfileActivity.this, photoURI);
+                            
                             // Procesar y guardar la imagen
                             if (bitmap != null) {
                                 saveProfileImage(bitmap);
                                 imageViewProfilePic.setImageBitmap(bitmap);
+                            } else {
+                                Toast.makeText(
+                                    ProfileActivity.this,
+                                    getString(R.string.error_loading_image), 
+                                    Toast.LENGTH_SHORT
+                                ).show();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Toast.makeText(this, getString(R.string.error_loading_image), 
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(
+                                ProfileActivity.this,
+                                getString(R.string.error_loading_image), 
+                                Toast.LENGTH_SHORT
+                            ).show();
                         }
                     }
                 });
