@@ -1,20 +1,14 @@
 package com.xabierland.librebook.activities;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -25,8 +19,6 @@ import com.xabierland.librebook.data.repositories.UsuarioRepository;
 import com.xabierland.librebook.utils.NotificationUtils;
 
 public class RegisterActivity extends BaseActivity {
-
-    private static final int REQUEST_NOTIFICATION_PERMISSION = 102;
 
     private TextInputLayout nameInputLayout;
     private TextInputLayout emailInputLayout;
@@ -66,31 +58,6 @@ public class RegisterActivity extends BaseActivity {
         
         // Configurar escuchadores
         setupListeners();
-        
-        // Solicitar permiso de notificación en Android 13+
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requestNotificationPermission();
-        }
-    }
-    
-    private void requestNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) 
-                    != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, 
-                        new String[]{Manifest.permission.POST_NOTIFICATIONS}, 
-                        REQUEST_NOTIFICATION_PERMISSION);
-            }
-        }
-    }
-    
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, 
-                                          @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_NOTIFICATION_PERMISSION) {
-            // No necesitamos hacer nada aquí, solo registramos el resultado
-        }
     }
     
     private void setupListeners() {
