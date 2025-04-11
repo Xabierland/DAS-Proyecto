@@ -51,6 +51,17 @@
                 android:maxLines="1"
                 android:ellipsize="end" />
 
+            <!-- Indicador de compartir -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/long_press_to_share"
+                android:textSize="10sp"
+                android:textStyle="italic"
+                android:textColor="?attr/colorPrimary"
+                android:gravity="end"
+                android:layout_marginTop="4dp" />
+
             <!-- Progreso de lectura (si aplica) -->
             <LinearLayout
                 android:id="@+id/layoutProgress"

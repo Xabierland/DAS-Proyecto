@@ -3,6 +3,7 @@ package com.xabierland.librebook.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import com.xabierland.librebook.data.repositories.BibliotecaRepository;
 import com.xabierland.librebook.data.repositories.LibroRepository;
 import com.xabierland.librebook.fragments.BookActionsFragment;
 import com.xabierland.librebook.fragments.BookInfoFragment;
+import com.xabierland.librebook.utils.ShareUtils;
 
 public class BookDetailActivity extends BaseActivity implements BookActionsFragment.OnBookActionListener{
 
@@ -33,6 +35,7 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
 
     // Datos
     private Libro libro;
+    private LibroConEstado libroConEstado;
     private int usuarioId = -1;
     private boolean isLoggedIn = false;
     private boolean libroYaEnBiblioteca = false;
@@ -77,6 +80,50 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
         usuarioId = sharedPreferences.getInt("userId", -1);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_book_detail, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        
+        if (id == R.id.action_share) {
+            showShareOptions();
+            return true;
+        } else if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        
+        return super.onOptionsItemSelected(item);
+    }
+
+    // Método para mostrar las opciones de compartir
+    private void showShareOptions() {
+        // Crear un diálogo con las opciones
+        final CharSequence[] items = {
+                getString(R.string.share_as_text),
+                getString(R.string.share_as_file)
+        };
+        
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.share_book_message);
+        builder.setItems(items, (dialog, which) -> {
+            switch (which) {
+                case 0: // Compartir como texto
+                    ShareUtils.shareBookAsText(this, libro);
+                    break;
+                case 1: // Compartir como archivo
+                    ShareUtils.shareBookAsFile(this, libro, libroConEstado);
+                    break;
+            }
+        });
+        builder.show();
+    }
+
     private void loadBookData() {
         // Obtener el ID del libro desde los extras
         int libroId = getIntent().getIntExtra(EXTRA_LIBRO_ID, -1);
@@ -105,6 +152,7 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
                         if (libroConEstado != null) {
                             // El libro ya está en la biblioteca del usuario
                             libroYaEnBiblioteca = true;
+                            this.libroConEstado = libroConEstado; // Guardar referencia
                             runOnUiThread(() -> {
                                 // Actualizar fragments con los datos del libro
                                 bookInfoFragment.setLibro(libro);
@@ -115,6 +163,7 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
                         } else {
                             // El libro no está en la biblioteca del usuario
                             libroYaEnBiblioteca = false;
+                            this.libroConEstado = null; // No hay estado
                             runOnUiThread(() -> {
                                 // Actualizar fragments con los datos del libro
                                 bookInfoFragment.setLibro(libro);
@@ -150,20 +199,6 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
         builder.setView(dialogView);
         builder.setCancelable(false);
         return builder.create();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected String getActivityTitle() {
-        return getString(R.string.book_detail);
     }
 
     // Implementación de OnBookActionListener

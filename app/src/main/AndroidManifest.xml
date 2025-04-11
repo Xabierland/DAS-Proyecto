@@ -24,6 +24,17 @@
     android:theme="@style/Theme.LibreBook"
     tools:targetApi="31">
 
+    <!-- Declaración del ContentProvider -->
+    <provider
+        android:name=".providers.LibreBooksProvider"
+        android:authorities="com.xabierland.librebook.provider"
+        android:exported="true"
+        android:grantUriPermissions="true">
+        <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/file_provider_paths" />
+    </provider>
+
     <provider
         android:name="androidx.core.content.FileProvider"
         android:authorities="com.xabierland.librebook.fileprovider"

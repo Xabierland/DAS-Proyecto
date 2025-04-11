@@ -179,4 +179,19 @@
     <string name="notification_channel_name">LibreBook Notifications</string>
     <string name="notification_channel_description">Channel for receiving LibreBook notifications</string>
     <string name="fcm_message">FCM Message</string>
+
+    <!-- Cadenas para compartir libros -->
+    <string name="share">Share</string>
+    <string name="share_as_text">Share as text</string>
+    <string name="share_as_file">Share as file</string>
+    <string name="share_book_via">Share book via</string>
+    <string name="shared_from_librebook">Shared from LibreBook</string>
+    <string name="error_sharing_book">Error sharing the book</string>
+    <string name="error_creating_file">Error creating the file</string>
+    <string name="book_info">Book information</string>
+    <string name="pages">pages</string>
+    <string name="share_book">Share book</string>
+    <string name="share_book_message">Choose how you want to share this book:</string>
+    <string name="share_success">Book shared successfully</string>
+    <string name="long_press_to_share">Long press to share</string>
 </resources>

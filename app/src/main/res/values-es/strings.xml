@@ -178,4 +178,19 @@
     <string name="notification_channel_name">Notificaciones LibreBook</string>
     <string name="notification_channel_description">Canal para recibir notificaciones de LibreBook</string>
     <string name="fcm_message">Mensaje de FCM</string>
+
+    <!-- Cadenas para compartir libros -->
+    <string name="share">Compartir</string>
+    <string name="share_as_text">Compartir como texto</string>
+    <string name="share_as_file">Compartir como archivo</string>
+    <string name="share_book_via">Compartir libro a través de</string>
+    <string name="shared_from_librebook">Compartido desde LibreBook</string>
+    <string name="error_sharing_book">Error al compartir el libro</string>
+    <string name="error_creating_file">Error al crear el archivo</string>
+    <string name="book_info">Información del libro</string>
+    <string name="pages">páginas</string>
+    <string name="share_book">Compartir libro</string>
+    <string name="share_book_message">Elige cómo quieres compartir este libro:</string>
+    <string name="share_success">Libro compartido con éxito</string>
+    <string name="long_press_to_share">Mantén pulsado para compartir</string>
 </resources>

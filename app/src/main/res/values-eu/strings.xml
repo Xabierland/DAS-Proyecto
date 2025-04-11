@@ -179,4 +179,19 @@
     <string name="notification_channel_name">LibreBook Jakinarazpenak</string>
     <string name="notification_channel_description">LibreBook jakinarazpenak jasotzeko kanala</string>
     <string name="fcm_message">FCM Mezua</string>
+
+    <!-- Cadenas para compartir libros -->
+    <string name="share">Partekatu</string>
+    <string name="share_as_text">Testu gisa partekatu</string>
+    <string name="share_as_file">Fitxategi gisa partekatu</string>
+    <string name="share_book_via">Liburua partekatu honen bidez</string>
+    <string name="shared_from_librebook">LibreBook-etik partekatua</string>
+    <string name="error_sharing_book">Errorea liburua partekatzean</string>
+    <string name="error_creating_file">Errorea fitxategia sortzean</string>
+    <string name="book_info">Liburuaren informazioa</string>
+    <string name="pages">orrialdeak</string>
+    <string name="share_book">Liburua partekatu</string>
+    <string name="share_book_message">Aukeratu nola partekatu nahi duzun liburu hau:</string>
+    <string name="share_success">Liburua arrakastaz partekatu da</string>
+    <string name="long_press_to_share">Partekatzeko sakatu eta eutsi</string>
 </resources>
