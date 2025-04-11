@@ -62,6 +62,12 @@ eerqLpcfeQICXkxr5cFPAr3cK3TKbSF8tCvAqszm1Js27MWP1XwMTKw6yFVC4XYK
 -----END RSA PRIVATE KEY-----
 ```
 
+### Panel de mensajeria
+
+La aplicacion cuenta con un panel de mensajeria que permite enviar mensajes a todas las instancias de la aplicacion. Puedes acceder a el mediante el siguiente enlace:
+
+[http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/mensajeria.php](http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/admin_panel.php)
+
 ## TODO
 
 - Alarma (Probablemente para actualizar la lista de recomendaciones del MainActivity)
