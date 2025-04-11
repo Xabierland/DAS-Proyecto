@@ -65,6 +65,5 @@ eerqLpcfeQICXkxr5cFPAr3cK3TKbSF8tCvAqszm1Js27MWP1XwMTKw6yFVC4XYK
 ## TODO
 
 - Alarma (Probablemente para actualizar la lista de recomendaciones del MainActivity)
-- ContentProvider (Boton en el perfil para compartir los libros marcados como favoritos)
+- ContentProvider (Compartir libros) [Funciona más o menos ahora mismo]
 - Servicio en primer plano (Contador de tiempo de lectura)
-- FCM (Mostrar una notificacion cuando se envie un mensaje a un archivo PHP)
