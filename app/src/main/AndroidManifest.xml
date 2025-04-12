@@ -11,130 +11,107 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
     <application
-        android:networkSecurityConfig="@xml/network_security_config"
-        android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.LibreBook"
-        tools:targetApi="31">
+    android:networkSecurityConfig="@xml/network_security_config"
+    android:allowBackup="true"
+    android:dataExtractionRules="@xml/data_extraction_rules"
+    android:fullBackupContent="@xml/backup_rules"
+    android:icon="@mipmap/ic_launcher"
+    android:label="@string/app_name"
+    android:roundIcon="@mipmap/ic_launcher_round"
+    android:supportsRtl="true"
+    android:theme="@style/Theme.LibreBook"
+    tools:targetApi="31">
 
-        <!-- Declaración del ContentProvider -->
-        <provider
-            android:name=".providers.LibreBooksProvider"
-            android:authorities="com.xabierland.librebook.provider"
-            android:exported="true"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_provider_paths" />
-        </provider>
-
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="com.xabierland.librebook.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_provider_paths" />
-        </provider>
-
-        <!-- Servicio para la alarma de actualización de libros -->
-        <receiver
-            android:name=".widget.BookRecommendationWidgetProvider"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.xabierland.librebook.widget.UPDATE_WIDGET" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_book_recommendation_info" />
-        </receiver>
-
-        <!-- Servicio para el temporizador de lectura -->
-        <receiver
-            android:name=".services.ReadingTimerReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.xabierland.librebook.action.START_TIMER" />
-                <action android:name="com.xabierland.librebook.action.STOP_TIMER" />
-                <action android:name="com.xabierland.librebook.action.RESET_TIMER" />
-            </intent-filter>
-        </receiver>
-
-        <!-- Servicio de Firebase Cloud Messaging -->
-        <service
-            android:name=".fcm.LibreBookMessagingService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-
-        <!-- Servicio de cronómetro de lectura en primer plano -->
-        <service
-            android:name=".services.ReadingTimerService"
-            android:enabled="true"
-            android:exported="false"
-            android:foregroundServiceType="dataSync" />
-
-        <!-- Icono por defecto para notificaciones FCM -->
+    <!-- Declaración del ContentProvider -->
+    <provider
+        android:name=".providers.LibreBooksProvider"
+        android:authorities="com.xabierland.librebook.provider"
+        android:exported="true"
+        android:grantUriPermissions="true">
         <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_notification" />
-        
-        <!-- Color por defecto para notificaciones FCM -->
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/file_provider_paths" />
+    </provider>
+
+    <provider
+        android:name="androidx.core.content.FileProvider"
+        android:authorities="com.xabierland.librebook.fileprovider"
+        android:exported="false"
+        android:grantUriPermissions="true">
         <meta-data
-            android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/purple_500" />
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/file_provider_paths" />
+    </provider>
 
-        <!-- Canal de notificación por defecto para FCM -->
+    <!-- Servicio de Firebase Cloud Messaging -->
+    <service
+        android:name=".fcm.LibreBookMessagingService"
+        android:exported="false">
+        <intent-filter>
+            <action android:name="com.google.firebase.MESSAGING_EVENT" />
+        </intent-filter>
+    </service>
+
+    <!-- Icono por defecto para notificaciones FCM -->
+    <meta-data
+        android:name="com.google.firebase.messaging.default_notification_icon"
+        android:resource="@drawable/ic_notification" />
+    
+    <!-- Color por defecto para notificaciones FCM -->
+    <meta-data
+        android:name="com.google.firebase.messaging.default_notification_color"
+        android:resource="@color/purple_500" />
+
+    <!-- Canal de notificación por defecto para FCM -->
+    <meta-data
+        android:name="com.google.firebase.messaging.default_notification_channel_id"
+        android:value="fcm_channel" />
+
+    <receiver
+        android:name=".widget.BookRecommendationWidgetProvider"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            <action android:name="com.xabierland.librebook.widget.UPDATE_WIDGET" />
+        </intent-filter>
         <meta-data
-            android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="fcm_channel" />
+            android:name="android.appwidget.provider"
+            android:resource="@xml/widget_book_recommendation_info" />
+    </receiver>
 
-        <!-- Actividades de la aplicación -->
-        <activity
-            android:name=".activities.MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".activities.ProfileActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.SearchActivity"
-            android:exported="false" />
+    <activity
+        android:name=".activities.MainActivity"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
 
-        <activity
-            android:name=".activities.BookDetailActivity"
-            android:exported="false" />
+    <activity
+    android:name=".activities.ProfileActivity"
+    android:exported="false" />
 
-        <activity
-            android:name=".activities.LoginActivity"
-            android:exported="false" />
+    <activity
+        android:name=".activities.SearchActivity"
+        android:exported="false" />
 
-        <activity
-            android:name=".activities.RegisterActivity"
-            android:exported="false" />
+    <activity
+        android:name=".activities.BookDetailActivity"
+        android:exported="false" />
 
-        <activity
-            android:name=".activities.SettingsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.ReadingTimerActivity"
-            android:exported="false"
-            android:label="@string/reading_timer" />
+    <activity
+        android:name=".activities.LoginActivity"
+        android:exported="false" />
+
+    <activity
+        android:name=".activities.RegisterActivity"
+        android:exported="false" />
+
+    <activity
+        android:name=".activities.SettingsActivity"
+        android:exported="false" />
     </application>
 </manifest>

@@ -9,23 +9,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
 import android.util.Log;
-import android.view.View;
 import android.widget.RemoteViews;
 
 import com.xabierland.librebook.R;
 import com.xabierland.librebook.activities.BookDetailActivity;
 import com.xabierland.librebook.data.database.entities.Libro;
 import com.xabierland.librebook.data.repositories.LibroRepository;
-import com.xabierland.librebook.services.ReadingTimerReceiver;
 import com.xabierland.librebook.utils.ImageLoader;
 import com.xabierland.librebook.widget.WidgetImageLoader;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Clase que implementa el widget de recomendación de libros
@@ -199,24 +195,6 @@ public class BookRecommendationWidgetProvider extends AppWidgetProvider {
         // Asignar el PendingIntent al widget
         views.setOnClickPendingIntent(R.id.widget_container, pendingIntent);
         
-        // Comprobar si hay un cronómetro activo para este libro
-        boolean isTimerRunning = ReadingTimerReceiver.isTimerRunning(context);
-        int timerBookId = ReadingTimerReceiver.getCurrentBookId(context);
-        
-        if (isTimerRunning && timerBookId == libro.getId()) {
-            // Mostrar indicador de cronómetro activo
-            views.setViewVisibility(R.id.widget_timer_indicator, View.VISIBLE);
-            
-            // Calcular tiempo de lectura transcurrido
-            long elapsedTime = ReadingTimerReceiver.getElapsedTime(context);
-            String formattedTime = formatElapsedTime(elapsedTime);
-            
-            views.setTextViewText(R.id.widget_timer_text, formattedTime);
-        } else {
-            // Ocultar indicador de cronómetro
-            views.setViewVisibility(R.id.widget_timer_indicator, View.GONE);
-        }
-        
         // Cargar la imagen de portada si existe
         if (libro.getPortadaUrl() != null && !libro.getPortadaUrl().isEmpty()) {
             // Usar nuestro cargador de imágenes especializado para widgets
@@ -233,21 +211,6 @@ public class BookRecommendationWidgetProvider extends AppWidgetProvider {
             views.setImageViewResource(R.id.widget_book_cover, R.mipmap.ic_launcher);
             // Actualizar el widget inmediatamente ya que no hay carga asíncrona
             appWidgetManager.updateAppWidget(appWidgetId, views);
-        }
-    }
-    
-    /**
-     * Formatea el tiempo en milisegundos a formato legible
-     */
-    private String formatElapsedTime(long timeMillis) {
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(timeMillis) % 60;
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(timeMillis) % 60;
-        long hours = TimeUnit.MILLISECONDS.toHours(timeMillis);
-        
-        if (hours > 0) {
-            return String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
-        } else {
-            return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
         }
     }
     

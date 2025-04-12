@@ -1,34 +1,28 @@
 package com.xabierland.librebook.fragments;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.xabierland.librebook.R;
-import com.xabierland.librebook.activities.ReadingTimerActivity;
-import com.xabierland.librebook.data.database.entities.Libro;
 import com.xabierland.librebook.data.database.entities.UsuarioLibro;
 import com.xabierland.librebook.data.models.LibroConEstado;
-import com.xabierland.librebook.services.ReadingTimerReceiver;
-import com.xabierland.librebook.services.ReadingTimerService;
 
 public class BookActionsFragment extends Fragment implements AddBookDialogFragment.OnBookActionListener {
 
@@ -44,7 +38,6 @@ public class BookActionsFragment extends Fragment implements AddBookDialogFragme
     private OnBookActionListener listener;
     private MaterialButton buttonAddToLibrary;
     private MaterialButton buttonRemoveFromLibrary;
-    private Button buttonReadingTimer;
     private View reviewSection;
     private TextView textViewRating;
     private TextView textViewReview;
@@ -55,9 +48,6 @@ public class BookActionsFragment extends Fragment implements AddBookDialogFragme
     private Float calificacionActual = null;
     private String notasActuales = null;
     private Integer paginaActual = null;
-    
-    // Referencia al libro actual
-    private LibroConEstado libro;
     
     // Nuevo campo para el número total de páginas
     private int numPaginasTotal = 0;
@@ -105,7 +95,6 @@ public class BookActionsFragment extends Fragment implements AddBookDialogFragme
     private void initViews(View view) {
         buttonAddToLibrary = view.findViewById(R.id.buttonAddToLibrary);
         buttonRemoveFromLibrary = view.findViewById(R.id.buttonRemoveFromLibrary);
-        buttonReadingTimer = view.findViewById(R.id.buttonReadingTimer);
         reviewSection = view.findViewById(R.id.reviewSection);
         textViewRating = view.findViewById(R.id.textViewRating);
         ratingBarDisplay = view.findViewById(R.id.ratingBarDisplay);
@@ -128,8 +117,6 @@ public class BookActionsFragment extends Fragment implements AddBookDialogFragme
                 listener.showLoginRequiredDialog();
             }
         });
-        
-        buttonReadingTimer.setOnClickListener(v -> startReadingTimer());
     }
     
     private void showRemoveFromLibraryDialog() {
@@ -143,61 +130,12 @@ public class BookActionsFragment extends Fragment implements AddBookDialogFragme
                 .create()
                 .show();
     }
-    
-    private void startReadingTimer() {
-        if (!listener.isUserLoggedIn()) {
-            listener.showLoginRequiredDialog();
-            return;
-        }
-        
-        // Iniciar la actividad del cronómetro
-        Intent intent = new Intent(requireContext(), ReadingTimerActivity.class);
-        intent.putExtra(ReadingTimerService.PREF_LIBRO_ID, libro.getId());
-        startActivity(intent);
-    }
-    
-    @Override
-    public void onResume() {
-        super.onResume();
-        
-        // Comprobar si hay un cronómetro activo
-        updateTimerButtonState();
-    }
-    
-    private void updateTimerButtonState() {
-        if (buttonReadingTimer == null || libro == null) return;
-        
-        boolean isTimerRunning = ReadingTimerReceiver.isTimerRunning(requireContext());
-        int currentBookId = ReadingTimerReceiver.getCurrentBookId(requireContext());
-        
-        // Si hay un cronómetro en ejecución
-        if (isTimerRunning) {
-            if (currentBookId == libro.getId()) {
-                // El cronómetro está activo para este libro
-                buttonReadingTimer.setText(R.string.continue_timer);
-                buttonReadingTimer.setBackgroundTintList(ColorStateList.valueOf(
-                        ContextCompat.getColor(requireContext(), R.color.purple_700)));
-            } else {
-                // El cronómetro está activo para otro libro
-                String currentTitle = ReadingTimerReceiver.getCurrentBookTitle(requireContext());
-                buttonReadingTimer.setText(getString(R.string.timer_active_for, currentTitle));
-                buttonReadingTimer.setBackgroundTintList(ColorStateList.valueOf(
-                        ContextCompat.getColor(requireContext(), R.color.purple_500)));
-            }
-        } else {
-            // No hay cronómetro activo
-            buttonReadingTimer.setText(R.string.start_reading_timer);
-            buttonReadingTimer.setBackgroundTintList(ColorStateList.valueOf(
-                    ContextCompat.getColor(requireContext(), R.color.purple_500)));
-        }
-    }
 
     // Método para actualizar la UI según el estado del libro en la biblioteca del usuario
     public void updateUIForExistingBook(LibroConEstado libroConEstado) {
         if (libroConEstado == null || getContext() == null) return;
         
         libroYaEnBiblioteca = true;
-        this.libro = libroConEstado;
         
         // Almacenar el estado actual
         estadoActual = libroConEstado.getEstadoLectura();
@@ -255,15 +193,6 @@ public class BookActionsFragment extends Fragment implements AddBookDialogFragme
             // Si no está en estado leído, ocultar la sección completa
             reviewSection.setVisibility(View.GONE);
         }
-        
-        // Mostrar u ocultar el botón del cronómetro según el estado
-        // Solo mostrar el botón si el libro está en estado "leyendo"
-        if (UsuarioLibro.ESTADO_LEYENDO.equals(estadoActual)) {
-            buttonReadingTimer.setVisibility(View.VISIBLE);
-            updateTimerButtonState();
-        } else {
-            buttonReadingTimer.setVisibility(View.GONE);
-        }
     }
 
     // Método para actualizar la UI para un libro nuevo (no está en la biblioteca)
@@ -272,7 +201,6 @@ public class BookActionsFragment extends Fragment implements AddBookDialogFragme
         buttonAddToLibrary.setText(R.string.add_to_library);
         reviewSection.setVisibility(View.GONE);
         buttonRemoveFromLibrary.setVisibility(View.GONE);
-        buttonReadingTimer.setVisibility(View.GONE); // Ocultar botón de cronómetro para libros nuevos
     }
 
     private void showAddToLibraryDialog() {
