@@ -70,6 +70,4 @@ La aplicacion cuenta con un panel de mensajeria que permite enviar mensajes a to
 
 ## TODO
 
-- Alarma (Probablemente para actualizar la lista de recomendaciones del MainActivity)
-- ContentProvider (Compartir libros) [Funciona más o menos ahora mismo]
 - Servicio en primer plano (Contador de tiempo de lectura)

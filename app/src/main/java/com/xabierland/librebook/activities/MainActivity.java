@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -38,6 +40,7 @@ public class MainActivity extends BaseActivity implements MapFragment.MapFragmen
     
     private static final String TAG = "MainActivity";
     private static final int REQUEST_NOTIFICATION_PERMISSION = 100;
+    private static final long RECOMENDACIONES_UPDATE_INTERVAL = 15000; // 15 segundos en milisegundos
     
     private UsuarioRepository usuarioRepository;
     private LibroRepository libroRepository; 
@@ -54,6 +57,19 @@ public class MainActivity extends BaseActivity implements MapFragment.MapFragmen
     // Control del fragment del mapa
     private MapFragment mapFragment;
     private boolean isMapFragmentShowing = false;
+    
+    // Handler y Runnable para actualización periódica de recomendaciones
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final Runnable updateRecommendationsRunnable = new Runnable() {
+        @Override
+        public void run() {
+            // Cargar nuevos libros recomendados
+            loadRecommendedBooks();
+            
+            // Programar la siguiente actualización
+            handler.postDelayed(this, RECOMENDACIONES_UPDATE_INTERVAL);
+        }
+    };
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +89,7 @@ public class MainActivity extends BaseActivity implements MapFragment.MapFragmen
         // Verificar la base de datos
         verificarEstadoLibros();
         
-        // Cargar libros recomendados
+        // Cargar libros recomendados (primera vez)
         loadRecommendedBooks();
 
         // Suscribirse al tema "all_devices" para recibir notificaciones
@@ -158,6 +174,40 @@ public class MainActivity extends BaseActivity implements MapFragment.MapFragmen
         
         // Verificar sesión cada vez que la actividad se reanuda y actualizar UI
         checkUserSessionAndUpdateUI();
+        
+        // Iniciar la actualización periódica de recomendaciones
+        startPeriodicRecommendationsUpdate();
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        
+        // Detener la actualización periódica de recomendaciones cuando la actividad está en segundo plano
+        stopPeriodicRecommendationsUpdate();
+    }
+    
+    /**
+     * Inicia la actualización periódica de recomendaciones
+     */
+    private void startPeriodicRecommendationsUpdate() {
+        // Eliminar cualquier callback pendiente para evitar duplicados
+        handler.removeCallbacks(updateRecommendationsRunnable);
+        
+        // Programar la primera actualización después de 15 segundos
+        handler.postDelayed(updateRecommendationsRunnable, RECOMENDACIONES_UPDATE_INTERVAL);
+        
+        Log.d(TAG, "Actualización periódica de recomendaciones iniciada");
+    }
+    
+    /**
+     * Detiene la actualización periódica de recomendaciones
+     */
+    private void stopPeriodicRecommendationsUpdate() {
+        // Eliminar el callback para detener las actualizaciones
+        handler.removeCallbacks(updateRecommendationsRunnable);
+        
+        Log.d(TAG, "Actualización periódica de recomendaciones detenida");
     }
     
     // Métodos existentes (checkUserSessionAndUpdateUI, verificarEstadoLibros, loadRecommendedBooks, etc.)
@@ -192,6 +242,9 @@ public class MainActivity extends BaseActivity implements MapFragment.MapFragmen
                     
                     recyclerViewRecommended.setVisibility(View.VISIBLE);
                     textViewNoRecommended.setVisibility(View.GONE);
+                    
+                    // Log para confirmar la actualización
+                    Log.d(TAG, "Lista de recomendaciones actualizada con " + randomBooks.size() + " libros");
                 });
             } else {
                 // No hay libros disponibles
