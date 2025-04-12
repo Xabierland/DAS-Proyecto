@@ -146,95 +146,75 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
             return;
         }
     
-        try {
-            // Mostrar diálogo de carga
-            loadingDialog = createLoadingDialog();
-            if (!isFinishing()) {
-                loadingDialog.show();
+        // Mostrar diálogo de carga
+        loadingDialog = createLoadingDialog();
+        loadingDialog.show();
+    
+        // Cargar datos del libro
+        libroRepository.obtenerLibroPorId(libroId, result -> {
+            // Verificar que la actividad no esté destruyéndose
+            if (isFinishing() || isDestroyed()) {
+                safelyDismissDialog();
+                return;
             }
     
-            // Cargar datos del libro
-            libroRepository.obtenerLibroPorId(libroId, result -> {
-                if (isFinishing()) {
-                    safelyDismissDialog();
-                    return;
-                }
-    
-                if (result != null) {
-                    libro = result;
-                    
-                    // Si el usuario está logueado, verificar si el libro ya está en su biblioteca
-                    if (isLoggedIn && usuarioId != -1) {
-                        bibliotecaRepository.obtenerLibroDeBiblioteca(usuarioId, libro.getId(), libroConEstado -> {
-                            // Siempre cerramos el diálogo primero para evitar problemas
+            if (result != null) {
+                libro = result;
+                
+                // Si el usuario está logueado, verificar si el libro ya está en su biblioteca
+                if (isLoggedIn && usuarioId != -1) {
+                    bibliotecaRepository.obtenerLibroDeBiblioteca(usuarioId, libro.getId(), libroConEstado -> {
+                        // Verificar que la actividad no esté destruyéndose
+                        if (isFinishing() || isDestroyed()) {
                             safelyDismissDialog();
-                            
-                            if (isFinishing()) return;
-                            
-                            if (libroConEstado != null) {
-                                // El libro ya está en la biblioteca del usuario
-                                libroYaEnBiblioteca = true;
-                                this.libroConEstado = libroConEstado; // Guardar referencia
-                                runOnUiThread(() -> {
-                                    if (isFinishing()) return;
-                                    
-                                    // Actualizar fragments con los datos del libro de forma segura
-                                    if (bookInfoFragment != null && bookActionsFragment != null) {
-                                        bookInfoFragment.setLibro(libro);
-                                        // Establecer el número total de páginas antes de mostrar UI
-                                        bookActionsFragment.setNumPaginasTotal(libro.getNumPaginas());
-                                        bookActionsFragment.updateUIForExistingBook(libroConEstado);
-                                    }
-                                });
-                            } else {
-                                // El libro no está en la biblioteca del usuario
-                                libroYaEnBiblioteca = false;
-                                this.libroConEstado = null; // No hay estado
-                                runOnUiThread(() -> {
-                                    if (isFinishing()) return;
-                                    
-                                    // Actualizar fragments con los datos del libro de forma segura
-                                    if (bookInfoFragment != null && bookActionsFragment != null) {
-                                        bookInfoFragment.setLibro(libro);
-                                        // Establecer el número total de páginas antes de mostrar UI
-                                        bookActionsFragment.setNumPaginasTotal(libro.getNumPaginas());
-                                        bookActionsFragment.updateUIForNewBook();
-                                    }
-                                });
-                            }
-                        });
-                    } else {
-                        // No hay usuario logueado, simplemente mostrar los detalles del libro
+                            return;
+                        }
+    
                         safelyDismissDialog();
                         
-                        runOnUiThread(() -> {
-                            if (isFinishing()) return;
-                            
-                            // Actualizar fragments con los datos del libro de forma segura
-                            if (bookInfoFragment != null && bookActionsFragment != null) {
+                        if (libroConEstado != null) {
+                            // El libro ya está en la biblioteca del usuario
+                            libroYaEnBiblioteca = true;
+                            this.libroConEstado = libroConEstado; // Guardar referencia
+                            runOnUiThread(() -> {
+                                // Actualizar fragments con los datos del libro
+                                bookInfoFragment.setLibro(libro);
+                                // Establecer el número total de páginas antes de mostrar UI
+                                bookActionsFragment.setNumPaginasTotal(libro.getNumPaginas());
+                                bookActionsFragment.updateUIForExistingBook(libroConEstado);
+                            });
+                        } else {
+                            // El libro no está en la biblioteca del usuario
+                            libroYaEnBiblioteca = false;
+                            this.libroConEstado = null; // No hay estado
+                            runOnUiThread(() -> {
+                                // Actualizar fragments con los datos del libro
                                 bookInfoFragment.setLibro(libro);
                                 // Establecer el número total de páginas antes de mostrar UI
                                 bookActionsFragment.setNumPaginasTotal(libro.getNumPaginas());
                                 bookActionsFragment.updateUIForNewBook();
-                            }
-                        });
-                    }
-                } else {
-                    safelyDismissDialog();
-                    
-                    runOnUiThread(() -> {
-                        if (!isFinishing()) {
-                            Toast.makeText(BookDetailActivity.this, "No se encontró el libro", Toast.LENGTH_SHORT).show();
-                            finish();
+                            });
                         }
                     });
+                } else {
+                    // No hay usuario logueado, simplemente mostrar los detalles del libro
+                    safelyDismissDialog();
+                    runOnUiThread(() -> {
+                        // Actualizar fragments con los datos del libro
+                        bookInfoFragment.setLibro(libro);
+                        // Establecer el número total de páginas antes de mostrar UI
+                        bookActionsFragment.setNumPaginasTotal(libro.getNumPaginas());
+                        bookActionsFragment.updateUIForNewBook();
+                    });
                 }
-            });
-        } catch (Exception e) {
-            safelyDismissDialog();
-            Log.e(TAG, "Error al cargar datos del libro", e);
-            Toast.makeText(this, "Error al cargar el libro", Toast.LENGTH_SHORT).show();
-        }
+            } else {
+                safelyDismissDialog();
+                runOnUiThread(() -> {
+                    Toast.makeText(BookDetailActivity.this, "No se encontró el libro", Toast.LENGTH_SHORT).show();
+                    finish();
+                });
+            }
+        });
     }
     
     private AlertDialog createLoadingDialog() {
@@ -249,9 +229,7 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
     private void safelyDismissDialog() {
         runOnUiThread(() -> {
             try {
-                if (loadingDialog != null && loadingDialog.isShowing() && !isFinishing()) {
-                    loadingDialog.dismiss();
-                }
+                loadingDialog.dismiss();
             } catch (Exception e) {
                 Log.e(TAG, "Error al cerrar diálogo", e);
             }
