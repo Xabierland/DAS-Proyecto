@@ -109,7 +109,7 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
 
     @Override
     protected String getActivityTitle() {
-        return "";
+        return getString(R.string.book_detail);
     }
 
     // Método para mostrar las opciones de compartir
