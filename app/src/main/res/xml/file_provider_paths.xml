@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
     <!-- Permite compartir archivos desde el directorio de caché interno -->
-    <cache-path name="shared_books" path="." />
+    <cache-path name="shared_cache" path="." />
     
     <!-- Permite compartir archivos desde el directorio de archivos interno -->
     <files-path name="shared_files" path="." />

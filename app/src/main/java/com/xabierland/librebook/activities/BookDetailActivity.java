@@ -3,6 +3,7 @@ package com.xabierland.librebook.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,8 @@ import com.xabierland.librebook.utils.ShareUtils;
 
 public class BookDetailActivity extends BaseActivity implements BookActionsFragment.OnBookActionListener{
 
+    private static final String TAG = "BookDetailActivity";
+    
     // Constantes para los extras
     public static final String EXTRA_LIBRO_ID = "libro_id";
 
@@ -39,6 +42,9 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
     private int usuarioId = -1;
     private boolean isLoggedIn = false;
     private boolean libroYaEnBiblioteca = false;
+    
+    // Diálogo global para evitar fugas
+    private AlertDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,64 +146,97 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
             return;
         }
     
-        // Mostrar diálogo de carga
-        AlertDialog loadingDialog = createLoadingDialog();
-        loadingDialog.show();
+        try {
+            // Mostrar diálogo de carga
+            loadingDialog = createLoadingDialog();
+            if (!isFinishing()) {
+                loadingDialog.show();
+            }
     
-        // Cargar datos del libro
-        libroRepository.obtenerLibroPorId(libroId, result -> {
-            if (result != null) {
-                libro = result;
-                
-                // Si el usuario está logueado, verificar si el libro ya está en su biblioteca
-                if (isLoggedIn && usuarioId != -1) {
-                    bibliotecaRepository.obtenerLibroDeBiblioteca(usuarioId, libro.getId(), libroConEstado -> {
-                        loadingDialog.dismiss();
+            // Cargar datos del libro
+            libroRepository.obtenerLibroPorId(libroId, result -> {
+                if (isFinishing()) {
+                    safelyDismissDialog();
+                    return;
+                }
+    
+                if (result != null) {
+                    libro = result;
+                    
+                    // Si el usuario está logueado, verificar si el libro ya está en su biblioteca
+                    if (isLoggedIn && usuarioId != -1) {
+                        bibliotecaRepository.obtenerLibroDeBiblioteca(usuarioId, libro.getId(), libroConEstado -> {
+                            // Siempre cerramos el diálogo primero para evitar problemas
+                            safelyDismissDialog();
+                            
+                            if (isFinishing()) return;
+                            
+                            if (libroConEstado != null) {
+                                // El libro ya está en la biblioteca del usuario
+                                libroYaEnBiblioteca = true;
+                                this.libroConEstado = libroConEstado; // Guardar referencia
+                                runOnUiThread(() -> {
+                                    if (isFinishing()) return;
+                                    
+                                    // Actualizar fragments con los datos del libro de forma segura
+                                    if (bookInfoFragment != null && bookActionsFragment != null) {
+                                        bookInfoFragment.setLibro(libro);
+                                        // Establecer el número total de páginas antes de mostrar UI
+                                        bookActionsFragment.setNumPaginasTotal(libro.getNumPaginas());
+                                        bookActionsFragment.updateUIForExistingBook(libroConEstado);
+                                    }
+                                });
+                            } else {
+                                // El libro no está en la biblioteca del usuario
+                                libroYaEnBiblioteca = false;
+                                this.libroConEstado = null; // No hay estado
+                                runOnUiThread(() -> {
+                                    if (isFinishing()) return;
+                                    
+                                    // Actualizar fragments con los datos del libro de forma segura
+                                    if (bookInfoFragment != null && bookActionsFragment != null) {
+                                        bookInfoFragment.setLibro(libro);
+                                        // Establecer el número total de páginas antes de mostrar UI
+                                        bookActionsFragment.setNumPaginasTotal(libro.getNumPaginas());
+                                        bookActionsFragment.updateUIForNewBook();
+                                    }
+                                });
+                            }
+                        });
+                    } else {
+                        // No hay usuario logueado, simplemente mostrar los detalles del libro
+                        safelyDismissDialog();
                         
-                        if (libroConEstado != null) {
-                            // El libro ya está en la biblioteca del usuario
-                            libroYaEnBiblioteca = true;
-                            this.libroConEstado = libroConEstado; // Guardar referencia
-                            runOnUiThread(() -> {
-                                // Actualizar fragments con los datos del libro
-                                bookInfoFragment.setLibro(libro);
-                                // Establecer el número total de páginas antes de mostrar UI
-                                bookActionsFragment.setNumPaginasTotal(libro.getNumPaginas());
-                                bookActionsFragment.updateUIForExistingBook(libroConEstado);
-                            });
-                        } else {
-                            // El libro no está en la biblioteca del usuario
-                            libroYaEnBiblioteca = false;
-                            this.libroConEstado = null; // No hay estado
-                            runOnUiThread(() -> {
-                                // Actualizar fragments con los datos del libro
+                        runOnUiThread(() -> {
+                            if (isFinishing()) return;
+                            
+                            // Actualizar fragments con los datos del libro de forma segura
+                            if (bookInfoFragment != null && bookActionsFragment != null) {
                                 bookInfoFragment.setLibro(libro);
                                 // Establecer el número total de páginas antes de mostrar UI
                                 bookActionsFragment.setNumPaginasTotal(libro.getNumPaginas());
                                 bookActionsFragment.updateUIForNewBook();
-                            });
+                            }
+                        });
+                    }
+                } else {
+                    safelyDismissDialog();
+                    
+                    runOnUiThread(() -> {
+                        if (!isFinishing()) {
+                            Toast.makeText(BookDetailActivity.this, "No se encontró el libro", Toast.LENGTH_SHORT).show();
+                            finish();
                         }
                     });
-                } else {
-                    // No hay usuario logueado, simplemente mostrar los detalles del libro
-                    loadingDialog.dismiss();
-                    runOnUiThread(() -> {
-                        // Actualizar fragments con los datos del libro
-                        bookInfoFragment.setLibro(libro);
-                        // Establecer el número total de páginas antes de mostrar UI
-                        bookActionsFragment.setNumPaginasTotal(libro.getNumPaginas());
-                        bookActionsFragment.updateUIForNewBook();
-                    });
                 }
-            } else {
-                loadingDialog.dismiss();
-                runOnUiThread(() -> {
-                    Toast.makeText(BookDetailActivity.this, "No se encontró el libro", Toast.LENGTH_SHORT).show();
-                    finish();
-                });
-            }
-        });
+            });
+        } catch (Exception e) {
+            safelyDismissDialog();
+            Log.e(TAG, "Error al cargar datos del libro", e);
+            Toast.makeText(this, "Error al cargar el libro", Toast.LENGTH_SHORT).show();
+        }
     }
+    
     private AlertDialog createLoadingDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_loading, null);
@@ -205,100 +244,192 @@ public class BookDetailActivity extends BaseActivity implements BookActionsFragm
         builder.setCancelable(false);
         return builder.create();
     }
+    
+    // Método para cerrar el diálogo de forma segura
+    private void safelyDismissDialog() {
+        runOnUiThread(() -> {
+            try {
+                if (loadingDialog != null && loadingDialog.isShowing() && !isFinishing()) {
+                    loadingDialog.dismiss();
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Error al cerrar diálogo", e);
+            }
+        });
+    }
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        safelyDismissDialog();
+    }
 
     // Implementación de OnBookActionListener
     @Override
     public void onAddToLibrary(String estadoLectura, float calificacion, String review, Integer paginaActual) {
         if (libro != null && usuarioId != -1) {
-            // Mostrar diálogo de carga
-            AlertDialog loadingDialog = createLoadingDialog();
-            loadingDialog.show();
-    
-            // Añadir el libro a la biblioteca del usuario
-            bibliotecaRepository.agregarLibro(usuarioId, libro.getId(), estadoLectura, result -> {
-                if (result > 0) {
-                    // Actualizar calificación si se ha proporcionado
-                    if (calificacion > 0) {
-                        bibliotecaRepository.actualizarCalificacion(usuarioId, libro.getId(), calificacion, null);
-                    }
-                    
-                    // Actualizar reseña si se ha proporcionado
-                    if (review != null && !review.isEmpty()) {
-                        bibliotecaRepository.guardarNotas(usuarioId, libro.getId(), review, null);
-                    }
-                    
-                    // Actualizar página actual si se ha proporcionado
-                    if (paginaActual != null && paginaActual > 0) {
-                        bibliotecaRepository.actualizarPaginaActual(usuarioId, libro.getId(), paginaActual, null);
-                    }
-                    
-                    loadingDialog.dismiss();
-                    
-                    // Recrear la actividad para actualizar la UI
-                    runOnUiThread(() -> {
-                        Toast.makeText(BookDetailActivity.this, R.string.book_added, Toast.LENGTH_SHORT).show();
-                        recreate();
-                    });
-                } else {
-                    loadingDialog.dismiss();
-                    
-                    runOnUiThread(() -> {
-                        Toast.makeText(BookDetailActivity.this, R.string.error_adding_book, Toast.LENGTH_SHORT).show();
-                    });
+            try {
+                // Mostrar diálogo de carga
+                AlertDialog actionDialog = createLoadingDialog();
+                if (!isFinishing()) {
+                    actionDialog.show();
                 }
-            });
+    
+                // Añadir el libro a la biblioteca del usuario
+                bibliotecaRepository.agregarLibro(usuarioId, libro.getId(), estadoLectura, result -> {
+                    if (result > 0) {
+                        // Actualizar calificación si se ha proporcionado
+                        if (calificacion > 0) {
+                            bibliotecaRepository.actualizarCalificacion(usuarioId, libro.getId(), calificacion, null);
+                        }
+                        
+                        // Actualizar reseña si se ha proporcionado
+                        if (review != null && !review.isEmpty()) {
+                            bibliotecaRepository.guardarNotas(usuarioId, libro.getId(), review, null);
+                        }
+                        
+                        // Actualizar página actual si se ha proporcionado
+                        if (paginaActual != null && paginaActual > 0) {
+                            bibliotecaRepository.actualizarPaginaActual(usuarioId, libro.getId(), paginaActual, null);
+                        }
+                        
+                        runOnUiThread(() -> {
+                            try {
+                                if (actionDialog != null && actionDialog.isShowing() && !isFinishing()) {
+                                    actionDialog.dismiss();
+                                }
+                                
+                                if (!isFinishing()) {
+                                    Toast.makeText(BookDetailActivity.this, R.string.book_added, Toast.LENGTH_SHORT).show();
+                                    recreate();
+                                }
+                            } catch (Exception e) {
+                                Log.e(TAG, "Error al cerrar diálogo de acción", e);
+                            }
+                        });
+                    } else {
+                        runOnUiThread(() -> {
+                            try {
+                                if (actionDialog != null && actionDialog.isShowing() && !isFinishing()) {
+                                    actionDialog.dismiss();
+                                }
+                                
+                                if (!isFinishing()) {
+                                    Toast.makeText(BookDetailActivity.this, R.string.error_adding_book, Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (Exception e) {
+                                Log.e(TAG, "Error al cerrar diálogo de acción", e);
+                            }
+                        });
+                    }
+                });
+            } catch (Exception e) {
+                Log.e(TAG, "Error al añadir libro a biblioteca", e);
+                Toast.makeText(this, R.string.error_adding_book, Toast.LENGTH_SHORT).show();
+            }
         }
     }
     
     @Override
     public void onUpdateInLibrary(String estadoLectura, float calificacion, String review, Integer paginaActual) {
         if (libro != null && usuarioId != -1) {
-            // Mostrar diálogo de carga
-            AlertDialog loadingDialog = createLoadingDialog();
-            loadingDialog.show();
-    
-            // Primero actualizar el estado de lectura
-            bibliotecaRepository.cambiarEstadoLectura(usuarioId, libro.getId(), estadoLectura, result -> {
-                // Luego actualizar la calificación
-                bibliotecaRepository.actualizarCalificacion(usuarioId, libro.getId(), calificacion, null);
-                
-                // Actualizar la reseña
-                bibliotecaRepository.guardarNotas(usuarioId, libro.getId(), review, null);
-                
-                // Actualizar página actual si corresponde
-                if (paginaActual != null && paginaActual > 0) {
-                    bibliotecaRepository.actualizarPaginaActual(usuarioId, libro.getId(), paginaActual, null);
+            try {
+                // Mostrar diálogo de carga
+                AlertDialog actionDialog = createLoadingDialog();
+                if (!isFinishing()) {
+                    actionDialog.show();
                 }
+    
+                // Para rastrear las operaciones pendientes
+                final boolean[] operationsComplete = {false, false, false};
                 
-                loadingDialog.dismiss();
-                
-                runOnUiThread(() -> {
-                    Toast.makeText(BookDetailActivity.this, R.string.book_status_updated, Toast.LENGTH_SHORT).show();
-                    recreate();
+                // Función para comprobar si todas las operaciones han finalizado
+                final Runnable checkAllOperationsComplete = () -> {
+                    if (operationsComplete[0] && operationsComplete[1] && operationsComplete[2]) {
+                        runOnUiThread(() -> {
+                            try {
+                                if (actionDialog != null && actionDialog.isShowing() && !isFinishing()) {
+                                    actionDialog.dismiss();
+                                }
+                                
+                                if (!isFinishing()) {
+                                    Toast.makeText(BookDetailActivity.this, R.string.book_status_updated, Toast.LENGTH_SHORT).show();
+                                    recreate();
+                                }
+                            } catch (Exception e) {
+                                Log.e(TAG, "Error al cerrar diálogo de actualización", e);
+                            }
+                        });
+                    }
+                };
+    
+                // Primero actualizar el estado de lectura
+                bibliotecaRepository.cambiarEstadoLectura(usuarioId, libro.getId(), estadoLectura, result -> {
+                    // Actualizar la calificación
+                    bibliotecaRepository.actualizarCalificacion(usuarioId, libro.getId(), calificacion, res -> {
+                        operationsComplete[0] = true;
+                        checkAllOperationsComplete.run();
+                    });
+                    
+                    // Actualizar la reseña
+                    bibliotecaRepository.guardarNotas(usuarioId, libro.getId(), review, res -> {
+                        operationsComplete[1] = true;
+                        checkAllOperationsComplete.run();
+                    });
+                    
+                    // Actualizar página actual si corresponde
+                    if (paginaActual != null && paginaActual > 0) {
+                        bibliotecaRepository.actualizarPaginaActual(usuarioId, libro.getId(), paginaActual, res -> {
+                            operationsComplete[2] = true;
+                            checkAllOperationsComplete.run();
+                        });
+                    } else {
+                        operationsComplete[2] = true;
+                        checkAllOperationsComplete.run();
+                    }
                 });
-            });
+            } catch (Exception e) {
+                Log.e(TAG, "Error al actualizar libro en biblioteca", e);
+                Toast.makeText(this, R.string.error_adding_book, Toast.LENGTH_SHORT).show();
+            }
         }
     }    
+
     @Override
     public void onRemoveFromLibrary() {
         if (libro != null && usuarioId != -1) {
-            // Mostrar diálogo de carga
-            AlertDialog loadingDialog = createLoadingDialog();
-            loadingDialog.show();
-
-            // Eliminar el libro de la biblioteca
-            bibliotecaRepository.eliminarLibroDeBiblioteca(usuarioId, libro.getId(), result -> {
-                loadingDialog.dismiss();
-                
-                runOnUiThread(() -> {
-                    if (result > 0) {
-                        Toast.makeText(BookDetailActivity.this, R.string.book_removed, Toast.LENGTH_SHORT).show();
-                        recreate();
-                    } else {
-                        Toast.makeText(BookDetailActivity.this, R.string.error_removing_book, Toast.LENGTH_SHORT).show();
-                    }
+            try {
+                // Mostrar diálogo de carga
+                AlertDialog actionDialog = createLoadingDialog();
+                if (!isFinishing()) {
+                    actionDialog.show();
+                }
+    
+                // Eliminar el libro de la biblioteca
+                bibliotecaRepository.eliminarLibroDeBiblioteca(usuarioId, libro.getId(), result -> {
+                    runOnUiThread(() -> {
+                        try {
+                            if (actionDialog != null && actionDialog.isShowing() && !isFinishing()) {
+                                actionDialog.dismiss();
+                            }
+                            
+                            if (!isFinishing()) {
+                                if (result > 0) {
+                                    Toast.makeText(BookDetailActivity.this, R.string.book_removed, Toast.LENGTH_SHORT).show();
+                                    recreate();
+                                } else {
+                                    Toast.makeText(BookDetailActivity.this, R.string.error_removing_book, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error al cerrar diálogo de eliminación", e);
+                        }
+                    });
                 });
-            });
+            } catch (Exception e) {
+                Log.e(TAG, "Error al eliminar libro de biblioteca", e);
+                Toast.makeText(this, R.string.error_removing_book, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

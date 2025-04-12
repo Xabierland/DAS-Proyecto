@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.Normalizer;
 import java.util.Locale;
 
 /**
@@ -50,12 +51,8 @@ public class ShareUtils {
         message.append("📄 ").append(libro.getNumPaginas()).append(" ").append(context.getString(R.string.pages)).append("\n\n");
         
         if (libro.getDescripcion() != null && !libro.getDescripcion().isEmpty()) {
-            // Limitar la descripción para que no sea demasiado larga
-            String description = libro.getDescripcion();
-            if (description.length() > 200) {
-                description = description.substring(0, 197) + "...";
-            }
-            message.append(description).append("\n\n");
+            // Incluir la descripción completa sin limitación
+            message.append(libro.getDescripcion()).append("\n\n");
         }
         
         message.append("💬 ").append(context.getString(R.string.shared_from_librebook));
@@ -91,10 +88,13 @@ public class ShareUtils {
                 return;
             }
             
+            // Log para depuración
+            Log.d(TAG, "Ruta del archivo: " + bookFile.getAbsolutePath());
+            
             // Obtener la URI del archivo usando FileProvider para compatibilidad
             Uri fileUri = FileProvider.getUriForFile(
                     context,
-                    "com.xabierland.librebook.fileprovider",
+                    "com.xabierland.librebook.fileprovider", // Usar el authority correcto definido en AndroidManifest
                     bookFile);
             
             // Crear intent para compartir
@@ -149,7 +149,11 @@ public class ShareUtils {
      */
     private static File createBookFile(Context context, Libro libro, LibroConEstado estado) {
         try {
-            File file = new File(context.getCacheDir(), "libro_" + libro.getId() + ".txt");
+            // Generar un nombre de archivo basado en el título del libro
+            String safeFileName = sanitizeFileName(libro.getTitulo()) + "_" + libro.getId() + ".txt";
+            
+            // Crear archivo en el directorio de caché (que ahora estará correctamente configurado)
+            File file = new File(context.getCacheDir(), safeFileName);
             
             try (PrintWriter writer = new PrintWriter(new FileOutputStream(file))) {
                 writer.println("LIBRO COMPARTIDO DESDE LIBREBOOK");
@@ -233,10 +237,42 @@ public class ShareUtils {
                 writer.println("Descárgala ahora y gestiona tus lecturas");
             }
             
-            return file;
+            // Verificar que el archivo se creó correctamente
+            if (file.exists() && file.length() > 0) {
+                Log.d(TAG, "Archivo creado con éxito: " + file.getAbsolutePath() + ", tamaño: " + file.length());
+                return file;
+            } else {
+                Log.e(TAG, "El archivo no existe o está vacío después de crearlo");
+                return null;
+            }
         } catch (IOException e) {
             Log.e(TAG, "Error al crear archivo de libro", e);
             return null;
         }
+    }
+    
+    /**
+     * Sanitiza un nombre de archivo eliminando caracteres no permitidos
+     * @param fileName Nombre de archivo original
+     * @return Nombre de archivo sanitizado
+     */
+    private static String sanitizeFileName(String fileName) {
+        if (fileName == null || fileName.isEmpty()) {
+            return "libro";
+        }
+        
+        // Limitar la longitud a 50 caracteres para evitar nombres demasiado largos
+        if (fileName.length() > 50) {
+            fileName = fileName.substring(0, 50);
+        }
+        
+        // Eliminar acentos y caracteres especiales
+        String normalized = Normalizer.normalize(fileName, Normalizer.Form.NFD)
+                .replaceAll("[^\\p{ASCII}]", "");
+        
+        // Reemplazar caracteres no permitidos en nombres de archivo
+        return normalized.replaceAll("[^a-zA-Z0-9\\-_\\. ]", "_")
+                .trim()
+                .replaceAll("\\s+", "_");
     }
 }
