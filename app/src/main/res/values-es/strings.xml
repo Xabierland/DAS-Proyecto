@@ -192,5 +192,4 @@
     <string name="share_book">Compartir libro</string>
     <string name="share_book_message">Elige cómo quieres compartir este libro:</string>
     <string name="share_success">Libro compartido con éxito</string>
-    <string name="long_press_to_share">Mantén pulsado para compartir</string>
 </resources>

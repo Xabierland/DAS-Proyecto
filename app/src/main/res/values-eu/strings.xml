@@ -193,5 +193,4 @@
     <string name="share_book">Liburua partekatu</string>
     <string name="share_book_message">Aukeratu nola partekatu nahi duzun liburu hau:</string>
     <string name="share_success">Liburua arrakastaz partekatu da</string>
-    <string name="long_press_to_share">Partekatzeko sakatu eta eutsi</string>
 </resources>

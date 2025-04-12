@@ -193,5 +193,4 @@
     <string name="share_book">Share book</string>
     <string name="share_book_message">Choose how you want to share this book:</string>
     <string name="share_success">Book shared successfully</string>
-    <string name="long_press_to_share">Long press to share</string>
 </resources>
