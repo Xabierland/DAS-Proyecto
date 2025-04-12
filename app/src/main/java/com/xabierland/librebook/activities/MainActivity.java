@@ -108,9 +108,7 @@ public class MainActivity extends BaseActivity implements MapFragment.MapFragmen
                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_NOTIFICATION_PERMISSION) {
-            // Aquí puedes manejar el resultado si es necesario
-            // Por ejemplo, puedes mostrar un mensaje al usuario sobre la importancia de las notificaciones
-            // si rechazó el permiso
+            // Aquí puedes manejar el resultado
         }
     }
 
