@@ -384,7 +384,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 break;
             case LANGUAGE_SYSTEM:
             default:
-                languageCode = Locale.getDefault().getLanguage();
+                languageCode = "es";
                 break;
         }
         
