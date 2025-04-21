@@ -17,7 +17,6 @@ import androidx.work.WorkerParameters;
 
 import com.xabierland.librebook.R;
 import com.xabierland.librebook.activities.ReadingTimerActivity;
-import com.xabierland.librebook.utils.NotificationUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -109,8 +108,10 @@ public class ReadingTimerWorker extends Worker {
         // Intent para abrir la actividad al tocar la notificación
         Intent intent = new Intent(context, ReadingTimerActivity.class);
         intent.putExtra(PREF_LIBRO_ID, libroId);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         
+        // Corregimos el problema de permisos usando el FLAG_ACTIVITY_NEW_TASK
+        // y ajustando el FLAG_IMMUTABLE para cumplir con las restricciones de seguridad
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         

@@ -56,7 +56,7 @@ public class BookActionsFragment extends Fragment implements AddBookDialogFragme
     private Integer paginaActual = null;
     
     // Referencia al libro actual
-    private Libro libro;
+    private LibroConEstado libro;
     
     // Nuevo campo para el número total de páginas
     private int numPaginasTotal = 0;
