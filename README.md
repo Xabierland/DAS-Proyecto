@@ -67,15 +67,3 @@ eerqLpcfeQICXkxr5cFPAr3cK3TKbSF8tCvAqszm1Js27MWP1XwMTKw6yFVC4XYK
 La aplicacion cuenta con un panel de mensajeria que permite enviar mensajes a todas las instancias de la aplicacion. Puedes acceder a el mediante el siguiente enlace:
 
 [http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/mensajeria.php](http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/admin_panel.php)
-
-## TODO
-
-- Servicio en primer plano (Contador de tiempo de lectura)
-<<<<<<< HEAD
-  - El boton de cronometro debe de ser solo visible si el libro esta en estado de lectura
-  - La notificacion no se actualiza constantemente
-  - Una vez dado a iniciar el cronometro es necesario entrar y salir de la actividad o de la aplicacion para que empiece a actualizarse.
-- Mapa
-  - El mapa en android 29 crashea
-=======
->>>>>>> 93fbfd6 (Agregar actualización periódica de recomendaciones en MainActivity)
