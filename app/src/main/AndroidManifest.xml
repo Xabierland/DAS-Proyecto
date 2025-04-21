@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
     <application
     android:networkSecurityConfig="@xml/network_security_config"
@@ -81,6 +83,11 @@
             android:resource="@xml/widget_book_recommendation_info" />
     </receiver>
 
+    <service
+        android:name=".services.ReadingTimerService"
+        android:enabled="true"
+        android:exported="false" />
+
     <activity
         android:name=".activities.MainActivity"
         android:exported="true">
@@ -89,27 +96,24 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
     </activity>
-
     <activity
-    android:name=".activities.ProfileActivity"
-    android:exported="false" />
-
+        android:name=".activities.ProfileActivity"
+        android:exported="false" />
     <activity
         android:name=".activities.SearchActivity"
         android:exported="false" />
-
     <activity
         android:name=".activities.BookDetailActivity"
         android:exported="false" />
-
+    <activity
+            android:name=".activities.ReadingTimerActivity"
+            android:exported="false" />
     <activity
         android:name=".activities.LoginActivity"
         android:exported="false" />
-
     <activity
         android:name=".activities.RegisterActivity"
         android:exported="false" />
-
     <activity
         android:name=".activities.SettingsActivity"
         android:exported="false" />

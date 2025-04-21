@@ -192,4 +192,13 @@
     <string name="share_book">Compartir libro</string>
     <string name="share_book_message">Elige cómo quieres compartir este libro:</string>
     <string name="share_success">Libro compartido con éxito</string>
+
+    <!-- Temporizador de lectura -->
+    <string name="reading_timer">Temporizador de lectura</string>
+    <string name="time_reading">Tiempo de lectura</string>
+    <string name="start">Iniciar</string>
+    <string name="stop">Detener</string>
+    <string name="reset">Reiniciar</string>
+    <string name="reading_timer_info">Seguirá funcionando incluso si cierras la aplicación. Puedes usar la notificación para controlar el temporizador.</string>
+    <string name="timer_notification_title">Tiempo de lectura</string>
 </resources>

@@ -193,4 +193,13 @@
     <string name="share_book">Liburua partekatu</string>
     <string name="share_book_message">Aukeratu nola partekatu nahi duzun liburu hau:</string>
     <string name="share_success">Liburua arrakastaz partekatu da</string>
+
+    <!-- Irakurketa tenporizadorea -->
+    <string name="reading_timer">Irakurketa tenporizadorea</string>
+    <string name="time_reading">Irakurketa denbora</string>
+    <string name="start">Hasi</string>
+    <string name="stop">Gelditu</string>
+    <string name="reset">Berrezarri</string>
+    <string name="reading_timer_info">Aplikazioa ixten baduzu ere funtzionatzen jarraituko du. Tenporizadorea kontrolatzeko jakinarazpena erabil dezakezu.</string>
+    <string name="timer_notification_title">Irakurketa denbora</string>
 </resources>

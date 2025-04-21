@@ -193,4 +193,13 @@
     <string name="share_book">Share book</string>
     <string name="share_book_message">Choose how you want to share this book:</string>
     <string name="share_success">Book shared successfully</string>
+
+    <!-- Reading Timer -->
+    <string name="reading_timer">Reading Timer</string>
+    <string name="time_reading">Time Reading</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="reset">Reset</string>
+    <string name="reading_timer_info">It will keep running even if you close the app. You can use the notification to control the timer.</string>
+    <string name="timer_notification_title">Reading Time</string>
 </resources>

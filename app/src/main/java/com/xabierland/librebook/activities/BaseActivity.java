@@ -253,6 +253,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         // Si estamos ya en la actividad seleccionada, no hacemos nada
         if ((this instanceof MainActivity && itemId == R.id.nav_home) ||
                 (this instanceof SearchActivity && itemId == R.id.nav_search) ||
+                (this instanceof ReadingTimerActivity && itemId == R.id.nav_timer) ||
                 (this instanceof ProfileActivity && itemId == R.id.nav_profile && !((ProfileActivity)this).isViewingOtherProfile()) ||
                 (this instanceof SearchActivity && itemId == R.id.action_search) ||
                 (this instanceof LoginActivity && itemId == R.id.nav_login) ||
@@ -261,18 +262,20 @@ public abstract class BaseActivity extends AppCompatActivity {
                 {
             return;
         }
-
+    
         // Manejar la navegación
         Intent intent = null;
-
+    
         if (itemId == R.id.nav_home) {
             intent = new Intent(this, MainActivity.class);
             // Limpiar el stack de activities si vamos al home
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            recreate();
         }
         else if (itemId == R.id.nav_search) {
             intent = new Intent(this, SearchActivity.class);
+        }
+        else if (itemId == R.id.nav_timer) {
+            intent = new Intent(this, ReadingTimerActivity.class);
         }
         else if (itemId == R.id.nav_profile) {
             intent = new Intent(this, ProfileActivity.class);
