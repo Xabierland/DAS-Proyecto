@@ -1,9 +1,11 @@
 package com.xabierland.librebook.activities;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -429,13 +431,21 @@ public class ReadingTimerActivity extends BaseActivity {
                 readingSpeed, speedDescription));
     }
     
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     @Override
     protected void onResume() {
         super.onResume();
         
         // Registrar el receptor de actualizaciones del timer
         IntentFilter filter = new IntentFilter(ReadingTimerReceiver.ACTION_TIMER_TICK);
-        registerReceiver(timerUpdateReceiver, filter);
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Android 13 (API 33) o superior, usar la bandera RECEIVER_NOT_EXPORTED
+            registerReceiver(timerUpdateReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            // Versiones anteriores de Android
+            registerReceiver(timerUpdateReceiver, filter);
+        }
         
         // Actualizar display del timer
         updateTimerDisplay();

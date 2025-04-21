@@ -71,3 +71,8 @@ La aplicacion cuenta con un panel de mensajeria que permite enviar mensajes a to
 ## TODO
 
 - Servicio en primer plano (Contador de tiempo de lectura)
+  - El boton de cronometro debe de ser solo visible si el libro esta en estado de lectura
+  - La notificacion no se actualiza constantemente
+  - Una vez dado a iniciar el cronometro es necesario entrar y salir de la actividad o de la aplicacion para que empiece a actualizarse.
+- Mapa
+  - El mapa en android 29 crashea

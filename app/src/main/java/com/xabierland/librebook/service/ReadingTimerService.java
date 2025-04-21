@@ -8,6 +8,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ServiceInfo;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -90,14 +91,19 @@ public class ReadingTimerService extends Service {
         }
         
         // Iniciar el servicio en primer plano con la notificación inicial
-        startForeground(NOTIFICATION_ID, buildNotification(libroTitulo, "00:00:00"));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(NOTIFICATION_ID, buildNotification(libroTitulo, "00:00:00"), 
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);
+        } else {
+            startForeground(NOTIFICATION_ID, buildNotification(libroTitulo, "00:00:00"));
+        }
         
         // Comenzar las actualizaciones periódicas
         handler.post(updateTimerRunnable);
         
         return START_STICKY;
     }
-
+    
     @Override
     public void onDestroy() {
         // Detener las actualizaciones
@@ -141,7 +147,7 @@ public class ReadingTimerService extends Service {
         notificationManager.notify(NOTIFICATION_ID, buildNotification(libroTitulo, formattedTime));
         
         // Enviar broadcast para actualizar la UI
-        Intent updateIntent = new Intent(ReadingTimerReceiver.ACTION_TIMER_TICK);
+        Intent updateIntent = new Intent(com.xabierland.librebook.services.ReadingTimerReceiver.ACTION_TIMER_TICK);
         sendBroadcast(updateIntent);
     }
     
@@ -189,8 +195,8 @@ public class ReadingTimerService extends Service {
                 this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         
         // Intent para detener el cronómetro
-        Intent stopIntent = new Intent(this, ReadingTimerReceiver.class);
-        stopIntent.setAction(ReadingTimerReceiver.ACTION_STOP_TIMER);
+        Intent stopIntent = new Intent(this, com.xabierland.librebook.services.ReadingTimerReceiver.class);
+        stopIntent.setAction(com.xabierland.librebook.services.ReadingTimerReceiver.ACTION_STOP_TIMER);
         PendingIntent stopPendingIntent = PendingIntent.getBroadcast(
                 this, 1, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         

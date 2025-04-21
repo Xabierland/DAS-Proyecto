@@ -1,0 +1,108 @@
+\documentclass[a4paper,10pt]{report}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx, csquotes, longtable, array, booktabs, xparse, float, titlesec, enumitem, dingbat, soul, multicol, listings, wrapfig}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[margin=2cm]{geometry}
+
+% Añadir la bibliografía
+%\usepackage[backend=biber, style=numeric, sorting=ynt]{biblatex}
+%\addbibresource{memoria.bib}
+
+% Cambia el color de los links
+\usepackage{hyperref}
+\hypersetup{hidelinks}
+
+% Generamos un comando para saltar pagina con las secciones
+\NewDocumentCommand{\cpsection}{s o m}{%
+  \clearpage
+  \IfBooleanTF{#1}
+    {\section*{#3}}
+    {%
+      \IfNoValueTF{#2}
+        {\section{#3}}
+        {\section[#2]{#3}}%
+    }%
+}
+
+\NewDocumentCommand{\cpsubsection}{s o m}{%
+  \clearpage
+  \IfBooleanTF{#1}
+    {\subsection*{#3}}
+    {%
+      \IfNoValueTF{#2}
+        {\subsection{#3}}
+        {\subsection[#2]{#3}}%
+    }%
+}
+
+% Elimina la palabra 'Capítulo' de los títulos de los capítulos
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries}{}{0pt}{\Huge\thechapter.\space}
+
+\titleformat{name=\chapter,numberless}[display]
+  {\normalfont\bfseries}{}{0pt}{\Huge}
+
+\titlespacing*{\chapter}{0pt}{-50pt}{20pt}
+
+% Personalización del índice de listados
+\renewcommand{\lstlistingname}{Código}  % Cambiar el nombre de 'Listing' a 'Código'
+\renewcommand{\lstlistlistingname}{Índice de códigos}
+
+% Añade numeración a los subsubsections y los añade al índice
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+
+% Idioma predeterminado (Español)
+\selectlanguage{spanish}
+
+\begin{document}
+  \begin{titlepage}
+      \centering
+      \includegraphics[width=0.6\textwidth]{./.img/logo.jpg}\\
+      \vspace{1cm}
+      \Large Ingeniería Informática de Gestión y Sistemas de Información\\
+      \vspace{3cm}
+      \Huge Desarrollo Avanzado de Software\\
+      \vspace{0.5cm}
+      \huge \textbf{LibreBook}\\
+      \vspace{7.5cm}
+      \Large Estudiante:\\
+      \vspace{0.2cm}
+      \large Gabiña Barañano, Xabier\\
+      \vspace{1cm}
+      \vfill
+      \today
+  \end{titlepage}
+  \tableofcontents
+  \listoffigures
+  \chapter{Introducción}
+    
+  \chapter{Objetivos}
+    \section{Elementos obligatorios}
+      \begin{itemize}
+        \item \textbf{Uso de una base de datos remota para el registro y la identificación de usuarios mediante registro.}
+        \item \textbf{Integrar los servicios Google Maps y Open Street Map y Geolocalización en una actividad.}
+        \item \textbf{Captar imágenes desde la cámara, guardarlas en el servidor y mostrarlas en la aplicación. Por ejemplo, una foto de perfil.}
+      \end{itemize}
+    \section{Elementos opcionales}
+      \begin{itemize}
+        \item \textbf{Uso de algún Content Provider para añadir, modificar o eliminar datos.}
+        \item \textbf{Implementación de un servicio en primer plano y gestión de mensajes broadcast durante el servicio}
+        \item \textbf{Uso de mensajería FCM. Se debe incluir alguna forma de que se pueda probar de forma externa (por ejemplo, con un servicio web PHP adicional en el servidor de la asignatura).}
+        \item \textbf{Desarrollar un widget que tenga, al menos, un elemento que se actualice automáticamente de manera periódica.}
+        \item \textbf{Uso de algún servicio o tarea programada mediante alarma (no valen las alarmas del widget).}
+      \end{itemize}
+  \chapter{Descripción de la aplicación}
+  \chapter{Manual de usuario}
+  \chapter{Dificultades}
+    \section{Base de datos remota}
+      Mover la base de datos de local a remota ha supuesto un reto importante.
+      
+    \section{Servicio de tiempo de lectura}
+      Implementar el servicio de lectura tubo sus dificultades especialmente la parte de broadcast.
+      Yo queria implementar una notificacion que constantemente se estuviera actualizando para que estando fuera de la aplicacion y de actividad fuera posible saber el tiempo de lectura e incluso deternerlo.
+      Lo primero que intente fue usar un WorkManager y poner el PeriodicWorkRequest a 1 segundo pero Android pone que el tiempo minimo es de 15 minutos por lo que tuve que rescribir el servicio u usar un ForegroundService usando Handler y Runnable.
+
+  \chapter{Conclusiones}
+\end{document}
