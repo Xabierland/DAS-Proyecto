@@ -1,4 +1,4 @@
-\documentclass[a4paper,10pt]{report}
+\documentclass[a4paper,12pt]{report}
 \usepackage[spanish]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx, csquotes, longtable, array, booktabs, xparse, float, titlesec, enumitem, dingbat, soul, multicol, listings, wrapfig}
@@ -77,6 +77,58 @@
   \tableofcontents
   \listoffigures
   \chapter{Introducción}
+    \paragraph*{}{
+      Al igual que en la primera entrega, LibreBook es una aplicación móvil para Android diseñada para los amantes de la lectura. Es una plataforma que permite a los usuarios crear una biblioteca personal digital donde pueden registrar, organizar y seguir su progreso en los libros que están leyendo o desean leer.
+    }
+    \paragraph*{}{
+      La aplicación está desarrollada completamente en Java y sigue las mejores prácticas de desarrollo para Android, incluyendo el uso de Room para la persistencia de datos\cite{room_documentation}, arquitectura MVVM\cite{mvvm_pattern}, y componentes de la biblioteca de Material Design\cite{material_design} para ofrecer una interfaz moderna y funcional.\\
+      El repositorio de la aplicación se encuentra en GitHub y está disponible para su descarga y uso bajo la licencia MIT.
+    }
+    \begin{center}
+      %Link al repositorio
+        \color{blue}\href{https://github.com/Xabierland/DAS-Proyecto}{Repositorio de la aplicación}
+    \end{center}
+    \paragraph*{}{
+      Además en el repositorio, tambien esta disponible en GitHub el binario de la aplicación en formato apk para su descarga e instalación en dispositivos Android.
+    }
+    \begin{center}
+      %Link al binario
+        \color{blue}\href{https://github.com/Xabierland/DAS-Proyecto/releases}{Archivo APK de la aplicación}
+    \end{center}
+    \paragraph*{}{
+      En la aplicación existen por defecto unicamente 10 libros.
+      \begin{multicols}{2}
+        \begin{enumerate}
+          \item Crimen y Castigo
+          \item Los Hermanos Karamazov
+          \item El Idiota
+          \item Memorias del Subsuelo
+          \item El Jugador
+          \item Los Demonios
+          \item Humillados y Ofendidos
+          \item El eterno marido
+          \item Noches Blancas
+          \item El doble
+        \end{enumerate}
+      \end{multicols}
+      Todos de Dostoievski. Tenlo en cuenta a la hora de buscar los libros ya que no se pueden añadir libros directamente desde la aplicación.
+    }
+    \paragraph*{}{
+      La aplicación cuenta con dos cuentas de usuario por defectos:
+      \begin{itemize}
+        \item \textbf{Administrador}
+          \begin{itemize}
+            \item Email: admin@xabierland.com
+            \item Contraseña: admin
+          \end{itemize}
+        \item \textbf{Xabier}
+          \begin{itemize}
+            \item Email: xabierland@gmail.com
+            \item Contraseña: 123456
+          \end{itemize}
+      \end{itemize}
+      No obstante, se pueden crear nuevas cuentas de usuario mediante el registro en la aplicación.
+    }
     
   \chapter{Objetivos}
     \section{Elementos obligatorios}
@@ -88,8 +140,21 @@
     \section{Elementos opcionales}
       \begin{itemize}
         \item \textbf{Uso de algún Content Provider para añadir, modificar o eliminar datos.}
+        \begin{itemize}
+          \item \textcolor{red}{Dado que el uso de Content Provider es el de permitir el acceso a los datos de la aplicación desde otras aplicaciones no he usado el Content Provider para añdir, modificar o eliminar datos de la aplicacion si no en la base de datos propia del Content Provider. No me queda claro si este era el objetivo del ejercicio en base al enunciado...}
+          \item El uso de Content Provider se ha implementado en las actividades de (ProfileActivity.java y BookActivity.java).
+          \item En el ProfileActivity.java se ha implementado al mantener presionado un libro lo que abre un dialogo para compartirlos en otras aplicaicones bien en forma de texto plano o de archivo.
+          \item En el BookActivity.java se ha implementado un boton de compartir en menu de opciones que permite compartir el libro en otras aplicaciones de la misma forma que la anterior.
+        \end{itemize}
         \item \textbf{Implementación de un servicio en primer plano y gestión de mensajes broadcast durante el servicio}
+        \begin{itemize}
+          \item 
+        \end{itemize}
         \item \textbf{Uso de mensajería FCM. Se debe incluir alguna forma de que se pueda probar de forma externa (por ejemplo, con un servicio web PHP adicional en el servidor de la asignatura).}
+        \begin{itemize}
+          \item La logica para implementar la mensajeria FCM se encuentra en (LibreBookMessagingService.java).
+          \item Para hacer uso de la mensajeria FCM accede a \textcolor{blue}{\href{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/admin_panel.php}{esta web}} y escribe el mensaje y el titulo que se mostraran como notificacion.
+        \end{itemize}
         \item \textbf{Desarrollar un widget que tenga, al menos, un elemento que se actualice automáticamente de manera periódica.}
         \item \textbf{Uso de algún servicio o tarea programada mediante alarma (no valen las alarmas del widget).}
       \end{itemize}
@@ -98,11 +163,13 @@
   \chapter{Dificultades}
     \section{Base de datos remota}
       Mover la base de datos de local a remota ha supuesto un reto importante.
-      
+      Primero al usar la arquitectura Room no tenia unas sentencias SQL definidas para la estructura de la base de datos por lo que tuve que crearla de cero.
+      Ademas, era necesario el uso de una API REST para poder interactuar con la base de datos.
     \section{Servicio de tiempo de lectura}
       Implementar el servicio de lectura tubo sus dificultades especialmente la parte de broadcast.
       Yo queria implementar una notificacion que constantemente se estuviera actualizando para que estando fuera de la aplicacion y de actividad fuera posible saber el tiempo de lectura e incluso deternerlo.
-      Lo primero que intente fue usar un WorkManager y poner el PeriodicWorkRequest a 1 segundo pero Android pone que el tiempo minimo es de 15 minutos por lo que tuve que rescribir el servicio u usar un ForegroundService usando Handler y Runnable.
-
+      Lo primero que intente fue usar un WorkManager y poner el PeriodicWorkRequest a 1 segundo pero Android pone que el tiempo minimo es de 15 minutos por lo que tuve que rescribir el servicio u usar un ForegroundService.
+      Esto supuso reescribir el servicio y la actividad de tiempo de lectura completamente.
   \chapter{Conclusiones}
+    Aunque esta entrega haya sido más corta en cuanto a funcionalidades se me ha hecho bastante más complejas de implementar.
 \end{document}
