@@ -28,7 +28,7 @@ import com.xabierland.librebook.data.database.entities.Libro;
 import com.xabierland.librebook.data.database.entities.UsuarioLibro;
 import com.xabierland.librebook.data.models.LibroConEstado;
 import com.xabierland.librebook.services.ReadingTimerReceiver;
-import com.xabierland.librebook.services.ReadingTimerWorker;
+import com.xabierland.librebook.services.ReadingTimerService;
 
 public class BookActionsFragment extends Fragment implements AddBookDialogFragment.OnBookActionListener {
 
@@ -44,6 +44,7 @@ public class BookActionsFragment extends Fragment implements AddBookDialogFragme
     private OnBookActionListener listener;
     private MaterialButton buttonAddToLibrary;
     private MaterialButton buttonRemoveFromLibrary;
+    private Button buttonReadingTimer;
     private View reviewSection;
     private TextView textViewRating;
     private TextView textViewReview;
@@ -104,16 +105,11 @@ public class BookActionsFragment extends Fragment implements AddBookDialogFragme
     private void initViews(View view) {
         buttonAddToLibrary = view.findViewById(R.id.buttonAddToLibrary);
         buttonRemoveFromLibrary = view.findViewById(R.id.buttonRemoveFromLibrary);
+        buttonReadingTimer = view.findViewById(R.id.buttonReadingTimer);
         reviewSection = view.findViewById(R.id.reviewSection);
         textViewRating = view.findViewById(R.id.textViewRating);
         ratingBarDisplay = view.findViewById(R.id.ratingBarDisplay);
         textViewReview = view.findViewById(R.id.textViewReview);
-        
-        // Añadir el botón del cronómetro de lectura
-        Button buttonReadingTimer = view.findViewById(R.id.buttonReadingTimer);
-        if (buttonReadingTimer != null) {
-            buttonReadingTimer.setOnClickListener(v -> startReadingTimer());
-        }
     }
 
     private void setupListeners() {
@@ -132,6 +128,8 @@ public class BookActionsFragment extends Fragment implements AddBookDialogFragme
                 listener.showLoginRequiredDialog();
             }
         });
+        
+        buttonReadingTimer.setOnClickListener(v -> startReadingTimer());
     }
     
     private void showRemoveFromLibraryDialog() {
@@ -154,7 +152,7 @@ public class BookActionsFragment extends Fragment implements AddBookDialogFragme
         
         // Iniciar la actividad del cronómetro
         Intent intent = new Intent(requireContext(), ReadingTimerActivity.class);
-        intent.putExtra(ReadingTimerWorker.PREF_LIBRO_ID, libro.getId());
+        intent.putExtra(ReadingTimerService.PREF_LIBRO_ID, libro.getId());
         startActivity(intent);
     }
     
@@ -167,7 +165,6 @@ public class BookActionsFragment extends Fragment implements AddBookDialogFragme
     }
     
     private void updateTimerButtonState() {
-        Button buttonReadingTimer = getView().findViewById(R.id.buttonReadingTimer);
         if (buttonReadingTimer == null || libro == null) return;
         
         boolean isTimerRunning = ReadingTimerReceiver.isTimerRunning(requireContext());
@@ -259,8 +256,14 @@ public class BookActionsFragment extends Fragment implements AddBookDialogFragme
             reviewSection.setVisibility(View.GONE);
         }
         
-        // Actualizar estado del botón de cronómetro
-        updateTimerButtonState();
+        // Mostrar u ocultar el botón del cronómetro según el estado
+        // Solo mostrar el botón si el libro está en estado "leyendo"
+        if (UsuarioLibro.ESTADO_LEYENDO.equals(estadoActual)) {
+            buttonReadingTimer.setVisibility(View.VISIBLE);
+            updateTimerButtonState();
+        } else {
+            buttonReadingTimer.setVisibility(View.GONE);
+        }
     }
 
     // Método para actualizar la UI para un libro nuevo (no está en la biblioteca)
@@ -269,6 +272,7 @@ public class BookActionsFragment extends Fragment implements AddBookDialogFragme
         buttonAddToLibrary.setText(R.string.add_to_library);
         reviewSection.setVisibility(View.GONE);
         buttonRemoveFromLibrary.setVisibility(View.GONE);
+        buttonReadingTimer.setVisibility(View.GONE); // Ocultar botón de cronómetro para libros nuevos
     }
 
     private void showAddToLibraryDialog() {

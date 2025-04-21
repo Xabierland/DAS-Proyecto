@@ -7,10 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
-
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -24,9 +20,7 @@ public class ReadingTimerReceiver extends BroadcastReceiver {
     public static final String ACTION_START_TIMER = "com.xabierland.librebook.action.START_TIMER";
     public static final String ACTION_STOP_TIMER = "com.xabierland.librebook.action.STOP_TIMER";
     public static final String ACTION_RESET_TIMER = "com.xabierland.librebook.action.RESET_TIMER";
-    
-    // Nombre único para el trabajo periódico
-    public static final String WORK_NAME = "reading_timer_work";
+    public static final String ACTION_TIMER_TICK = "com.xabierland.librebook.action.TIMER_TICK";
     
     // ID de la notificación del timer
     private static final int NOTIFICATION_ID = 1001;
@@ -41,68 +35,70 @@ public class ReadingTimerReceiver extends BroadcastReceiver {
         }
         
         SharedPreferences prefs = context.getSharedPreferences(
-                ReadingTimerWorker.PREF_FILE_READING_TIMER, Context.MODE_PRIVATE);
+                ReadingTimerService.PREF_FILE_READING_TIMER, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         
         switch (action) {
             case ACTION_START_TIMER:
                 // Obtener datos del libro
-                int libroId = intent.getIntExtra(ReadingTimerWorker.PREF_LIBRO_ID, -1);
-                String libroTitulo = intent.getStringExtra(ReadingTimerWorker.PREF_LIBRO_TITULO);
+                int libroId = intent.getIntExtra(ReadingTimerService.PREF_LIBRO_ID, -1);
+                String libroTitulo = intent.getStringExtra(ReadingTimerService.PREF_LIBRO_TITULO);
                 
                 if (libroId == -1 || libroTitulo == null) {
                     Log.e(TAG, "Error: ID del libro o título no proporcionados");
                     return;
                 }
                 
-                // Guardar estado inicial del timer
-                editor.putBoolean(ReadingTimerWorker.PREF_IS_TIMER_RUNNING, true);
-                editor.putLong(ReadingTimerWorker.PREF_START_TIME, System.currentTimeMillis());
-                editor.putInt(ReadingTimerWorker.PREF_LIBRO_ID, libroId);
-                editor.putString(ReadingTimerWorker.PREF_LIBRO_TITULO, libroTitulo);
+                // Iniciar el servicio en primer plano
+                Intent serviceIntent = new Intent(context, ReadingTimerService.class);
+                serviceIntent.putExtra(ReadingTimerService.PREF_LIBRO_ID, libroId);
+                serviceIntent.putExtra(ReadingTimerService.PREF_LIBRO_TITULO, libroTitulo);
+                
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    context.startForegroundService(serviceIntent);
+                } else {
+                    context.startService(serviceIntent);
+                }
+                
+                // Asegurar que el estado es "en ejecución"
+                editor.putBoolean(ReadingTimerService.PREF_IS_TIMER_RUNNING, true);
                 editor.apply();
                 
-                // Programar el worker periódico
-                schedulePeriodicWork(context, libroId, libroTitulo);
+                Log.d(TAG, "Servicio de cronómetro iniciado para libro: " + libroTitulo);
                 break;
                 
             case ACTION_STOP_TIMER:
                 // Pausar el timer
-                boolean isRunning = prefs.getBoolean(ReadingTimerWorker.PREF_IS_TIMER_RUNNING, false);
+                boolean isRunning = prefs.getBoolean(ReadingTimerService.PREF_IS_TIMER_RUNNING, false);
                 
                 if (isRunning) {
-                    // Calcular tiempo transcurrido
-                    long startTime = prefs.getLong(ReadingTimerWorker.PREF_START_TIME, 0);
-                    long previousElapsed = prefs.getLong(ReadingTimerWorker.PREF_ELAPSED_TIME, 0);
-                    long currentTime = System.currentTimeMillis();
-                    long newElapsed = previousElapsed + (currentTime - startTime);
+                    // Detener el servicio
+                    context.stopService(new Intent(context, ReadingTimerService.class));
                     
-                    // Actualizar tiempo acumulado y marcar como pausado
-                    editor.putBoolean(ReadingTimerWorker.PREF_IS_TIMER_RUNNING, false);
-                    editor.putLong(ReadingTimerWorker.PREF_ELAPSED_TIME, newElapsed);
+                    // Marcar como pausado
+                    editor.putBoolean(ReadingTimerService.PREF_IS_TIMER_RUNNING, false);
                     editor.apply();
-                    
-                    // Cancelar el trabajo periódico
-                    WorkManager.getInstance(context).cancelUniqueWork(WORK_NAME);
                     
                     // Cancelar la notificación
                     NotificationManager notificationManager = 
                             (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                     notificationManager.cancel(NOTIFICATION_ID);
                     
-                    Log.d(TAG, "Timer detenido. Tiempo acumulado: " + formatElapsedTime(newElapsed));
+                    Log.d(TAG, "Timer detenido. Tiempo acumulado: " + 
+                            formatElapsedTime(getElapsedTime(context)));
                 }
                 break;
                 
             case ACTION_RESET_TIMER:
                 // Reiniciar el timer
-                editor.putBoolean(ReadingTimerWorker.PREF_IS_TIMER_RUNNING, false);
-                editor.putLong(ReadingTimerWorker.PREF_ELAPSED_TIME, 0);
-                editor.putLong(ReadingTimerWorker.PREF_START_TIME, 0);
-                editor.apply();
+                // Detener el servicio si está en ejecución
+                context.stopService(new Intent(context, ReadingTimerService.class));
                 
-                // Cancelar el trabajo periódico
-                WorkManager.getInstance(context).cancelUniqueWork(WORK_NAME);
+                // Resetear todos los valores
+                editor.putBoolean(ReadingTimerService.PREF_IS_TIMER_RUNNING, false);
+                editor.putLong(ReadingTimerService.PREF_ELAPSED_TIME, 0);
+                editor.putLong(ReadingTimerService.PREF_START_TIME, 0);
+                editor.apply();
                 
                 // Cancelar la notificación
                 NotificationManager notificationManager = 
@@ -111,28 +107,12 @@ public class ReadingTimerReceiver extends BroadcastReceiver {
                 
                 Log.d(TAG, "Timer reiniciado");
                 break;
+                
+            case ACTION_TIMER_TICK:
+                // Este caso se usa para notificar a las actividades que se actualicen
+                // No necesitamos hacer nada aquí, ya que las actividades escucharán este broadcast
+                break;
         }
-    }
-    
-    /**
-     * Programa el trabajo periódico para actualizar el cronómetro
-     */
-    private void schedulePeriodicWork(Context context, int libroId, String libroTitulo) {
-        // Crear solicitud de trabajo periódico que se ejecute cada segundo
-        // Reducimos el intervalo a 1 segundo para actualizaciones más frecuentes
-        PeriodicWorkRequest timerWorkRequest =
-                new PeriodicWorkRequest.Builder(ReadingTimerWorker.class, 1, TimeUnit.SECONDS)
-                        .setInputData(ReadingTimerWorker.createInputData(libroId, libroTitulo))
-                        .build();
-        
-        // Programar trabajo único reemplazando cualquier existente
-        WorkManager.getInstance(context)
-                .enqueueUniquePeriodicWork(
-                        WORK_NAME,
-                        ExistingPeriodicWorkPolicy.REPLACE,
-                        timerWorkRequest);
-        
-        Log.d(TAG, "Worker programado para actualizar cada segundo");
     }
     
     /**
@@ -140,8 +120,8 @@ public class ReadingTimerReceiver extends BroadcastReceiver {
      */
     public static boolean isTimerRunning(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(
-                ReadingTimerWorker.PREF_FILE_READING_TIMER, Context.MODE_PRIVATE);
-        return prefs.getBoolean(ReadingTimerWorker.PREF_IS_TIMER_RUNNING, false);
+                ReadingTimerService.PREF_FILE_READING_TIMER, Context.MODE_PRIVATE);
+        return prefs.getBoolean(ReadingTimerService.PREF_IS_TIMER_RUNNING, false);
     }
     
     /**
@@ -149,14 +129,14 @@ public class ReadingTimerReceiver extends BroadcastReceiver {
      */
     public static long getElapsedTime(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(
-                ReadingTimerWorker.PREF_FILE_READING_TIMER, Context.MODE_PRIVATE);
+                ReadingTimerService.PREF_FILE_READING_TIMER, Context.MODE_PRIVATE);
                 
-        boolean isRunning = prefs.getBoolean(ReadingTimerWorker.PREF_IS_TIMER_RUNNING, false);
-        long previousElapsed = prefs.getLong(ReadingTimerWorker.PREF_ELAPSED_TIME, 0);
+        boolean isRunning = prefs.getBoolean(ReadingTimerService.PREF_IS_TIMER_RUNNING, false);
+        long previousElapsed = prefs.getLong(ReadingTimerService.PREF_ELAPSED_TIME, 0);
         
         if (isRunning) {
             // Si está en ejecución, sumar el tiempo desde el último inicio
-            long startTime = prefs.getLong(ReadingTimerWorker.PREF_START_TIME, 0);
+            long startTime = prefs.getLong(ReadingTimerService.PREF_START_TIME, 0);
             long currentTime = System.currentTimeMillis();
             return previousElapsed + (currentTime - startTime);
         } else {
@@ -170,8 +150,8 @@ public class ReadingTimerReceiver extends BroadcastReceiver {
      */
     public static int getCurrentBookId(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(
-                ReadingTimerWorker.PREF_FILE_READING_TIMER, Context.MODE_PRIVATE);
-        return prefs.getInt(ReadingTimerWorker.PREF_LIBRO_ID, -1);
+                ReadingTimerService.PREF_FILE_READING_TIMER, Context.MODE_PRIVATE);
+        return prefs.getInt(ReadingTimerService.PREF_LIBRO_ID, -1);
     }
     
     /**
@@ -179,8 +159,8 @@ public class ReadingTimerReceiver extends BroadcastReceiver {
      */
     public static String getCurrentBookTitle(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(
-                ReadingTimerWorker.PREF_FILE_READING_TIMER, Context.MODE_PRIVATE);
-        return prefs.getString(ReadingTimerWorker.PREF_LIBRO_TITULO, "");
+                ReadingTimerService.PREF_FILE_READING_TIMER, Context.MODE_PRIVATE);
+        return prefs.getString(ReadingTimerService.PREF_LIBRO_TITULO, "");
     }
     
     /**

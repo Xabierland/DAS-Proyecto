@@ -1,9 +1,10 @@
 package com.xabierland.librebook.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +20,7 @@ import com.xabierland.librebook.data.database.entities.UsuarioLibro;
 import com.xabierland.librebook.data.repositories.BibliotecaRepository;
 import com.xabierland.librebook.data.repositories.LibroRepository;
 import com.xabierland.librebook.services.ReadingTimerReceiver;
-import com.xabierland.librebook.services.ReadingTimerWorker;
+import com.xabierland.librebook.services.ReadingTimerService;
 import com.xabierland.librebook.utils.ReadingTimeUtils;
 
 import java.util.Locale;
@@ -53,18 +54,8 @@ public class ReadingTimerActivity extends BaseActivity {
     // Velocidad de lectura
     private int readingSpeed;
     
-    // Handler para actualizar la UI
-    private final Handler handler = new Handler(Looper.getMainLooper());
-    private final Runnable updateTimeRunnable = new Runnable() {
-        @Override
-        public void run() {
-            updateTimerDisplay();
-            // Ejecutar cada segundo si el timer está en ejecución
-            if (ReadingTimerReceiver.isTimerRunning(ReadingTimerActivity.this)) {
-                handler.postDelayed(this, 1000);
-            }
-        }
-    };
+    // BroadcastReceiver para actualizaciones del timer
+    private BroadcastReceiver timerUpdateReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +70,7 @@ public class ReadingTimerActivity extends BaseActivity {
         initViews();
         
         // Obtener ID del libro de los extras o del timer en ejecución
-        libroId = getIntent().getIntExtra(ReadingTimerWorker.PREF_LIBRO_ID, -1);
+        libroId = getIntent().getIntExtra(ReadingTimerService.PREF_LIBRO_ID, -1);
         
         if (libroId == -1) {
             // Si no se proporcionó un ID, comprobar si hay un timer en ejecución
@@ -102,6 +93,16 @@ public class ReadingTimerActivity extends BaseActivity {
         // Configurar botones para cambiar la velocidad de lectura
         findViewById(R.id.buttonDecreaseSpeed).setOnClickListener(v -> decreaseReadingSpeed());
         findViewById(R.id.buttonIncreaseSpeed).setOnClickListener(v -> increaseReadingSpeed());
+        
+        // Inicializar el BroadcastReceiver para actualizaciones del timer
+        timerUpdateReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (ReadingTimerReceiver.ACTION_TIMER_TICK.equals(intent.getAction())) {
+                    updateTimerDisplay();
+                }
+            }
+        };
         
         // Actualizar estado inicial de los botones
         updateButtonStates();
@@ -187,20 +188,14 @@ public class ReadingTimerActivity extends BaseActivity {
             intent.setAction(ReadingTimerReceiver.ACTION_STOP_TIMER);
             sendBroadcast(intent);
             buttonStartStop.setText(R.string.start);
-            
-            // Detener las actualizaciones de UI
-            handler.removeCallbacks(updateTimeRunnable);
         } else {
             // Iniciar el timer
             Intent intent = new Intent(this, ReadingTimerReceiver.class);
             intent.setAction(ReadingTimerReceiver.ACTION_START_TIMER);
-            intent.putExtra(ReadingTimerWorker.PREF_LIBRO_ID, libroId);
-            intent.putExtra(ReadingTimerWorker.PREF_LIBRO_TITULO, libroTitulo);
+            intent.putExtra(ReadingTimerService.PREF_LIBRO_ID, libroId);
+            intent.putExtra(ReadingTimerService.PREF_LIBRO_TITULO, libroTitulo);
             sendBroadcast(intent);
             buttonStartStop.setText(R.string.stop);
-            
-            // Iniciar actualizaciones de UI
-            handler.post(updateTimeRunnable);
         }
         
         updateButtonStates();
@@ -438,21 +433,22 @@ public class ReadingTimerActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         
+        // Registrar el receptor de actualizaciones del timer
+        IntentFilter filter = new IntentFilter(ReadingTimerReceiver.ACTION_TIMER_TICK);
+        registerReceiver(timerUpdateReceiver, filter);
+        
         // Actualizar display del timer
         updateTimerDisplay();
-        
-        // Si el timer está en ejecución, iniciar actualizaciones periódicas
-        if (ReadingTimerReceiver.isTimerRunning(this)) {
-            handler.post(updateTimeRunnable);
-        }
     }
     
     @Override
     protected void onPause() {
         super.onPause();
         
-        // Detener actualizaciones periódicas
-        handler.removeCallbacks(updateTimeRunnable);
+        // Anular registro del receptor
+        if (timerUpdateReceiver != null) {
+            unregisterReceiver(timerUpdateReceiver);
+        }
     }
     
     @Override
