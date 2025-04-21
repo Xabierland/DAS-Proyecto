@@ -143,7 +143,14 @@ public class BookstoreFinder {
                 "out center;";
         
         // Codificar la consulta para URL
-        String encodedQuery = java.net.URLEncoder.encode(query, java.nio.charset.StandardCharsets.UTF_8);
+        String encodedQuery;
+        try {
+            // Usamos la sobrecarga compatible con API antiguas
+            encodedQuery = java.net.URLEncoder.encode(query, "UTF-8");
+        } catch (java.io.UnsupportedEncodingException e) {
+            // UTF-8 siempre está soportado, así que esto no debería ocurrir
+            throw new RuntimeException("UTF-8 no soportado", e);
+        }
         
         return "https://overpass-api.de/api/interpreter?data=" + encodedQuery;
     }
