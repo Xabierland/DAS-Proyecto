@@ -19,6 +19,7 @@ import com.xabierland.librebook.data.database.entities.UsuarioLibro;
 import com.xabierland.librebook.data.repositories.BibliotecaRepository;
 import com.xabierland.librebook.data.repositories.LibroRepository;
 import com.xabierland.librebook.services.ReadingTimerReceiver;
+import com.xabierland.librebook.services.ReadingTimerWorker;
 import com.xabierland.librebook.utils.ReadingTimeUtils;
 
 import java.util.Locale;
@@ -78,7 +79,7 @@ public class ReadingTimerActivity extends BaseActivity {
         initViews();
         
         // Obtener ID del libro de los extras o del timer en ejecución
-        libroId = getIntent().getIntExtra(ReadingTimerReceiver.PREF_LIBRO_ID, -1);
+        libroId = getIntent().getIntExtra(ReadingTimerWorker.PREF_LIBRO_ID, -1);
         
         if (libroId == -1) {
             // Si no se proporcionó un ID, comprobar si hay un timer en ejecución
@@ -193,8 +194,8 @@ public class ReadingTimerActivity extends BaseActivity {
             // Iniciar el timer
             Intent intent = new Intent(this, ReadingTimerReceiver.class);
             intent.setAction(ReadingTimerReceiver.ACTION_START_TIMER);
-            intent.putExtra(ReadingTimerReceiver.PREF_LIBRO_ID, libroId);
-            intent.putExtra(ReadingTimerReceiver.PREF_LIBRO_TITULO, libroTitulo);
+            intent.putExtra(ReadingTimerWorker.PREF_LIBRO_ID, libroId);
+            intent.putExtra(ReadingTimerWorker.PREF_LIBRO_TITULO, libroTitulo);
             sendBroadcast(intent);
             buttonStartStop.setText(R.string.stop);
             
