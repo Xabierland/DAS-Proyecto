@@ -1,5 +1,6 @@
 package com.xabierland.librebook.services;
 
+import android.app.ActivityOptions;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -8,6 +9,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -118,16 +120,34 @@ public class ReadingTimerService extends Service {
     }
 
     private Notification buildNotification() {
-        // Crear un PendingIntent para abrir la actividad al tocar la notificación
+        // 1) Intent para abrir la actividad
         Intent notificationIntent = new Intent(this, ReadingTimerActivity.class);
+        // Usamos FLAG_CLEAR_TOP para no destruir el servicio ni reiniciar el temporizador,
+        // y FLAG_NEW_TASK para permitir el lanzamiento desde background.
+        notificationIntent.addFlags(
+                Intent.FLAG_ACTIVITY_NEW_TASK |
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP
+        );
+
+        // 2) Permitimos explícitamente el Background Activity Launch (BAL)
+        ActivityOptions options = ActivityOptions.makeBasic();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            options.setPendingIntentCreatorBackgroundActivityStartMode(
+                    ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED
+            );
+        }
+        Bundle optsBundle = options.toBundle();
+
+        // 3) Creamos el PendingIntent con esas opciones
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this,
                 0,
                 notificationIntent,
-                PendingIntent.FLAG_IMMUTABLE
+                PendingIntent.FLAG_IMMUTABLE,
+                optsBundle
         );
 
-        // Crear acciones para la notificación
+        // 4) Acción “Parar” sigue igual
         PendingIntent stopPendingIntent = PendingIntent.getService(
                 this,
                 1,
@@ -135,20 +155,21 @@ public class ReadingTimerService extends Service {
                 PendingIntent.FLAG_IMMUTABLE
         );
 
-        // Formato del tiempo
+        // 5) Montamos la notificación con el timeString ya formateado
         String timeStr = formatTime(elapsedTime);
-
-        // Construir la notificación
         return new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(getString(R.string.timer_notification_title))
                 .setContentText(timeStr)
                 .setSmallIcon(R.drawable.ic_notification)
                 .setContentIntent(pendingIntent)
-                .addAction(android.R.drawable.ic_media_pause, getString(R.string.stop), stopPendingIntent)
+                .addAction(
+                        android.R.drawable.ic_media_pause,
+                        getString(R.string.stop),
+                        stopPendingIntent
+                )
                 .setOnlyAlertOnce(true)
                 .build();
     }
-
     private void updateNotification() {
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
         notificationManager.notify(NOTIFICATION_ID, buildNotification());

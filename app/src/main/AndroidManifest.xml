@@ -86,7 +86,8 @@
     <service
         android:name=".services.ReadingTimerService"
         android:enabled="true"
-        android:exported="false" />
+        android:exported="false" 
+        android:foregroundServiceType="dataSync" />
 
     <activity
         android:name=".activities.MainActivity"
@@ -106,8 +107,9 @@
         android:name=".activities.BookDetailActivity"
         android:exported="false" />
     <activity
-            android:name=".activities.ReadingTimerActivity"
-            android:exported="false" />
+        android:name=".activities.ReadingTimerActivity"
+        android:exported="false"
+        android:launchMode="singleTop" />
     <activity
         android:name=".activities.LoginActivity"
         android:exported="false" />

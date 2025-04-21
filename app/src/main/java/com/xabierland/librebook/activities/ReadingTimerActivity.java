@@ -145,7 +145,29 @@ public class ReadingTimerActivity extends BaseActivity implements ReadingTimerSe
     private void updateButtonText(boolean isRunning) {
         buttonStartStop.setText(isRunning ? R.string.stop : R.string.start);
     }
-    
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        // Aseguramos que el Intent interno de la Activity se actualice
+        setIntent(intent);
+
+        if (timerService != null) {
+            // Ya estábamos binded: volvemos a poner el listener y refrescamos UI
+            timerService.setTimerListener(this);
+            updateUIWithServiceState();
+        } else {
+            // Si por algún motivo aún no está binded, lo vinculamos ahora
+            Intent serviceIntent = new Intent(this, ReadingTimerService.class);
+            bindService(
+                    serviceIntent,
+                    serviceConnection,
+                    Context.BIND_AUTO_CREATE
+            );
+        }
+    }
+
+
     // Implementación de la interfaz TimerListener
     @Override
     public void onTimerTick(long elapsedTime) {
