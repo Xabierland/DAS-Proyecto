@@ -124,6 +124,19 @@
                 android:backgroundTint="@color/design_default_color_error"
                 android:visibility="gone"
                 android:layout_marginBottom="16dp" />
+                
+            <!-- Botón para el cronómetro de lectura -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonReadingTimer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/start_reading_timer"
+                android:drawableStart="@drawable/ic_timer"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                app:icon="@drawable/ic_timer"
+                app:iconGravity="textStart"
+                android:layout_marginBottom="16dp" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

@@ -58,5 +58,32 @@
             android:layout_marginTop="8dp"
             android:textStyle="italic" />
 
+        <!-- Indicador de cronómetro activo (inicialmente oculto) -->
+        <LinearLayout
+            android:id="@+id/widget_timer_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="#33FFFFFF"
+            android:padding="4dp"
+            android:layout_marginTop="8dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_timer"
+                android:contentDescription="@string/reading_timer" />
+
+            <TextView
+                android:id="@+id/widget_timer_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="#FFFFFF"
+                android:layout_marginStart="4dp"
+                android:text="00:00:00" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

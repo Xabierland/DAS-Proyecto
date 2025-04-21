@@ -55,8 +55,9 @@ public class BookActionsFragment extends Fragment implements AddBookDialogFragme
     private String notasActuales = null;
     private Integer paginaActual = null;
     
-    // Referencia al libro actual
-    private Libro libro;
+    // Referencias a los objetos de libro
+    private LibroConEstado libroConEstado;
+    private Libro libro = new Libro();
     
     // Nuevo campo para el número total de páginas
     private int numPaginasTotal = 0;
@@ -200,7 +201,14 @@ public class BookActionsFragment extends Fragment implements AddBookDialogFragme
         if (libroConEstado == null || getContext() == null) return;
         
         libroYaEnBiblioteca = true;
-        this.libro = libroConEstado;
+        this.libroConEstado = libroConEstado;
+        
+        // Actualizar libro con datos de LibroConEstado
+        libro.setId(libroConEstado.getId());
+        libro.setTitulo(libroConEstado.getTitulo());
+        libro.setAutor(libroConEstado.getAutor());
+        libro.setGenero(libroConEstado.getGenero());
+        libro.setNumPaginas(libroConEstado.getNumPaginas());
         
         // Almacenar el estado actual
         estadoActual = libroConEstado.getEstadoLectura();

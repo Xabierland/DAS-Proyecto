@@ -179,7 +179,7 @@
     <string name="notification_channel_description">Canal para recibir notificaciones de LibreBook</string>
     <string name="fcm_message">Mensaje de FCM</string>
 
-    <!-- Cadenas para compartir libros -->
+    <!-- Compartir libros -->
     <string name="share">Compartir</string>
     <string name="share_as_text">Compartir como texto</string>
     <string name="share_as_file">Compartir como archivo</string>
@@ -192,4 +192,45 @@
     <string name="share_book">Compartir libro</string>
     <string name="share_book_message">Elige cómo quieres compartir este libro:</string>
     <string name="share_success">Libro compartido con éxito</string>
+
+    <!-- Cronómetro de lectura -->
+    <string name="reading_timer">Cronómetro de lectura</string>
+    <string name="reading_timer_channel_name">Cronómetro de lectura</string>
+    <string name="reading_timer_channel_description">Notificaciones del cronómetro de lectura</string>
+    <string name="reading_timer_notification_title">Tiempo de lectura</string>
+    <string name="reading_timer_notification_text">Leyendo: %1$s (%2$s)</string>
+    <string name="start">Iniciar</string>
+    <string name="stop">Detener</string>
+    <string name="reset">Reiniciar</string>
+    <string name="timer_reset">Cronómetro reiniciado</string>
+    <string name="reset_timer">Reiniciar cronómetro</string>
+    <string name="reset_timer_confirmation">¿Estás seguro de que deseas reiniciar el cronómetro? Se perderá el tiempo acumulado.</string>
+    <string name="save_reading_progress">Guardar progreso de lectura</string>
+    <string name="estimated_reading_time">Tiempo estimado: %1$s</string>
+    <string name="estimated_reading_time_loading">Calculando tiempo estimado…</string>
+    <string name="enter_current_page">Página actual</string>
+    <string name="total_pages_format">Total: %1$d páginas</string>
+    <string name="total_pages_loading">Cargando páginas…</string>
+    <string name="reading_progress_help">Actualiza tu progreso para recibir estimaciones más precisas del tiempo restante.</string>
+    <string name="invalid_page_number">Número de página no válido</string>
+    <string name="progress_saved">Progreso guardado</string>
+    <string name="error_saving_progress">Error al guardar el progreso</string>
+    <string name="add_book_to_save_progress">Para guardar tu progreso, necesitas añadir el libro a tu biblioteca.</string>
+    <string name="reading_speed">Velocidad de lectura:</string>
+    <string name="reading_speed_format">%1$d pág/h (%2$s)</string>
+    <string name="reading_speed_default">30 pág/h (Media)</string>
+    <string name="reading_speed_slow">Lenta</string>
+    <string name="reading_speed_medium">Media</string>
+    <string name="reading_speed_fast">Rápida</string>
+    <string name="reading_speed_very_fast">Muy rápida</string>
+    <string name="increase_reading_speed">Aumentar velocidad de lectura</string>
+    <string name="decrease_reading_speed">Disminuir velocidad de lectura</string>
+    <string name="timer_info_text">El cronómetro seguirá funcionando aunque cierres la aplicación. Puedes verlo en la barra de notificaciones.</string>
+    <string name="error_book_not_found">No se encontró el libro</string>
+    <string name="change_book_title">Cambiar libro</string>
+    <string name="change_book_message">Ya estás leyendo \"%1$s\". ¿Deseas detener ese cronómetro y cambiar a \"%2$s\"?</string>
+    <string name="save">Guardar</string>
+    <string name="start_reading_timer">Cronómetro de lectura</string>
+    <string name="continue_timer">Continuar cronómetro</string>
+    <string name="timer_active_for">Cronómetro activo para %1$s</string>
 </resources>

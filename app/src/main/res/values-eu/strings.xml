@@ -193,4 +193,45 @@
     <string name="share_book">Liburua partekatu</string>
     <string name="share_book_message">Aukeratu nola partekatu nahi duzun liburu hau:</string>
     <string name="share_success">Liburua arrakastaz partekatu da</string>
+
+    <!-- Irakurketa kronometroa -->
+    <string name="reading_timer">Irakurketa kronometroa</string>
+    <string name="reading_timer_channel_name">Irakurketa kronometroa</string>
+    <string name="reading_timer_channel_description">Irakurketa kronometroaren jakinarazpenak</string>
+    <string name="reading_timer_notification_title">Irakurketa denbora</string>
+    <string name="reading_timer_notification_text">Irakurtzen: %1$s (%2$s)</string>
+    <string name="start">Hasi</string>
+    <string name="stop">Gelditu</string>
+    <string name="reset">Berrezarri</string>
+    <string name="timer_reset">Kronometroa berrezarrita</string>
+    <string name="reset_timer">Kronometroa berrezarri</string>
+    <string name="reset_timer_confirmation">Ziur zaude kronometroa berrezarri nahi duzula? Metatutako denbora galduko da.</string>
+    <string name="save_reading_progress">Irakurketa aurrerapena gorde</string>
+    <string name="estimated_reading_time">Kalkulatutako denbora: %1$s</string>
+    <string name="estimated_reading_time_loading">Kalkulatutako denbora kalkulatzen...</string>
+    <string name="enter_current_page">Uneko orria</string>
+    <string name="total_pages_format">Guztira: %1$d orrialde</string>
+    <string name="total_pages_loading">Orrialdeak kargatzen...</string>
+    <string name="reading_progress_help">Eguneratu zure aurrerapena denbora estimazio zehatzagoak jasotzeko.</string>
+    <string name="invalid_page_number">Orrialde zenbaki baliogabea</string>
+    <string name="progress_saved">Aurrerapena gordeta</string>
+    <string name="error_saving_progress">Errorea aurrerapena gordetzean</string>
+    <string name="add_book_to_save_progress">Zure aurrerapena gordetzeko, liburua zure liburutegian gehitu behar duzu.</string>
+    <string name="reading_speed">Irakurketa abiadura:</string>
+    <string name="reading_speed_format">%1$d orr/h (%2$s)</string>
+    <string name="reading_speed_default">30 orr/h (Ertaina)</string>
+    <string name="reading_speed_slow">Motel</string>
+    <string name="reading_speed_medium">Ertaina</string>
+    <string name="reading_speed_fast">Azkar</string>
+    <string name="reading_speed_very_fast">Oso azkar</string>
+    <string name="increase_reading_speed">Irakurketa abiadura handitu</string>
+    <string name="decrease_reading_speed">Irakurketa abiadura murriztu</string>
+    <string name="timer_info_text">Kronometroak lanean jarraituko du aplikazioa ixten baduzu ere. Jakinarazpen barran ikus dezakezu.</string>
+    <string name="error_book_not_found">Liburua ez da aurkitu</string>
+    <string name="change_book_title">Liburua aldatu</string>
+    <string name="change_book_message">Dagoeneko \"%1$s\" irakurtzen ari zara. Kronometro hori gelditu eta \"%2$s\"-ra aldatu nahi duzu?</string>
+    <string name="save">Gorde</string>
+    <string name="start_reading_timer">Irakurketa kronometroa</string>
+    <string name="continue_timer">Kronometroarekin jarraitu</string>
+    <string name="timer_active_for">Kronometroa aktibo dago %1$s-rentzat</string>
 </resources>

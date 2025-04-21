@@ -193,4 +193,45 @@
     <string name="share_book">Share book</string>
     <string name="share_book_message">Choose how you want to share this book:</string>
     <string name="share_success">Book shared successfully</string>
+
+    <!-- Reading Timer -->
+    <string name="reading_timer">Reading Timer</string>
+    <string name="reading_timer_channel_name">Reading Timer</string>
+    <string name="reading_timer_channel_description">Reading Timer Notifications</string>
+    <string name="reading_timer_notification_title">Reading Time</string>
+    <string name="reading_timer_notification_text">Reading: %1$s (%2$s)</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="reset">Reset</string>
+    <string name="timer_reset">Timer reset</string>
+    <string name="reset_timer">Reset timer</string>
+    <string name="reset_timer_confirmation">Are you sure you want to reset the timer? Accumulated time will be lost.</string>
+    <string name="save_reading_progress">Save reading progress</string>
+    <string name="estimated_reading_time">Estimated time: %1$s</string>
+    <string name="estimated_reading_time_loading">Calculating estimated time…</string>
+    <string name="enter_current_page">Current page</string>
+    <string name="total_pages_format">Total: %1$d pages</string>
+    <string name="total_pages_loading">Loading pages…</string>
+    <string name="reading_progress_help">Update your progress to receive more accurate remaining time estimates.</string>
+    <string name="invalid_page_number">Invalid page number</string>
+    <string name="progress_saved">Progress saved</string>
+    <string name="error_saving_progress">Error saving progress</string>
+    <string name="add_book_to_save_progress">To save your progress, you need to add the book to your library.</string>
+    <string name="reading_speed">Reading speed:</string>
+    <string name="reading_speed_format">%1$d pages/h (%2$s)</string>
+    <string name="reading_speed_default">30 pages/h (Average)</string>
+    <string name="reading_speed_slow">Slow</string>
+    <string name="reading_speed_medium">Medium</string>
+    <string name="reading_speed_fast">Fast</string>
+    <string name="reading_speed_very_fast">Very fast</string>
+    <string name="increase_reading_speed">Increase reading speed</string>
+    <string name="decrease_reading_speed">Decrease reading speed</string>
+    <string name="timer_info_text">The timer will keep running even if you close the app. You can see it in the notification bar.</string>
+    <string name="error_book_not_found">Book not found</string>
+    <string name="change_book_title">Change book</string>
+    <string name="change_book_message">You are already reading \"%1$s\". Do you want to stop that timer and switch to \"%2$s\"?</string>
+    <string name="save">Save</string>
+    <string name="start_reading_timer">Reading Timer</string>
+    <string name="continue_timer">Continue Timer</string>
+    <string name="timer_active_for">Timer active for %1$s</string>
 </resources>
