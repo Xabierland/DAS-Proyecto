@@ -13,7 +13,7 @@
 \usepackage{hyperref}
 \hypersetup{hidelinks}
 
-% Generamos un comando para saltar pagina con las secciones
+% Generamos un comando para saltar página con las secciones
 \NewDocumentCommand{\cpsection}{s o m}{%
   \clearpage
   \IfBooleanTF{#1}
@@ -89,14 +89,14 @@
         \color{blue}\href{https://github.com/Xabierland/DAS-Proyecto}{Repositorio de la aplicación}
     \end{center}
     \paragraph*{}{
-      Además en el repositorio, tambien esta disponible en GitHub el binario de la aplicación en formato apk para su descarga e instalación en dispositivos Android.
+      Además, en el repositorio también está disponible en GitHub el binario de la aplicación en formato apk para su descarga e instalación en dispositivos Android.
     }
     \begin{center}
       %Link al binario
         \color{blue}\href{https://github.com/Xabierland/DAS-Proyecto/releases}{Archivo APK de la aplicación}
     \end{center}
     \paragraph*{}{
-      En la aplicación existen por defecto unicamente 10 libros.
+      En la aplicación existen por defecto únicamente 10 libros.
       \begin{multicols}{2}
         \begin{enumerate}
           \item Crimen y Castigo
@@ -114,7 +114,7 @@
       Todos de Dostoievski. Tenlo en cuenta a la hora de buscar los libros ya que no se pueden añadir libros directamente desde la aplicación.
     }
     \paragraph*{}{
-      La aplicación cuenta con dos cuentas de usuario por defectos:
+      La aplicación cuenta con dos cuentas de usuario por defecto:
       \begin{itemize}
         \item \textbf{Administrador}
           \begin{itemize}
@@ -216,7 +216,7 @@
         \caption{Diagrama de clases de la aplicación LibreBook}
         \label{fig:diagrama-clases}
       \end{figure}
-      Como se muestra en la Figura~\ref{fig:diagrama-clases}, la ha aumentado el número de clases respecto a la entrega anterior pero manteniendo las capas con una clara separación de responsabilidades\cite{android_architecture}:
+      Como se muestra en la Figura~\ref{fig:diagrama-clases}, ha aumentado el número de clases respecto a la entrega anterior pero manteniendo las capas con una clara separación de responsabilidades\cite{android_architecture}:
       En este apartado me voy a limitar a describir los cambios realizados en la aplicación respecto a la entrega anterior.
       \subsection{Activities}
         \begin{itemize}
@@ -249,8 +249,8 @@
       \subsection{Repositorios}
         \begin{itemize}
           \item \textbf{Modificaciones en LibroRepository:} Actualizado para interactuar con la API REST en lugar de la base de datos local. Proporciona métodos para obtener, añadir, modificar y eliminar libros.
-          \item \textbf{Modificaciones en UsuarioRepository:} Actualizado para interactuar con la API REST en lugar de la base de datos local.. Proporciona métodos para gestionar usuarios y autenticación.
-          \item \textbf{Modificaciones en BibliotecaRepository:} Actualizado para interactuar con la API REST en lugar de la base de datos local.. Proporciona métodos para gestionar la biblioteca del usuario.
+          \item \textbf{Modificaciones en UsuarioRepository:} Actualizado para interactuar con la API REST en lugar de la base de datos local. Proporciona métodos para gestionar usuarios y autenticación.
+          \item \textbf{Modificaciones en BibliotecaRepository:} Actualizado para interactuar con la API REST en lugar de la base de datos local. Proporciona métodos para gestionar la biblioteca del usuario.
         \end{itemize}
       \subsection{Utils}
         \begin{itemize}
@@ -269,16 +269,16 @@
         \caption{Diagrama de la base de datos de la aplicación LibreBook}
         \label{fig:diagrama-bd}
       \end{figure}
-      La base de datos no ha sufrido cambios respecto en su estructura respecto a la entrega anterior.
+      La base de datos no ha sufrido cambios en su estructura respecto a la entrega anterior.
   \chapter{Manual de usuario}
     \section{Base de datos remota con API}
       Ahora la base de datos de la aplicación está alojada en un servidor remoto y se accede a ella a través de una API REST. Esto permite que los datos sean accesibles desde cualquier dispositivo con conexión a Internet y facilita la sincronización entre diferentes instancias de la aplicación.
-      Es posible ver parte de la información de la base de datos desde los seguientes endpoints:
+      Es posible ver parte de la información de la base de datos desde los siguientes endpoints:
       \begin{itemize}
-        \item \href{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/api.php/usuarios}{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/api.php/usuarios} \\Usuarios
-        \item \href{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/api.php/libros}{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/api.php/libros} \\Libros
-        \item \href{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/api.php/biblioteca/2}{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/api.php/biblioteca/2} \\Biblioteca del usuario 2
-        \item \href{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/api.php/biblioteca/1?estado=leyendo}{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/api.php/biblioteca/2?estado=leyendo} \\Libros que esta leyendo el usuario 2
+        \item \href{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/api.php/usuarios}{/xgabina001/WEB/api.php/usuarios} \\Usuarios
+        \item \href{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/api.php/libros}{/xgabina001/WEB/api.php/libros} \\Libros
+        \item \href{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/api.php/biblioteca/2}{/xgabina001/WEB/api.php/biblioteca/2} \\Biblioteca del usuario 2
+        \item \href{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/api.php/biblioteca/2?estado=leyendo}{/xgabina001/WEB/api.php/biblioteca/2?estado=leyendo} \\Libros que está leyendo el usuario 2
       \end{itemize}
       De esta forma conseguimos que la aplicación sea más escalable y flexible, permitiendo futuras mejoras y nuevas funcionalidades sin necesidad de realizar cambios significativos en la arquitectura de la aplicación.
     \cpsection{Encontrar librerías}
@@ -291,10 +291,10 @@
         \caption{Encontrar librerías}
         \label{fig:mapa}
       \end{figure}
-      En la pantalla principal de la aplicación, se encuentra un boton de Librerias cercanas que al pulsarlo abre un mapa interactivo con las librerías cercanas a la ubicación del usuario. 
-      El mapa se muestra a pantalla completa, permitiendo al usuario desplazarse, hacer zoom y interactuar con los iconos para ver las librerias y la distancia a la que se encuentran.
+      En la pantalla principal de la aplicación, se encuentra un botón de Librerías cercanas que al pulsarlo abre un mapa interactivo con las librerías cercanas a la ubicación del usuario. 
+      El mapa se muestra a pantalla completa, permitiendo al usuario desplazarse, hacer zoom y interactuar con los iconos para ver las librerías y la distancia a la que se encuentran.
     \cpsection{Foto de perfil}
-      Aunque en la entrega anterior era posible elegir una foto de la galería ahora tambien es posible usar la camara del movil para subir una foto de perfil a la aplicación conservando ademas la opcion de la galeria y sincronizandola con la base de datos.
+      Aunque en la entrega anterior era posible elegir una foto de la galería, ahora también es posible usar la cámara del móvil para subir una foto de perfil a la aplicación conservando además la opción de la galería y sincronizándola con la base de datos.
       \begin{figure}[H]
         \centering
         \includegraphics[width=0.25\textwidth]{.img/foto_perfil_1.png}
@@ -305,7 +305,7 @@
         \caption{Foto de perfil}
         \label{fig:perfil}
       \end{figure}
-      Para elegirla entra desde el menu desplegable de la aplicacion en el perfil del usuario y dale click al icono de la camara al lado de la foto de perfil.
+      Para elegirla entra desde el menú desplegable de la aplicación en el perfil del usuario y dale clic al icono de la cámara al lado de la foto de perfil.
       Al pulsar el icono de la cámara, se abre un diálogo que permite al usuario elegir entre tomar una foto con la cámara o seleccionar una imagen de la galería.
     \cpsection{Compartir libros}
       La aplicación permite compartir libros con otros usuarios mediante dos métodos:
@@ -315,7 +315,7 @@
         \caption{Compartir libros desde el perfil}
         \label{fig:compartir-perfil}
       \end{figure}
-      El primero como se ven en la Figura~\ref{fig:compartir-perfil} es desde el perfil de usuario, donde al mantener pulsado un libro se abre un menú contextual que permite compartir el libro seleccionado.
+      El primero, como se ve en la Figura~\ref{fig:compartir-perfil}, es desde el perfil de usuario, donde al mantener pulsado un libro se abre un menú contextual que permite compartir el libro seleccionado.
       \begin{figure}[H]
         \centering
         \includegraphics[width=0.25\textwidth]{.img/compartir_libro_1.png}
@@ -335,9 +335,9 @@
         \caption{Temporizador de lectura}
         \label{fig:temporizador}
       \end{figure}
-      El temporizador funciona incluso con la aplicacion cerrada, mostrando una notificación persistente que se actualiza cada segundo con el tiempo transcurrido.
+      El temporizador funciona incluso con la aplicación cerrada, mostrando una notificación persistente que se actualiza cada segundo con el tiempo transcurrido.
       El usuario puede iniciar, pausar y reiniciar el temporizador desde la interfaz de la aplicación. Al abrir la aplicación, el temporizador se reanuda automáticamente y se muestra el tiempo total acumulado.
-    \cpsection{Mensajeria FCM}
+    \cpsection{Mensajería FCM}
       La aplicación utiliza Firebase Cloud Messaging (FCM) para recibir notificaciones push. Los usuarios pueden enviar mensajes a todos los dispositivos a través de un \textcolor{blue}{\href{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/admin_panel.php}{panel de administración web}}.
       \begin{figure}[H]
         \centering
@@ -355,7 +355,7 @@
       \end{figure}
       De esta forma los usuarios pueden recibir mensajes importantes, actualizaciones o recordatorios directamente en su dispositivo móvil.
     \cpsection{Widget}
-      Junto con la aplicacion se añade un widget para colocar en el escritorio del movil.
+      Junto con la aplicación se añade un widget para colocar en el escritorio del móvil.
       \begin{figure}[H]
         \centering
         \includegraphics[width=0.25\textwidth]{.img/widget.png}
@@ -367,7 +367,7 @@
       El widget muestra recomendaciones de libros aleatorios de la biblioteca del usuario. Se actualiza automáticamente cada 15 segundos para mostrar diferentes recomendaciones.
       Al pulsar el widget, se abre la actividad de detalle del libro correspondiente, permitiendo al usuario acceder rápidamente a la información del libro recomendado.
     \cpsection{Actualizar libros recomendados}
-      Ahora la pagina principal de la aplicacion se actualiza cada 15 segundos para mostrar libros recomendados aleatorios de la biblioteca del usuario.
+      Ahora la página principal de la aplicación se actualiza cada 15 segundos para mostrar libros recomendados aleatorios de la biblioteca del usuario.
       \begin{figure}[H]
         \centering
         \includegraphics[width=0.25\textwidth]{.img/libros_recomendados_1.png}
