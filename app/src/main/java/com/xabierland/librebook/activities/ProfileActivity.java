@@ -1,14 +1,19 @@
 package com.xabierland.librebook.activities;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
+
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,8 +37,8 @@ import com.xabierland.librebook.data.repositories.BibliotecaRepository;
 import com.xabierland.librebook.data.repositories.UsuarioRepository;
 import com.xabierland.librebook.utils.FileUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,9 +48,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfileActivity extends BaseActivity {
 
     private static final int REQUEST_PERMISSION_READ_EXTERNAL_STORAGE = 101;
+    private static final int REQUEST_PERMISSION_CAMERA = 103;
 
     public static final String EXTRA_USER_ID = "user_id";
     public static final String EXTRA_VIEW_ONLY = "view_only";
+
+    private Uri photoURI;
 
     // Vistas
     private CircleImageView imageViewProfilePic;
@@ -79,6 +88,7 @@ public class ProfileActivity extends BaseActivity {
 
     // Launcher para selección de foto
     private ActivityResultLauncher<Intent> imagePickerLauncher;
+    private ActivityResultLauncher<Intent> cameraLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +118,36 @@ public class ProfileActivity extends BaseActivity {
                 finish();
             }
         } else {
+            cameraLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        try {
+                            // En lugar de decodificar directamente, usamos nuestro método mejorado
+                            // que corrige la orientación de la imagen
+                            Bitmap bitmap = FileUtils.getAndFixImageOrientation(ProfileActivity.this, photoURI);
+                            
+                            // Procesar y guardar la imagen
+                            if (bitmap != null) {
+                                saveProfileImage(bitmap);
+                                imageViewProfilePic.setImageBitmap(bitmap);
+                            } else {
+                                Toast.makeText(
+                                    ProfileActivity.this,
+                                    getString(R.string.error_loading_image), 
+                                    Toast.LENGTH_SHORT
+                                ).show();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(
+                                ProfileActivity.this,
+                                getString(R.string.error_loading_image), 
+                                Toast.LENGTH_SHORT
+                            ).show();
+                        }
+                    }
+                });
             // Configurar el launcher para seleccionar imágenes
             imagePickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -223,15 +263,21 @@ public class ProfileActivity extends BaseActivity {
         // Actualizar información básica del usuario
         textViewUserName.setText(usuario.getNombre());
         textViewUserEmail.setText(usuario.getEmail());
-
+    
         // Cargar foto de perfil si existe
         if (usuario.getFotoPerfil() != null && !usuario.getFotoPerfil().isEmpty()) {
-            File imgFile = new File(usuario.getFotoPerfil());
-            if (imgFile.exists()) {
-                imageViewProfilePic.setImageURI(Uri.fromFile(imgFile));
+            try {
+                // Decodificar la cadena base64 a un bitmap
+                byte[] decodedString = Base64.decode(usuario.getFotoPerfil(), Base64.DEFAULT);
+                Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                imageViewProfilePic.setImageBitmap(decodedBitmap);
+            } catch (Exception e) {
+                Log.e("ProfileActivity", "Error al decodificar imagen base64", e);
+                // Usar imagen por defecto en caso de error
+                imageViewProfilePic.setImageResource(R.drawable.default_profile_image);
             }
         }
-
+    
         // Cargar listas de libros
         loadBooks();
     }
@@ -290,6 +336,25 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void checkPermissionAndOpenGallery() {
+        // Mostrar diálogo de opciones para seleccionar fuente de imagen
+        String[] options = {getString(R.string.camera), getString(R.string.gallery)};
+        
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.select_image_source));
+        builder.setItems(options, (dialog, which) -> {
+            if (which == 0) {
+                // Opción de cámara
+                checkCameraPermissionAndOpen();
+            } else {
+                // Opción de galería
+                checkGalleryPermissionAndOpen();
+            }
+        });
+        builder.show();
+    }
+
+    private void checkGalleryPermissionAndOpen() {
+        // Este es tu código actual de verificación de permisos de galería
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             // Android 13+: Necesitamos READ_MEDIA_IMAGES
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES)
@@ -352,48 +417,102 @@ public class ProfileActivity extends BaseActivity {
             }
         }
     }
-
+    
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         imagePickerLauncher.launch(intent);
     }
 
+    private void checkCameraPermissionAndOpen() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, 
+                    Manifest.permission.CAMERA)) {
+                // Mostrar explicación
+                new AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.permission_needed))
+                    .setMessage(getString(R.string.permission_camera_explanation))
+                    .setPositiveButton(getString(R.string.accept), (dialog, which) -> {
+                        ActivityCompat.requestPermissions(ProfileActivity.this,
+                                new String[]{Manifest.permission.CAMERA},
+                                REQUEST_PERMISSION_CAMERA);
+                    })
+                    .setNegativeButton(getString(R.string.cancel), null)
+                    .create()
+                    .show();
+            } else {
+                // Solicitar permiso directamente
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.CAMERA},
+                        REQUEST_PERMISSION_CAMERA);
+            }
+        } else {
+            openCamera();
+        }
+    }
+    
+    private void openCamera() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        
+        try {
+            // Crear el archivo donde debería ir la foto
+            File photoFile = null;
+            try {
+                photoFile = FileUtils.createTempImageFile(this);
+            } catch (IOException ex) {
+                // Error al crear el archivo
+                Toast.makeText(this, getString(R.string.error_camera_file), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            
+            // Continuar solo si el archivo se creó correctamente
+            if (photoFile != null) {
+                photoURI = FileProvider.getUriForFile(this,
+                        "com.xabierland.librebook.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                cameraLauncher.launch(takePictureIntent);
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, getString(R.string.no_camera_app), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
     private void saveProfileImage(Bitmap bitmap) {
         if (usuario == null) return;
-
+    
         try {
-            // Crear directorio para imágenes si no existe
-            File directory = new File(getFilesDir(), "profile_images");
-            if (!directory.exists()) {
-                directory.mkdirs();
-            }
-
-            // Crear archivo para la imagen
-            String fileName = "profile_" + usuario.getId() + ".jpg";
-            File file = new File(directory, fileName);
-
-            // Guardar imagen en el archivo
-            FileOutputStream fos = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
-            fos.flush();
-            fos.close();
-
-            // Actualizar ruta de la imagen en el usuario
-            String filePath = file.getAbsolutePath();
-            usuario.setFotoPerfil(filePath);
-
-            // Actualizar usuario en la base de datos
+            // Convertir el bitmap a base64
+            String base64Image = FileUtils.bitmapToBase64(bitmap);
+            
+            // Guardar la representación base64 en el usuario
+            usuario.setFotoPerfil(base64Image);
+            
+            // Mostrar un diálogo de carga
+            AlertDialog loadingDialog = createLoadingDialog();
+            loadingDialog.show();
+    
+            // Actualizar usuario en la base de datos con la nueva imagen
             usuarioRepository.actualizarUsuario(usuario, result -> {
                 runOnUiThread(() -> {
+                    loadingDialog.dismiss();
+                    
                     if (result > 0) {
                         Toast.makeText(ProfileActivity.this, getString(R.string.profile_pic_updated), Toast.LENGTH_SHORT).show();
-                        recreate();
+                        
+                        // Actualizar la UI con la nueva imagen
+                        imageViewProfilePic.setImageBitmap(bitmap);
+                        
+                        // Actualizar también el menú de navegación
+                        updateNavigationHeader();
                     } else {
                         Toast.makeText(ProfileActivity.this, getString(R.string.error_updating_profile_pic), Toast.LENGTH_SHORT).show();
                     }
                 });
             });
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, getString(R.string.error_saving_image), Toast.LENGTH_SHORT).show();
         }
@@ -422,6 +541,25 @@ public class ProfileActivity extends BaseActivity {
                     .show();
                 Toast.makeText(this, getString(R.string.permission_denied), Toast.LENGTH_SHORT).show();
             }
+        } else if (requestCode == REQUEST_PERMISSION_CAMERA) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openCamera();
+            } else {
+                // Mostrar un diálogo preguntando si quiere ir a los ajustes
+                new AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.permission_title))
+                    .setMessage(getString(R.string.permission_camera_message))
+                    .setPositiveButton(getString(R.string.go_to_settings), (dialog, which) -> {
+                        Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", getPackageName(), null);
+                        intent.setData(uri);
+                        startActivity(intent);
+                    })
+                    .setNegativeButton(getString(R.string.cancel), null)
+                    .create()
+                    .show();
+                Toast.makeText(this, getString(R.string.permission_denied_camera), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -446,6 +584,14 @@ public class ProfileActivity extends BaseActivity {
                 }
             });
         });
+    }
+
+    private AlertDialog createLoadingDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_loading, null);
+        builder.setView(dialogView);
+        builder.setCancelable(false);
+        return builder.create();
     }
 
     public boolean isViewingOtherProfile() {

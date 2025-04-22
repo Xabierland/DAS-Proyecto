@@ -1,10 +1,14 @@
 package com.xabierland.librebook.data.repositories;
 
 import android.app.Application;
+import android.util.Log;
 
-import com.xabierland.librebook.data.database.AppDatabase;
-import com.xabierland.librebook.data.database.daos.UsuarioDao;
+import com.xabierland.librebook.api.ApiClient;
+import com.xabierland.librebook.api.ApiParsers;
 import com.xabierland.librebook.data.database.entities.Usuario;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -12,101 +16,224 @@ import java.util.concurrent.Executors;
 
 public class UsuarioRepository {
     
-    private final UsuarioDao usuarioDao;
+    private static final String TAG = "UsuarioRepository";
     private final ExecutorService executorService;
     
     public UsuarioRepository(Application application) {
-        AppDatabase db = AppDatabase.getInstance(application);
-        usuarioDao = db.usuarioDao();
         executorService = Executors.newFixedThreadPool(4);
     }
     
     // Método para registrar un nuevo usuario
     public void registrarUsuario(Usuario usuario, final DataCallback<Long> callback) {
-        executorService.execute(() -> {
-            // Verificar si el email ya existe
-            int existentes = usuarioDao.verificarEmailExistente(usuario.getEmail());
-            if (existentes > 0) {
-                // El email ya existe
-                if (callback != null) {
-                    callback.onComplete(-1L); // -1 indica error
-                }
-                return;
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("nombre", usuario.getNombre());
+            jsonObject.put("email", usuario.getEmail());
+            jsonObject.put("password", usuario.getPassword());
+            if (usuario.getFotoPerfil() != null) {
+                jsonObject.put("fotoPerfil", usuario.getFotoPerfil());
             }
             
-            // Registrar el usuario
-            long id = usuarioDao.insertarUsuario(usuario);
+            ApiClient.post("usuarios", jsonObject, ApiParsers.idResponseParser(), new ApiClient.ApiCallback<Long>() {
+                @Override
+                public void onSuccess(Long result) {
+                    if (callback != null) {
+                        callback.onComplete(result);
+                    }
+                }
+                
+                @Override
+                public void onError(String errorMessage) {
+                    Log.e(TAG, "Error al registrar usuario: " + errorMessage);
+                    if (callback != null) {
+                        // Si el error es por email duplicado, devolvemos -1
+                        if (errorMessage.contains("409") || errorMessage.contains("ya está en uso")) {
+                            callback.onComplete(-1L);
+                        } else {
+                            callback.onComplete(0L);
+                        }
+                    }
+                }
+            });
+        } catch (JSONException e) {
+            Log.e(TAG, "Error al crear JSON para registrar usuario", e);
             if (callback != null) {
-                callback.onComplete(id);
+                callback.onComplete(0L);
             }
-        });
+        }
     }
     
     // Método para autenticar un usuario
     public void autenticarUsuario(String email, String password, final DataCallback<Integer> callback) {
-        executorService.execute(() -> {
-            Integer userId = usuarioDao.autenticarUsuario(email, password);
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("email", email);
+            jsonObject.put("password", password);
+            
+            ApiClient.post("usuarios/autenticar", jsonObject, response -> {
+                JSONObject json = new JSONObject(response);
+                return json.getInt("id");
+            }, new ApiClient.ApiCallback<Integer>() {
+                @Override
+                public void onSuccess(Integer result) {
+                    if (callback != null) {
+                        callback.onComplete(result);
+                    }
+                }
+                
+                @Override
+                public void onError(String errorMessage) {
+                    Log.e(TAG, "Error al autenticar usuario: " + errorMessage);
+                    if (callback != null) {
+                        callback.onComplete(null);
+                    }
+                }
+            });
+        } catch (JSONException e) {
+            Log.e(TAG, "Error al crear JSON para autenticar usuario", e);
             if (callback != null) {
-                callback.onComplete(userId); // Será null si la autenticación falla
+                callback.onComplete(null);
             }
-        });
+        }
     }
     
     // Método para obtener un usuario por su ID
     public void obtenerUsuarioPorId(int id, final DataCallback<Usuario> callback) {
-        executorService.execute(() -> {
-            Usuario usuario = usuarioDao.obtenerUsuarioPorId(id);
-            if (callback != null) {
-                callback.onComplete(usuario);
+        ApiClient.get("usuarios/" + id, ApiParsers.usuarioParser(), new ApiClient.ApiCallback<Usuario>() {
+            @Override
+            public void onSuccess(Usuario result) {
+                if (callback != null) {
+                    callback.onComplete(result);
+                }
+            }
+            
+            @Override
+            public void onError(String errorMessage) {
+                Log.e(TAG, "Error al obtener usuario por ID: " + errorMessage);
+                if (callback != null) {
+                    callback.onComplete(null);
+                }
             }
         });
     }
     
     // Método para obtener un usuario por su email
     public void obtenerUsuarioPorEmail(String email, final DataCallback<Usuario> callback) {
-        executorService.execute(() -> {
-            Usuario usuario = usuarioDao.obtenerUsuarioPorEmail(email);
-            if (callback != null) {
-                callback.onComplete(usuario);
+        ApiClient.get("usuarios?email=" + email, ApiParsers.usuariosListParser(), new ApiClient.ApiCallback<List<Usuario>>() {
+            @Override
+            public void onSuccess(List<Usuario> result) {
+                if (callback != null) {
+                    callback.onComplete(result.isEmpty() ? null : result.get(0));
+                }
+            }
+            
+            @Override
+            public void onError(String errorMessage) {
+                Log.e(TAG, "Error al obtener usuario por email: " + errorMessage);
+                if (callback != null) {
+                    callback.onComplete(null);
+                }
             }
         });
     }
     
     // Método para actualizar los datos de un usuario
     public void actualizarUsuario(Usuario usuario, final DataCallback<Integer> callback) {
-        executorService.execute(() -> {
-            int filasActualizadas = usuarioDao.actualizarUsuario(usuario);
-            if (callback != null) {
-                callback.onComplete(filasActualizadas);
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("nombre", usuario.getNombre());
+            jsonObject.put("email", usuario.getEmail());
+            if (usuario.getFotoPerfil() != null) {
+                // La ruta de la foto de perfil ahora contiene la imagen en base64
+                jsonObject.put("fotoPerfil", usuario.getFotoPerfil());
             }
-        });
+            
+            ApiClient.put("usuarios/" + usuario.getId(), jsonObject, response -> {
+                // La respuesta no es importante, solo nos interesa si fue exitoso
+                return 1;
+            }, new ApiClient.ApiCallback<Integer>() {
+                @Override
+                public void onSuccess(Integer result) {
+                    if (callback != null) {
+                        callback.onComplete(result);
+                    }
+                }
+                
+                @Override
+                public void onError(String errorMessage) {
+                    Log.e(TAG, "Error al actualizar usuario: " + errorMessage);
+                    if (callback != null) {
+                        callback.onComplete(0);
+                    }
+                }
+            });
+        } catch (JSONException e) {
+            Log.e(TAG, "Error al crear JSON para actualizar usuario", e);
+            if (callback != null) {
+                callback.onComplete(0);
+            }
+        }
     }
     
     // Método para eliminar un usuario
     public void eliminarUsuario(Usuario usuario, final DataCallback<Integer> callback) {
-        executorService.execute(() -> {
-            int filasEliminadas = usuarioDao.eliminarUsuario(usuario);
-            if (callback != null) {
-                callback.onComplete(filasEliminadas);
+        ApiClient.delete("usuarios/" + usuario.getId(), response -> {
+            // La respuesta no es importante, solo nos interesa si fue exitoso
+            return 1;
+        }, new ApiClient.ApiCallback<Integer>() {
+            @Override
+            public void onSuccess(Integer result) {
+                if (callback != null) {
+                    callback.onComplete(result);
+                }
+            }
+            
+            @Override
+            public void onError(String errorMessage) {
+                Log.e(TAG, "Error al eliminar usuario: " + errorMessage);
+                if (callback != null) {
+                    callback.onComplete(0);
+                }
             }
         });
     }
     
     // Método para obtener todos los usuarios (administrador)
     public void obtenerTodosLosUsuarios(final DataCallback<List<Usuario>> callback) {
-        executorService.execute(() -> {
-            List<Usuario> usuarios = usuarioDao.obtenerTodosLosUsuarios();
-            if (callback != null) {
-                callback.onComplete(usuarios);
+        ApiClient.get("usuarios", ApiParsers.usuariosListParser(), new ApiClient.ApiCallback<List<Usuario>>() {
+            @Override
+            public void onSuccess(List<Usuario> result) {
+                if (callback != null) {
+                    callback.onComplete(result);
+                }
+            }
+            
+            @Override
+            public void onError(String errorMessage) {
+                Log.e(TAG, "Error al obtener todos los usuarios: " + errorMessage);
+                if (callback != null) {
+                    callback.onComplete(null);
+                }
             }
         });
     }
 
+    // Método para buscar usuarios
     public void buscarUsuarios(String busqueda, final DataCallback<List<Usuario>> callback) {
-        executorService.execute(() -> {
-            List<Usuario> usuarios = usuarioDao.buscarUsuarios(busqueda);
-            if (callback != null) {
-                callback.onComplete(usuarios);
+        ApiClient.get("usuarios?busqueda=" + busqueda, ApiParsers.usuariosListParser(), new ApiClient.ApiCallback<List<Usuario>>() {
+            @Override
+            public void onSuccess(List<Usuario> result) {
+                if (callback != null) {
+                    callback.onComplete(result);
+                }
+            }
+            
+            @Override
+            public void onError(String errorMessage) {
+                Log.e(TAG, "Error al buscar usuarios: " + errorMessage);
+                if (callback != null) {
+                    callback.onComplete(null);
+                }
             }
         });
     }

@@ -3,8 +3,12 @@ package com.xabierland.librebook.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -193,6 +197,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     // Método para actualizar el header del navigation view con los datos del usuario
+    // Modificar el método updateNavigationHeader en com.xabierland.librebook.activities.BaseActivity.java
     protected void updateNavigationHeader() {
         if (headerView == null || imageViewNavHeaderProfile == null || 
             textViewNavHeaderName == null || textViewNavHeaderEmail == null) {
@@ -214,9 +219,15 @@ public abstract class BaseActivity extends AppCompatActivity {
                         
                         // Mostrar foto de perfil si existe
                         if (usuario.getFotoPerfil() != null && !usuario.getFotoPerfil().isEmpty()) {
-                            File imgFile = new File(usuario.getFotoPerfil());
-                            if (imgFile.exists()) {
-                                imageViewNavHeaderProfile.setImageURI(Uri.fromFile(imgFile));
+                            try {
+                                // Decodificar la cadena base64 a un bitmap
+                                byte[] decodedString = Base64.decode(usuario.getFotoPerfil(), Base64.DEFAULT);
+                                Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                                imageViewNavHeaderProfile.setImageBitmap(decodedBitmap);
+                            } catch (Exception e) {
+                                Log.e("BaseActivity", "Error al decodificar imagen base64", e);
+                                // Usar imagen por defecto en caso de error
+                                imageViewNavHeaderProfile.setImageResource(R.drawable.default_profile_image);
                             }
                         } else {
                             // Usar imagen por defecto
@@ -242,6 +253,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         // Si estamos ya en la actividad seleccionada, no hacemos nada
         if ((this instanceof MainActivity && itemId == R.id.nav_home) ||
                 (this instanceof SearchActivity && itemId == R.id.nav_search) ||
+                (this instanceof ReadingTimerActivity && itemId == R.id.nav_timer) ||
                 (this instanceof ProfileActivity && itemId == R.id.nav_profile && !((ProfileActivity)this).isViewingOtherProfile()) ||
                 (this instanceof SearchActivity && itemId == R.id.action_search) ||
                 (this instanceof LoginActivity && itemId == R.id.nav_login) ||
@@ -250,18 +262,20 @@ public abstract class BaseActivity extends AppCompatActivity {
                 {
             return;
         }
-
+    
         // Manejar la navegación
         Intent intent = null;
-
+    
         if (itemId == R.id.nav_home) {
             intent = new Intent(this, MainActivity.class);
             // Limpiar el stack de activities si vamos al home
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            recreate();
         }
         else if (itemId == R.id.nav_search) {
             intent = new Intent(this, SearchActivity.class);
+        }
+        else if (itemId == R.id.nav_timer) {
+            intent = new Intent(this, ReadingTimerActivity.class);
         }
         else if (itemId == R.id.nav_profile) {
             intent = new Intent(this, ProfileActivity.class);
@@ -373,7 +387,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 break;
             case LANGUAGE_SYSTEM:
             default:
-                languageCode = Locale.getDefault().getLanguage();
+                languageCode = "es";
                 break;
         }
         

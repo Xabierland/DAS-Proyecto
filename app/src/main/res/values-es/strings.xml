@@ -23,6 +23,21 @@
     <string name="welcome_user">¡Bienvenido, %1$s! Tu biblioteca personal está lista.</string>
     <string name="recommended_books">Libros recomendados</string>
     <string name="no_recommended_books">No hay libros recomendados disponibles</string>
+    <string name="nearby_bookstores">Librerías cercanas</string>
+    <string name="no_nearby_bookstores">No se encontraron librerías cercanas</string>
+    <string name="my_location">Mi ubicación</string>
+    <string name="location_permission_needed">Se necesita permiso de ubicación para mostrar librerías cercanas</string>
+    <string name="bookstore_marker">Librería</string>
+    <string name="distance_format">a %1$.1f km</string>
+    <string name="bookstore_search_radius">5</string><!-- Radio de búsqueda en km -->
+    <string name="searching_bookstores">Buscando librerías cercanas...</string>
+    <string name="error_location">Error al obtener la ubicación</string>
+    <string name="location_settings">Configuración de ubicación</string>
+    <string name="location_required">La ubicación es necesaria para esta función</string>
+    <string name="enable_location">Por favor, activa los servicios de ubicación para ver librerías cercanas</string>
+    <string name="bookstores_description">Descubre librerías cercanas a tu ubicación</string>
+    <string name="open_map">Abrir mapa</string>
+    <string name="close">Cerrar</string>
 
     <!-- Actividad de ajustes -->
     <string name="select_language">Seleccionar idioma</string>
@@ -87,6 +102,14 @@
     <string name="member_since">Miembro desde: %1$s</string>
     <string name="permission_needed">Permiso necesario</string>
     <string name="permission_gallery_explanation">Para cambiar tu foto de perfil, necesitamos acceso a tus imágenes.</string>
+    <string name="gallery">Galería</string>
+    <string name="camera">Cámara</string>
+    <string name="select_image_source">Seleccionar origen de la imagen</string>
+    <string name="permission_camera_explanation">Para tomar una foto de perfil, necesitamos acceso a tu cámara.</string>
+    <string name="permission_camera_message">Sin este permiso no podrás usar la cámara para cambiar tu foto de perfil. ¿Deseas abrir los ajustes de la aplicación para conceder el permiso manualmente?</string>
+    <string name="permission_denied_camera">Permiso denegado para acceder a la cámara</string>
+    <string name="error_camera_file">Error al crear archivo para la cámara</string>
+    <string name="no_camera_app">No hay aplicación de cámara disponible</string>
 
     <!-- Actividad de detalle del libro -->
     <string name="book_detail">Detalle del libro</string>
@@ -144,4 +167,38 @@
     <string name="yes">Sí</string>
     <string name="no">No</string>
     <string name="session_closed">Sesión cerrada</string>
+
+    <!--  Widget -->
+    <string name="widget_recommendation_text">Recomendación del día</string>
+    <string name="widget_config_title">Configuración del widget</string>
+    <string name="widget_description">Muestra recomendaciones de libros que cambian cada 15 segundos</string>
+    <string name="no_books_available">No hay libros disponibles</string>
+
+    <!-- Firebase Cloud Messaging -->
+    <string name="notification_channel_name">Notificaciones LibreBook</string>
+    <string name="notification_channel_description">Canal para recibir notificaciones de LibreBook</string>
+    <string name="fcm_message">Mensaje de FCM</string>
+
+    <!-- Cadenas para compartir libros -->
+    <string name="share">Compartir</string>
+    <string name="share_as_text">Compartir como texto</string>
+    <string name="share_as_file">Compartir como archivo</string>
+    <string name="share_book_via">Compartir libro a través de</string>
+    <string name="shared_from_librebook">Compartido desde LibreBook</string>
+    <string name="error_sharing_book">Error al compartir el libro</string>
+    <string name="error_creating_file">Error al crear el archivo</string>
+    <string name="book_info">Información del libro</string>
+    <string name="pages">páginas</string>
+    <string name="share_book">Compartir libro</string>
+    <string name="share_book_message">Elige cómo quieres compartir este libro:</string>
+    <string name="share_success">Libro compartido con éxito</string>
+
+    <!-- Temporizador de lectura -->
+    <string name="reading_timer">Temporizador de lectura</string>
+    <string name="time_reading">Tiempo de lectura</string>
+    <string name="start">Iniciar</string>
+    <string name="stop">Detener</string>
+    <string name="reset">Reiniciar</string>
+    <string name="reading_timer_info">Seguirá funcionando incluso si cierras la aplicación. Puedes usar la notificación para controlar el temporizador.</string>
+    <string name="timer_notification_title">Tiempo de lectura</string>
 </resources>

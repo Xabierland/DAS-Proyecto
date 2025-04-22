@@ -21,6 +21,12 @@
             android:icon="@drawable/ic_profile"
             android:title="@string/profile" />
 
+        <!--Temporizador de lectura-->
+        <item
+            android:id="@+id/nav_timer"
+            android:icon="@drawable/ic_timer"
+            android:title="@string/reading_timer" />
+
         <!--Registrar usuario-->
         <item
             android:id="@+id/nav_register"

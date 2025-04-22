@@ -1,0 +1,25 @@
+# Habilitar AcceptPathInfo para permitir URLs como api.php/endpoint
+AcceptPathInfo On
+
+# Permitir que el servidor procese archivos PHP
+<FilesMatch "\.php$">
+    SetHandler application/x-httpd-php
+</FilesMatch>
+
+# Configuración CORS para permitir peticiones desde cualquier origen
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+    
+    # Responder a preflight requests
+    RewriteEngine On
+    RewriteCond %{REQUEST_METHOD} OPTIONS
+    RewriteRule ^(.*)$ $1 [R=200,L]
+</IfModule>
+
+# Prevenir acceso directo a archivos sensibles
+<Files ~ "\.log$">
+    Order allow,deny
+    Deny from all
+</Files>

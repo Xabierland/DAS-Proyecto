@@ -41,6 +41,61 @@
                     android:layout_marginBottom="16dp"
                     android:textColor="?attr/textColor" />
 
+                <!-- Botón para mostrar el mapa de librerías cercanas -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardNearbyBookstores"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="4dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@android:drawable/ic_dialog_map"
+                            android:tint="?attr/colorPrimary"
+                            android:contentDescription="@string/nearby_bookstores" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="16dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/nearby_bookstores"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:textColor="?attr/textColor" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/bookstores_description"
+                                android:textColor="?attr/textColor"
+                                android:alpha="0.7" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_media_play"
+                            android:tint="?attr/colorPrimary"
+                            android:contentDescription="@string/open_map" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
                 <!-- Sección: Libros recomendados -->
                 <TextView
                     android:layout_width="match_parent"
@@ -73,7 +128,6 @@
 
             </LinearLayout>
         </ScrollView>
-
     </LinearLayout>
 
     <!-- Menú lateral -->
