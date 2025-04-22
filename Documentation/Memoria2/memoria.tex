@@ -133,36 +133,69 @@
     \section{Elementos obligatorios}
       \begin{itemize}
         \item \textbf{Uso de una base de datos remota para el registro y la identificación de usuarios mediante registro.}
-        \begin{itemize}
-          \item He movido la base de datos de local a remota.
-          \item La definición de la base de datos se puede encontrar en \textbf{/sql/librebook\_db.sql}
-          \item También se ha implementado una API REST en PHP para que la aplicación pueda comunicarse con la base de datos \textbf{/php/api.php}
-        \end{itemize} 
+          \begin{itemize}
+            \item Se ha migrado la base de datos de local a remota, manteniendo la misma estructura pero alojándola en un servidor externo.
+            \item La definición de la base de datos se puede encontrar en \textbf{/sql/librebook\_db.sql}, con las mismas tablas que se utilizaban en la versión local (usuarios, libros, usuarios\_libros).
+            \item Se ha desarrollado una API REST en PHP que sirve como intermediaria entre la aplicación Android y la base de datos MySQL (\textbf{/php/api.php}).
+            \item Se han implementado nuevas clases en el paquete \texttt{com.xabierland.librebook.api} (ApiClient, ApiConfig, ApiParsers) para gestionar la comunicación con la API.
+            \item Los repositorios (LibroRepository, UsuarioRepository, BibliotecaRepository) se han actualizado para realizar las operaciones CRUD a través de la API en lugar de hacerlo localmente.
+          \end{itemize} 
         \item \textbf{Integrar los servicios Google Maps y Open Street Map y Geolocalización en una actividad.}
-        \begin{itemize}
-          \item He implementado Open Street Map en la actividad de \textbf{}
-        \end{itemize} 
+          \begin{itemize}
+            \item Se ha implementado OpenStreetMap en la aplicación mediante la biblioteca OSMdroid.
+            \item Se ha creado un nuevo fragmento (\texttt{MapFragment}) que muestra un mapa interactivo donde se visualizan las librerías cercanas a la ubicación del usuario.
+            \item El fragmento gestiona los permisos de ubicación y utiliza el proveedor de ubicación de alta precisión de Google (FusedLocationProviderClient).
+            \item Se ha implementado la clase utilitaria \texttt{BookstoreFinder} que utiliza la API de Overpass para buscar librerías y bibliotecas cercanas.
+            \item Se muestran marcadores personalizados en el mapa para cada librería, con ventanas de información detallada al hacer clic (implementadas mediante \texttt{CustomInfoWindow}).
+            \item El mapa se puede abrir desde la MainActivity a través de un card dedicado, mostrándose como un diálogo a pantalla completa.
+          \end{itemize} 
         \item \textbf{Captar imágenes desde la cámara, guardarlas en el servidor y mostrarlas en la aplicación. Por ejemplo, una foto de perfil.}
+          \begin{itemize}
+            \item Se ha ampliado la funcionalidad de \texttt{ProfileActivity} para permitir a los usuarios tomar fotos con la cámara además de seleccionarlas desde la galería.
+            \item Se han implementado los permisos necesarios para acceder a la cámara y al almacenamiento externo, con diálogos explicativos cuando se necesitan permisos.
+            \item Se ha utilizado FileProvider para gestionar el acceso a archivos de imagen entre diferentes aplicaciones (cámara y LibreBook).
+            \item Se ha agregado la clase utilitaria \texttt{FileUtils} para procesar las imágenes, corregir su orientación y convertirlas a formato base64 para su almacenamiento.
+            \item Las imágenes de perfil se transmiten al servidor codificadas en base64 a través de la API y se almacenan en la base de datos remota.
+            \item Las imágenes se cargan correctamente en el menú de navegación y en las vistas de perfil propio y de otros usuarios.
+          \end{itemize}
       \end{itemize}
     \section{Elementos opcionales}
       \begin{itemize}
         \item \textbf{Uso de algún Content Provider para añadir, modificar o eliminar datos.}
-        \begin{itemize}
-          \item \textcolor{red}{Dado que el uso de Content Provider es el de permitir el acceso a los datos de la aplicación desde otras aplicaciones no he usado el Content Provider para añdir, modificar o eliminar datos de la aplicacion si no en la base de datos propia del Content Provider. No me queda claro si este era el objetivo del ejercicio en base al enunciado...}
-          \item El uso de Content Provider se ha implementado en las actividades de (ProfileActivity.java y BookActivity.java).
-          \item En el ProfileActivity.java se ha implementado al mantener presionado un libro lo que abre un dialogo para compartirlos en otras aplicaicones bien en forma de texto plano o de archivo.
-          \item En el BookActivity.java se ha implementado un boton de compartir en menu de opciones que permite compartir el libro en otras aplicaciones de la misma forma que la anterior.
-        \end{itemize}
+          \begin{itemize}
+            \item Se ha implementado un Content Provider personalizado (\texttt{LibreBooksProvider}) que permite a otras aplicaciones acceder a los datos de libros de la biblioteca del usuario.
+            \item El Content Provider expone dos tipos de URI: una para acceder a la lista de libros (\texttt{books}) y otra para obtener archivos de texto con información detallada de un libro específico (\texttt{book\_files}).
+            \item Se ha implementado la funcionalidad de compartir libros mediante este Content Provider en \texttt{BookDetailActivity} (botón de compartir en la barra de herramientas) y en \texttt{BookCardAdapter} (menú contextual al mantener pulsado un libro).
+            \item La clase \texttt{ShareUtils} proporciona métodos para compartir información de libros como texto plano o como archivos de texto a través del Content Provider.
+            \item El Content Provider permite compartir no solo la información básica del libro, sino también datos adicionales como el estado de lectura, calificación y notas personales.
+          \end{itemize}
         \item \textbf{Implementación de un servicio en primer plano y gestión de mensajes broadcast durante el servicio}
-        \begin{itemize}
-          \item 
-        \end{itemize}
+          \begin{itemize}
+            \item Se ha desarrollado un servicio en primer plano (\texttt{ReadingTimerService}) que permite al usuario registrar su tiempo de lectura incluso cuando la aplicación está en segundo plano.
+            \item El servicio muestra una notificación persistente con el tiempo transcurrido y controles para detener el temporizador.
+            \item Se ha implementado un sistema de comunicación bidireccional entre la actividad (\texttt{ReadingTimerActivity}) y el servicio mediante un mecanismo de binding y una interfaz de callback (\texttt{TimerListener}).
+            \item El servicio gestiona intents de tipo broadcast para responder a acciones como iniciar, detener y reiniciar el temporizador.
+            \item Se ha configurado correctamente el servicio para ejecutarse en Android 12+ siguiendo las restricciones de ejecución en segundo plano y solicitando el tipo de servicio adecuado (FOREGROUND\_SERVICE\_DATA\_SYNC).
+            \item La actividad se asegura de que el servicio siga funcionando incluso si el usuario cierra la aplicación, y puede reconectarse al servicio cuando se vuelve a abrir.
+          \end{itemize}
         \item \textbf{Uso de mensajería FCM. Se debe incluir alguna forma de que se pueda probar de forma externa (por ejemplo, con un servicio web PHP adicional en el servidor de la asignatura).}
-        \begin{itemize}
-          \item La logica para implementar la mensajeria FCM se encuentra en (LibreBookMessagingService.java).
-          \item Para hacer uso de la mensajeria FCM accede a \textcolor{blue}{\href{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/admin_panel.php}{esta web}} y escribe el mensaje y el titulo que se mostraran como notificacion.
-        \end{itemize}
+          \begin{itemize}
+            \item Se ha implementado Firebase Cloud Messaging (FCM) para recibir notificaciones push en la aplicación.
+            \item Se ha creado un servicio (\texttt{LibreBookMessagingService}) que extiende \texttt{FirebaseMessagingService} para gestionar los mensajes recibidos.
+            \item La aplicación se suscribe automáticamente al tema "all\_devices" para recibir notificaciones generales.
+            \item Se solicitan los permisos necesarios para mostrar notificaciones en Android 13+.
+            \item Se ha implementado un panel de administración web accesible desde \href{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/admin_panel.php}{esta URL} que permite enviar notificaciones a todos los dispositivos suscritos.
+            \item Las notificaciones pueden contener un título, un mensaje y abren la aplicación al ser pulsadas.
+          \end{itemize}
         \item \textbf{Desarrollar un widget que tenga, al menos, un elemento que se actualice automáticamente de manera periódica.}
+          \begin{itemize}
+            \item Se ha implementado un widget de escritorio (\texttt{BookRecommendationWidgetProvider}) que muestra recomendaciones de libros aleatorios de la biblioteca del usuario.
+            \item El widget se actualiza automáticamente cada 15 segundos mediante un AlarmManager para mostrar diferentes recomendaciones.
+            \item El widget muestra la portada del libro, el título y el autor, y al pulsarlo, abre la actividad de detalle del libro correspondiente.
+            \item Se ha implementado la clase utilitaria \texttt{WidgetImageLoader} para cargar imágenes desde URLs en el widget de forma asíncrona.
+            \item El widget gestiona adecuadamente su ciclo de vida, incluyendo la cancelación de actualizaciones cuando se elimina y la programación de nuevas actualizaciones cuando se crea.
+            \item Se han utilizado RemoteViews para diseñar la interfaz del widget, que se adapta a diferentes tamaños de pantalla.
+          \end{itemize}
         \item \textbf{Uso de algún servicio o tarea programada mediante alarma (no valen las alarmas del widget).}
       \end{itemize}
   \chapter{Descripción de la aplicación}
@@ -176,7 +209,7 @@
         \label{fig:diagrama-clases}
       \end{figure}
       Como se muestra en la Figura~\ref{fig:diagrama-clases}, la ha aumentado el número de clases respecto a la entrega anterior pero manteniendo las capas con una clara separación de responsabilidades\cite{android_architecture}:
-      En este apartado me voy a limitar a describir los cambios realizados en la aplicación.
+      En este apartado me voy a limitar a describir los cambios realizados en la aplicación respecto a la entrega anterior.
       \subsection{Activities}
         \begin{itemize}
           \item \textbf{Modificaciones en ProfileActivity:} Se ha ampliado para permitir la captura de imágenes mediante la cámara o su selección desde la galería, ajustarlas y guardarlas como fotos de perfil.
