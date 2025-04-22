@@ -197,6 +197,14 @@
             \item Se han utilizado RemoteViews para diseñar la interfaz del widget, que se adapta a diferentes tamaños de pantalla.
           \end{itemize}
         \item \textbf{Uso de algún servicio o tarea programada mediante alarma (no valen las alarmas del widget).}
+          \begin{itemize}
+            \item Se ha implementado una actualización periódica de las recomendaciones de libros en la pantalla principal mediante un Handler y un Runnable en \texttt{MainActivity}.
+            \item Cada 15 segundos, la aplicación actualiza la lista de libros recomendados con selecciones aleatorias de la biblioteca.
+            \item La actualización periódica se inicia en \texttt{onResume()} y se detiene en \texttt{onPause()} para conservar recursos del sistema.
+            \item La lógica de actualización está encapsulada en el método \texttt{loadRecommendedBooks()}, que obtiene los libros de forma asíncrona y actualiza la interfaz.
+            \item Se utiliza un generador de números aleatorios con semilla basada en la hora actual para asegurar que las recomendaciones sean diferentes en cada actualización.
+            \item La interfaz de usuario se actualiza de forma suave sin interrumpir la interacción del usuario con la aplicación.
+          \end{itemize}
       \end{itemize}
   \chapter{Descripción de la aplicación}
     \section{Clases}
@@ -213,6 +221,7 @@
       \subsection{Activities}
         \begin{itemize}
           \item \textbf{Modificaciones en ProfileActivity:} Se ha ampliado para permitir la captura de imágenes mediante la cámara o su selección desde la galería, ajustarlas y guardarlas como fotos de perfil.
+          \item \textbf{ReadingTimerActivity:} Interfaz de usuario para controlar el temporizador de lectura, permitiendo iniciar, pausar y reiniciar el tiempo de lectura.
         \end{itemize}
       \subsection{Fragments}
         \begin{itemize}
@@ -237,6 +246,12 @@
         \begin{itemize}
           \item \textbf{BookRecommendationWidgetProvider:} Implementa un widget de escritorio que muestra recomendaciones de libros y se actualiza periódicamente.
         \end{itemize}
+      \subsection{Repositorios}
+        \begin{itemize}
+          \item \textbf{Modificaciones en LibroRepository:} Actualizado para interactuar con la API REST en lugar de la base de datos local. Proporciona métodos para obtener, añadir, modificar y eliminar libros.
+          \item \textbf{Modificaciones en UsuarioRepository:} Actualizado para interactuar con la API REST en lugar de la base de datos local.. Proporciona métodos para gestionar usuarios y autenticación.
+          \item \textbf{Modificaciones en BibliotecaRepository:} Actualizado para interactuar con la API REST en lugar de la base de datos local.. Proporciona métodos para gestionar la biblioteca del usuario.
+        \end{itemize}
       \subsection{Utils}
         \begin{itemize}
           \item \textbf{BookstoreFinder:} Clase utilitaria que utiliza la API de Overpass para buscar librerías y bibliotecas cercanas a una ubicación dada.
@@ -254,8 +269,69 @@
         \caption{Diagrama de la base de datos de la aplicación LibreBook}
         \label{fig:diagrama-bd}
       \end{figure}
-      La base de datos no ha sufrido cambios respecto a la entraga anterior.
+      La base de datos no ha sufrido cambios respecto en su estructura respecto a la entrega anterior.
   \chapter{Manual de usuario}
+    \section{Encontrar librerías}
+      Para que los usuarios puedan encontrar librerías cercanas a su ubicación, se ha implementado un mapa interactivo utilizando la biblioteca OSMdroid.
+      \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.25\textwidth]{.img/mapa_boton.png}
+        \hspace{2cm}
+        \includegraphics[width=0.25\textwidth]{.img/mapa_fragment.png}
+        \caption{Encontrar librerías}
+        \label{fig:mapa}
+      \end{figure}
+      El mapa se puede abrir desde la pantalla principal de la aplicación, donde se muestra un card dedicado a esta funcionalidad.
+      Al pulsar el card, se abre un fragmento a pantalla completa que muestra el mapa y los marcadores de las librerías cercanas.
+      
+    \cpsection{Compartir libros}
+      \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.25\textwidth]{.img/compartir_perfil.png}
+        \caption{Compartir libros desde el perfil}
+        \label{fig:compartir-perfil}
+      \end{figure}
+      \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.25\textwidth]{.img/compartir_libro_1.png}
+        \hspace{2cm}
+        \includegraphics[width=0.25\textwidth]{.img/compartir_libro_2.png}
+        \caption{Compartir libros desde la vista de libro}
+        \label{fig:compartir-libro}
+      \end{figure}
+    \cpsection{Temporizador de lectura}
+      \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.25\textwidth]{.img/temporizador.png}
+        \hspace{2cm}
+        \includegraphics[width=0.25\textwidth]{.img/temporizador_2.png}
+        \caption{Temporizador de lectura}
+        \label{fig:temporizador}
+      \end{figure}
+    \cpsection{Widget}
+      \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.25\textwidth]{.img/widget.png}
+        \hspace{2cm}
+        \includegraphics[width=0.25\textwidth]{.img/widget_2.png}
+        \caption{Widget de la aplicación}
+        \label{fig:widget}
+      \end{figure}
+    \cpsection{Mensajeria FCM}
+      \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.4\textwidth]{.img/mensaje_no_enviado.png}
+        \hspace{2cm}
+        \includegraphics[width=0.4\textwidth]{.img/mensaje_enviado.png}
+        \caption{Interfaz para enviar mensaje mediante FCM}
+        \label{fig:mensaje}
+      \end{figure}
+      \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.25\textwidth]{.img/mensaje_notificacion.png}
+        \caption{Notificación recibida}
+        \label{fig:mensaje-notificacion}
+      \end{figure}
   \chapter{Dificultades}
     \section{Base de datos remota}
       Mover la base de datos de local a remota ha supuesto un reto importante.
