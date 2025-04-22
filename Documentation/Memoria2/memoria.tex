@@ -283,7 +283,18 @@
       \end{figure}
       El mapa se puede abrir desde la pantalla principal de la aplicación, donde se muestra un card dedicado a esta funcionalidad.
       Al pulsar el card, se abre un fragmento a pantalla completa que muestra el mapa y los marcadores de las librerías cercanas.
-      
+    \cpsection{Foto de perfil}
+      Aunque en la entrega anterior era posible elegir una foto de la galería ahora tambien es posible usar la camara del movil para subir una foto de perfil a la aplicación conservando ademas la opcion de la galeria y sincronizandola con la base de datos.
+      \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.25\textwidth]{.img/foto_perfil_1.png}
+        \hspace{1cm}
+        \includegraphics[width=0.25\textwidth]{.img/foto_perfil_2.png}
+        \hspace{1cm}
+        \includegraphics[width=0.25\textwidth]{.img/foto_perfil_3.png}
+        \caption{Foto de perfil}
+        \label{fig:perfil}
+      \end{figure}
     \cpsection{Compartir libros}
       \begin{figure}[H]
         \centering
@@ -333,16 +344,30 @@
         \label{fig:mensaje-notificacion}
       \end{figure}
   \chapter{Dificultades}
-    \section{Base de datos remota}
-      Mover la base de datos de local a remota ha supuesto un reto importante.
-      Primero al usar la arquitectura Room no tenia unas sentencias SQL definidas para la estructura de la base de datos por lo que tuve que crearla de cero.
-      Ademas, era necesario el uso de una API REST para poder interactuar con la base de datos.
-    \section{Servicio de tiempo de lectura}
-      Implementar el servicio de lectura tubo sus dificultades especialmente la parte de broadcast.
-      Yo queria implementar una notificacion que constantemente se estuviera actualizando para que estando fuera de la aplicacion y de actividad fuera posible saber el tiempo de lectura e incluso deternerlo.
-      Lo primero que intente fue usar un WorkManager y poner el PeriodicWorkRequest a 1 segundo pero Android pone que el tiempo minimo es de 15 minutos por lo que tuve que rescribir el servicio u usar un ForegroundService.
-      Esto supuso reescribir el servicio y la actividad de tiempo de lectura completamente.
-  \chapter{Conclusiones}
-    Aunque esta entrega haya sido más corta en cuanto a funcionalidades se me ha hecho bastante más complejas de implementar.
+    Durante el desarrollo de esta segunda fase de LibreBook, me enfrenté a varios desafíos técnicos que tuve que resolver para implementar las nuevas funcionalidades.
+    \section{Migración a base de datos remota}
+      Cambiar de una base de datos local a una remota resultó más complicado de lo esperado:
+      \begin{itemize}
+        \item Al haber usado Room en la fase anterior, no tenía las sentencias SQL explícitas para crear la estructura en el servidor, por lo que tuve que reconstruirlas manualmente analizando las entidades y relaciones.
+        \item Fue necesario desarrollar una API REST completa en PHP que sirviera como intermediaria entre la aplicación Android y la base de datos MySQL del servidor.
+        \item Todos los repositorios que antes funcionaban directamente con Room debían ahora comunicarse a través de la API, lo que implicó reescribir la lógica de acceso a datos.
+        \item Tuve que implementar un sistema de parsing JSON en ambas direcciones: para enviar datos a la API (serialización) y para recibir e interpretar sus respuestas (deserialización).
+        \item La gestión de errores se volvió más compleja, ya que además de los errores de la base de datos ahora debía manejar posibles fallos de red, timeouts o respuestas inesperadas del servidor.
+      \end{itemize}
+      La solución fue crear una capa de abstracción con clases específicas (ApiClient, ApiConfig, ApiParsers) que encapsularan toda la lógica de comunicación con el servidor y proporcionaran una interfaz similar a la que usaban los repositorios con Room, minimizando así los cambios en el resto de la aplicación.
+    \section{Implementación del servicio de temporizador}
+      El desarrollo del temporizador de lectura presentó desafíos particulares:
+      \begin{itemize}
+        \item Mi idea inicial fue usar WorkManager con tareas periódicas para actualizar el temporizador, pero descubrí que Android limita la frecuencia mínima a 15 minutos, lo que resultaba inútil para un cronómetro que necesita actualizarse cada segundo.
+        \item Opté entonces por un servicio en primer plano (ForegroundService), pero tuve que lidiar con las restricciones que Android ha ido añadiendo en versiones recientes para limitar las aplicaciones que se ejecutan en segundo plano.
+        \item La gestión del ciclo de vida del servicio fue complicada: necesitaba que el temporizador siguiera funcionando aunque el usuario cerrara la aplicación, pero también que la actividad pudiera reconectarse al servicio al volver a abrirla.
+        \item Implementar la comunicación bidireccional entre la actividad y el servicio requirió configurar correctamente el mecanismo de binding y diseñar una interfaz de callback que permitiera actualizar la UI en tiempo real.
+        \item La notificación persistente debía actualizarse cada segundo mostrando el tiempo transcurrido y ofrecer controles para detener el temporizador sin necesidad de abrir la aplicación.
+      \end{itemize}
+      Tras varios intentos, conseguí una solución funcional combinando un Handler para las actualizaciones por segundo, un servicio en primer plano que se mantiene activo incluso cuando la aplicación no está en uso, y un sistema de binding que permite a la actividad comunicarse con el servicio cuando está visible.
+      \chapter{Conclusiones}
+        Esta segunda fase del proyecto LibreBook ha supuesto un salto importante en la madurez de la aplicación, transformándola de una simple herramienta de gestión de biblioteca personal a una plataforma más completa con funcionalidades sociales, interactivas y en tiempo real. Gracias a la migración a una base de datos remota, la integración de mapas, el temporizador de lectura, el sistema de compartición mediante Content Provider, el widget de recomendaciones y las notificaciones push, la aplicación ahora ofrece una experiencia mucho más rica para los amantes de la lectura.\\
+        
+        Aunque el desarrollo de esta fase ha sido más complejo que la anterior, las dificultades superadas han resultado en una aplicación más robusta y completa. La experiencia de implementar estas funcionalidades avanzadas me ha permitido profundizar en temas como arquitecturas cliente-servidor, servicios en primer plano, geolocalización y mensajería en la nube, ampliando significativamente mis conocimientos en desarrollo Android. LibreBook ha evolucionado notablemente y, aunque hay aspectos que podrían mejorarse en el futuro (como la sincronización diferencial de datos o asociar el temporizador a libros específicos), estoy satisfecho con los resultados obtenidos y entusiasmado por las posibilidades de expansión que tiene la aplicación.
   \printbibliography[title=Bibliografía]
 \end{document}
