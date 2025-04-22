@@ -137,24 +137,24 @@
             \item Se ha migrado la base de datos de local a remota, manteniendo la misma estructura pero alojándola en un servidor externo.
             \item La definición de la base de datos se puede encontrar en \textbf{/sql/librebook\_db.sql}, con las mismas tablas que se utilizaban en la versión local (usuarios, libros, usuarios\_libros).
             \item Se ha desarrollado una API REST en PHP que sirve como intermediaria entre la aplicación Android y la base de datos MySQL (\textbf{/php/api.php}).
-            \item Se han implementado nuevas clases en el paquete \texttt{com.xabierland.librebook.api} (ApiClient, ApiConfig, ApiParsers) para gestionar la comunicación con la API.
+            \item Se han implementado nuevas clases en el paquete \textbf{com.xabierland.librebook.api} (ApiClient, ApiConfig, ApiParsers) para gestionar la comunicación con la API.
             \item Los repositorios (LibroRepository, UsuarioRepository, BibliotecaRepository) se han actualizado para realizar las operaciones CRUD a través de la API en lugar de hacerlo localmente.
           \end{itemize} 
         \item \textbf{Integrar los servicios Google Maps y Open Street Map y Geolocalización en una actividad.}
           \begin{itemize}
             \item Se ha implementado OpenStreetMap en la aplicación mediante la biblioteca OSMdroid.
-            \item Se ha creado un nuevo fragmento (\texttt{MapFragment}) que muestra un mapa interactivo donde se visualizan las librerías cercanas a la ubicación del usuario.
+            \item Se ha creado un nuevo fragmento (\textbf{MapFragment}) que muestra un mapa interactivo donde se visualizan las librerías cercanas a la ubicación del usuario.
             \item El fragmento gestiona los permisos de ubicación y utiliza el proveedor de ubicación de alta precisión de Google (FusedLocationProviderClient).
-            \item Se ha implementado la clase utilitaria \texttt{BookstoreFinder} que utiliza la API de Overpass para buscar librerías y bibliotecas cercanas.
-            \item Se muestran marcadores personalizados en el mapa para cada librería, con ventanas de información detallada al hacer clic (implementadas mediante \texttt{CustomInfoWindow}).
+            \item Se ha implementado la clase utilitaria \textbf{BookstoreFinder} que utiliza la API de Overpass para buscar librerías y bibliotecas cercanas.
+            \item Se muestran marcadores personalizados en el mapa para cada librería, con ventanas de información detallada al hacer clic (implementadas mediante \textbf{CustomInfoWindow}).
             \item El mapa se puede abrir desde la MainActivity a través de un card dedicado, mostrándose como un diálogo a pantalla completa.
           \end{itemize} 
         \item \textbf{Captar imágenes desde la cámara, guardarlas en el servidor y mostrarlas en la aplicación. Por ejemplo, una foto de perfil.}
           \begin{itemize}
-            \item Se ha ampliado la funcionalidad de \texttt{ProfileActivity} para permitir a los usuarios tomar fotos con la cámara además de seleccionarlas desde la galería.
+            \item Se ha ampliado la funcionalidad de \textbf{ProfileActivity} para permitir a los usuarios tomar fotos con la cámara además de seleccionarlas desde la galería.
             \item Se han implementado los permisos necesarios para acceder a la cámara y al almacenamiento externo, con diálogos explicativos cuando se necesitan permisos.
-            \item Se ha utilizado FileProvider para gestionar el acceso a archivos de imagen entre diferentes aplicaciones (cámara y LibreBook).
-            \item Se ha agregado la clase utilitaria \texttt{FileUtils} para procesar las imágenes, corregir su orientación y convertirlas a formato base64 para su almacenamiento.
+            \item Se ha utilizado FileProvider para gestionar el acceso a archivos de imagen entre diferentes aplicaciones cámara y LibreBook.
+            \item Se ha agregado la clase utilitaria \textbf{FileUtils} para procesar las imágenes, corregir su orientación y convertirlas a formato base64 para su almacenamiento.
             \item Las imágenes de perfil se transmiten al servidor codificadas en base64 a través de la API y se almacenan en la base de datos remota.
             \item Las imágenes se cargan correctamente en el menú de navegación y en las vistas de perfil propio y de otros usuarios.
           \end{itemize}
@@ -163,17 +163,17 @@
       \begin{itemize}
         \item \textbf{Uso de algún Content Provider para añadir, modificar o eliminar datos.}
           \begin{itemize}
-            \item Se ha implementado un Content Provider personalizado (\texttt{LibreBooksProvider}) que permite a otras aplicaciones acceder a los datos de libros de la biblioteca del usuario.
-            \item El Content Provider expone dos tipos de URI: una para acceder a la lista de libros (\texttt{books}) y otra para obtener archivos de texto con información detallada de un libro específico (\texttt{book\_files}).
-            \item Se ha implementado la funcionalidad de compartir libros mediante este Content Provider en \texttt{BookDetailActivity} (botón de compartir en la barra de herramientas) y en \texttt{BookCardAdapter} (menú contextual al mantener pulsado un libro).
-            \item La clase \texttt{ShareUtils} proporciona métodos para compartir información de libros como texto plano o como archivos de texto a través del Content Provider.
+            \item Se ha implementado un Content Provider personalizado \textbf{LibreBooksProvider} que permite a otras aplicaciones acceder a los datos de libros de la biblioteca del usuario.
+            \item El Content Provider expone dos tipos de URI: una para acceder a la lista de libros \textbf{books} y otra para obtener archivos de texto con información detallada de un libro específico \textbf{book\_files}.
+            \item Se ha implementado la funcionalidad de compartir libros mediante este Content Provider en \textbf{BookDetailActivity} (botón de compartir en la barra de herramientas) y en \textbf{BookCardAdapter} (menú contextual al mantener pulsado un libro).
+            \item La clase \textbf{ShareUtils} proporciona métodos para compartir información de libros como texto plano o como archivos de texto a través del Content Provider.
             \item El Content Provider permite compartir no solo la información básica del libro, sino también datos adicionales como el estado de lectura, calificación y notas personales.
           \end{itemize}
         \item \textbf{Implementación de un servicio en primer plano y gestión de mensajes broadcast durante el servicio}
           \begin{itemize}
-            \item Se ha desarrollado un servicio en primer plano (\texttt{ReadingTimerService}) que permite al usuario registrar su tiempo de lectura incluso cuando la aplicación está en segundo plano.
+            \item Se ha desarrollado un servicio en primer plano \textbf{ReadingTimerService} que permite al usuario registrar su tiempo de lectura incluso cuando la aplicación está en segundo plano.
             \item El servicio muestra una notificación persistente con el tiempo transcurrido y controles para detener el temporizador.
-            \item Se ha implementado un sistema de comunicación bidireccional entre la actividad (\texttt{ReadingTimerActivity}) y el servicio mediante un mecanismo de binding y una interfaz de callback (\texttt{TimerListener}).
+            \item Se ha implementado un sistema de comunicación bidireccional entre la actividad \textbf{ReadingTimerActivity} y el servicio mediante un mecanismo de binding y una interfaz de callback \textbf{TimerListener}.
             \item El servicio gestiona intents de tipo broadcast para responder a acciones como iniciar, detener y reiniciar el temporizador.
             \item Se ha configurado correctamente el servicio para ejecutarse en Android 12+ siguiendo las restricciones de ejecución en segundo plano y solicitando el tipo de servicio adecuado (FOREGROUND\_SERVICE\_DATA\_SYNC).
             \item La actividad se asegura de que el servicio siga funcionando incluso si el usuario cierra la aplicación, y puede reconectarse al servicio cuando se vuelve a abrir.
@@ -181,7 +181,7 @@
         \item \textbf{Uso de mensajería FCM. Se debe incluir alguna forma de que se pueda probar de forma externa (por ejemplo, con un servicio web PHP adicional en el servidor de la asignatura).}
           \begin{itemize}
             \item Se ha implementado Firebase Cloud Messaging (FCM) para recibir notificaciones push en la aplicación.
-            \item Se ha creado un servicio (\texttt{LibreBookMessagingService}) que extiende \texttt{FirebaseMessagingService} para gestionar los mensajes recibidos.
+            \item Se ha creado un servicio \textbf{LibreBookMessagingService} que extiende \textbf{FirebaseMessagingService} para gestionar los mensajes recibidos.
             \item La aplicación se suscribe automáticamente al tema "all\_devices" para recibir notificaciones generales.
             \item Se solicitan los permisos necesarios para mostrar notificaciones en Android 13+.
             \item Se ha implementado un panel de administración web accesible desde \href{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/admin_panel.php}{esta URL} que permite enviar notificaciones a todos los dispositivos suscritos.
@@ -189,19 +189,19 @@
           \end{itemize}
         \item \textbf{Desarrollar un widget que tenga, al menos, un elemento que se actualice automáticamente de manera periódica.}
           \begin{itemize}
-            \item Se ha implementado un widget de escritorio (\texttt{BookRecommendationWidgetProvider}) que muestra recomendaciones de libros aleatorios de la biblioteca del usuario.
+            \item Se ha implementado un widget de escritorio (\textbf{BookRecommendationWidgetProvider}) que muestra recomendaciones de libros aleatorios de la biblioteca del usuario.
             \item El widget se actualiza automáticamente cada 15 segundos mediante un AlarmManager para mostrar diferentes recomendaciones.
             \item El widget muestra la portada del libro, el título y el autor, y al pulsarlo, abre la actividad de detalle del libro correspondiente.
-            \item Se ha implementado la clase utilitaria \texttt{WidgetImageLoader} para cargar imágenes desde URLs en el widget de forma asíncrona.
+            \item Se ha implementado la clase utilitaria \textbf{WidgetImageLoader} para cargar imágenes desde URLs en el widget de forma asíncrona.
             \item El widget gestiona adecuadamente su ciclo de vida, incluyendo la cancelación de actualizaciones cuando se elimina y la programación de nuevas actualizaciones cuando se crea.
             \item Se han utilizado RemoteViews para diseñar la interfaz del widget, que se adapta a diferentes tamaños de pantalla.
           \end{itemize}
         \item \textbf{Uso de algún servicio o tarea programada mediante alarma (no valen las alarmas del widget).}
           \begin{itemize}
-            \item Se ha implementado una actualización periódica de las recomendaciones de libros en la pantalla principal mediante un Handler y un Runnable en \texttt{MainActivity}.
+            \item Se ha implementado una actualización periódica de las recomendaciones de libros en la pantalla principal mediante un Handler y un Runnable en \textbf{MainActivity}.
             \item Cada 15 segundos, la aplicación actualiza la lista de libros recomendados con selecciones aleatorias de la biblioteca.
-            \item La actualización periódica se inicia en \texttt{onResume()} y se detiene en \texttt{onPause()} para conservar recursos del sistema.
-            \item La lógica de actualización está encapsulada en el método \texttt{loadRecommendedBooks()}, que obtiene los libros de forma asíncrona y actualiza la interfaz.
+            \item La actualización periódica se inicia en \textbf{onResume()} y se detiene en \textbf{onPause()} para conservar recursos del sistema.
+            \item La lógica de actualización está encapsulada en el método \textbf{loadRecommendedBooks()}, que obtiene los libros de forma asíncrona y actualiza la interfaz.
             \item Se utiliza un generador de números aleatorios con semilla basada en la hora actual para asegurar que las recomendaciones sean diferentes en cada actualización.
             \item La interfaz de usuario se actualiza de forma suave sin interrumpir la interacción del usuario con la aplicación.
           \end{itemize}
@@ -271,8 +271,18 @@
       \end{figure}
       La base de datos no ha sufrido cambios respecto en su estructura respecto a la entrega anterior.
   \chapter{Manual de usuario}
-    \section{Encontrar librerías}
-      Para que los usuarios puedan encontrar librerías cercanas a su ubicación, se ha implementado un mapa interactivo utilizando la biblioteca OSMdroid.
+    \section{Base de datos remota con API}
+      Ahora la base de datos de la aplicación está alojada en un servidor remoto y se accede a ella a través de una API REST. Esto permite que los datos sean accesibles desde cualquier dispositivo con conexión a Internet y facilita la sincronización entre diferentes instancias de la aplicación.
+      Es posible ver parte de la información de la base de datos desde los seguientes endpoints:
+      \begin{itemize}
+        \item \href{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/api.php/usuarios}{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/api.php/usuarios} \\Usuarios
+        \item \href{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/api.php/libros}{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/api.php/libros} \\Libros
+        \item \href{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/api.php/biblioteca/2}{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/api.php/biblioteca/2} \\Biblioteca del usuario 2
+        \item \href{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/api.php/biblioteca/1?estado=leyendo}{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/api.php/biblioteca/2?estado=leyendo} \\Libros que esta leyendo el usuario 2
+      \end{itemize}
+      De esta forma conseguimos que la aplicación sea más escalable y flexible, permitiendo futuras mejoras y nuevas funcionalidades sin necesidad de realizar cambios significativos en la arquitectura de la aplicación.
+    \cpsection{Encontrar librerías}
+      Para que los usuarios puedan encontrar librerías cercanas a su ubicación, se ha implementado un mapa interactivo.
       \begin{figure}[H]
         \centering
         \includegraphics[width=0.25\textwidth]{.img/mapa_boton.png}
@@ -281,8 +291,8 @@
         \caption{Encontrar librerías}
         \label{fig:mapa}
       \end{figure}
-      El mapa se puede abrir desde la pantalla principal de la aplicación, donde se muestra un card dedicado a esta funcionalidad.
-      Al pulsar el card, se abre un fragmento a pantalla completa que muestra el mapa y los marcadores de las librerías cercanas.
+      En la pantalla principal de la aplicación, se encuentra un boton de Librerias cercanas que al pulsarlo abre un mapa interactivo con las librerías cercanas a la ubicación del usuario. 
+      El mapa se muestra a pantalla completa, permitiendo al usuario desplazarse, hacer zoom y interactuar con los iconos para ver las librerias y la distancia a la que se encuentran.
     \cpsection{Foto de perfil}
       Aunque en la entrega anterior era posible elegir una foto de la galería ahora tambien es posible usar la camara del movil para subir una foto de perfil a la aplicación conservando ademas la opcion de la galeria y sincronizandola con la base de datos.
       \begin{figure}[H]
@@ -295,13 +305,17 @@
         \caption{Foto de perfil}
         \label{fig:perfil}
       \end{figure}
+      Para elegirla entra desde el menu desplegable de la aplicacion en el perfil del usuario y dale click al icono de la camara al lado de la foto de perfil.
+      Al pulsar el icono de la cámara, se abre un diálogo que permite al usuario elegir entre tomar una foto con la cámara o seleccionar una imagen de la galería.
     \cpsection{Compartir libros}
+      La aplicación permite compartir libros con otros usuarios mediante dos métodos:
       \begin{figure}[H]
         \centering
         \includegraphics[width=0.25\textwidth]{.img/compartir_perfil.png}
         \caption{Compartir libros desde el perfil}
         \label{fig:compartir-perfil}
       \end{figure}
+      El primero como se ven en la Figura~\ref{fig:compartir-perfil} es desde el perfil de usuario, donde al mantener pulsado un libro se abre un menú contextual que permite compartir el libro seleccionado.
       \begin{figure}[H]
         \centering
         \includegraphics[width=0.25\textwidth]{.img/compartir_libro_1.png}
@@ -310,7 +324,9 @@
         \caption{Compartir libros desde la vista de libro}
         \label{fig:compartir-libro}
       \end{figure}
+      La segunda opción es desde la vista de libro, donde en la parte superior derecha de la pantalla se encuentra un icono de compartir. Al pulsar este icono, se abre un menú que permite al usuario elegir entre compartir el libro como texto plano o como archivo de texto.
     \cpsection{Temporizador de lectura}
+      La aplicación cuenta con un temporizador de lectura que permite a los usuarios registrar el tiempo que pasan leyendo.
       \begin{figure}[H]
         \centering
         \includegraphics[width=0.25\textwidth]{.img/temporizador.png}
@@ -319,16 +335,10 @@
         \caption{Temporizador de lectura}
         \label{fig:temporizador}
       \end{figure}
-    \cpsection{Widget}
-      \begin{figure}[H]
-        \centering
-        \includegraphics[width=0.25\textwidth]{.img/widget.png}
-        \hspace{2cm}
-        \includegraphics[width=0.25\textwidth]{.img/widget_2.png}
-        \caption{Widget de la aplicación}
-        \label{fig:widget}
-      \end{figure}
+      El temporizador funciona incluso con la aplicacion cerrada, mostrando una notificación persistente que se actualiza cada segundo con el tiempo transcurrido.
+      El usuario puede iniciar, pausar y reiniciar el temporizador desde la interfaz de la aplicación. Al abrir la aplicación, el temporizador se reanuda automáticamente y se muestra el tiempo total acumulado.
     \cpsection{Mensajeria FCM}
+      La aplicación utiliza Firebase Cloud Messaging (FCM) para recibir notificaciones push. Los usuarios pueden enviar mensajes a todos los dispositivos a través de un \textcolor{blue}{\href{http://ec2-51-44-167-78.eu-west-3.compute.amazonaws.com/xgabina001/WEB/admin_panel.php}{panel de administración web}}.
       \begin{figure}[H]
         \centering
         \includegraphics[width=0.4\textwidth]{.img/mensaje_no_enviado.png}
@@ -342,6 +352,29 @@
         \includegraphics[width=0.25\textwidth]{.img/mensaje_notificacion.png}
         \caption{Notificación recibida}
         \label{fig:mensaje-notificacion}
+      \end{figure}
+      De esta forma los usuarios pueden recibir mensajes importantes, actualizaciones o recordatorios directamente en su dispositivo móvil.
+    \cpsection{Widget}
+      Junto con la aplicacion se añade un widget para colocar en el escritorio del movil.
+      \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.25\textwidth]{.img/widget.png}
+        \hspace{2cm}
+        \includegraphics[width=0.25\textwidth]{.img/widget_2.png}
+        \caption{Widget de la aplicación}
+        \label{fig:widget}
+      \end{figure}
+      El widget muestra recomendaciones de libros aleatorios de la biblioteca del usuario. Se actualiza automáticamente cada 15 segundos para mostrar diferentes recomendaciones.
+      Al pulsar el widget, se abre la actividad de detalle del libro correspondiente, permitiendo al usuario acceder rápidamente a la información del libro recomendado.
+    \cpsection{Actualizar libros recomendados}
+      Ahora la pagina principal de la aplicacion se actualiza cada 15 segundos para mostrar libros recomendados aleatorios de la biblioteca del usuario.
+      \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.25\textwidth]{.img/libros_recomendados_1.png}
+        \hspace{2cm}
+        \includegraphics[width=0.25\textwidth]{.img/libros_recomendados_2.png}
+        \caption{Libros recomendados}
+        \label{fig:libros-recomendados}
       \end{figure}
   \chapter{Dificultades}
     Durante el desarrollo de esta segunda fase de LibreBook, me enfrenté a varios desafíos técnicos que tuve que resolver para implementar las nuevas funcionalidades.
