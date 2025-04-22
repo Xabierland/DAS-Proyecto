@@ -6,8 +6,8 @@
 \usepackage[margin=2cm]{geometry}
 
 % Añadir la bibliografía
-%\usepackage[backend=biber, style=numeric, sorting=ynt]{biblatex}
-%\addbibresource{memoria.bib}
+\usepackage[backend=biber, style=numeric, sorting=ynt]{biblatex}
+\addbibresource{memoria.bib}
 
 % Cambia el color de los links
 \usepackage{hyperref}
@@ -128,13 +128,20 @@
           \end{itemize}
       \end{itemize}
       No obstante, se pueden crear nuevas cuentas de usuario mediante el registro en la aplicación.
-    }
-    
+    }  
   \chapter{Objetivos}
     \section{Elementos obligatorios}
       \begin{itemize}
         \item \textbf{Uso de una base de datos remota para el registro y la identificación de usuarios mediante registro.}
+        \begin{itemize}
+          \item He movido la base de datos de local a remota.
+          \item La definición de la base de datos se puede encontrar en \textbf{/sql/librebook\_db.sql}
+          \item También se ha implementado una API REST en PHP para que la aplicación pueda comunicarse con la base de datos \textbf{/php/api.php}
+        \end{itemize} 
         \item \textbf{Integrar los servicios Google Maps y Open Street Map y Geolocalización en una actividad.}
+        \begin{itemize}
+          \item He implementado Open Street Map en la actividad de \textbf{}
+        \end{itemize} 
         \item \textbf{Captar imágenes desde la cámara, guardarlas en el servidor y mostrarlas en la aplicación. Por ejemplo, una foto de perfil.}
       \end{itemize}
     \section{Elementos opcionales}
@@ -159,6 +166,25 @@
         \item \textbf{Uso de algún servicio o tarea programada mediante alarma (no valen las alarmas del widget).}
       \end{itemize}
   \chapter{Descripción de la aplicación}
+    \section{Clases}
+      \begin{figure}[H]
+        \centering
+        \href{https://raw.githubusercontent.com/Xabierland/DAS-Proyecto/refs/heads/main/Documentation/Memoria2/.img/diagrama-clases.svg}{%
+          \includegraphics[width=0.9\textwidth]{.img/diagrama-clases.png}
+        }
+        \caption{Diagrama de clases de la aplicación LibreBook}
+        \label{fig:diagrama-clases}
+      \end{figure}
+    \cpsection{Base de datos}
+      \begin{figure}[H]
+        \centering
+        \href{https://raw.githubusercontent.com/Xabierland/DAS-Proyecto/refs/heads/main/Documentation/Memoria2/.img/diagrama-bd.svg}{%
+          \includegraphics[width=0.4\textwidth]{.img/diagrama-bd.png}
+        }
+        \caption{Diagrama de la base de datos de la aplicación LibreBook}
+        \label{fig:diagrama-bd}
+      \end{figure}
+      La base de datos no ha sufrido cambios respecto a la entraga anterior.
   \chapter{Manual de usuario}
   \chapter{Dificultades}
     \section{Base de datos remota}
@@ -172,4 +198,5 @@
       Esto supuso reescribir el servicio y la actividad de tiempo de lectura completamente.
   \chapter{Conclusiones}
     Aunque esta entrega haya sido más corta en cuanto a funcionalidades se me ha hecho bastante más complejas de implementar.
+  \printbibliography[title=Bibliografía]
 \end{document}
