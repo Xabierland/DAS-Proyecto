@@ -1,4 +1,4 @@
-\documentclass[a4paper,12pt]{report}
+\documentclass[a4paper,11pt]{report}
 \usepackage[spanish]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx, csquotes, longtable, array, booktabs, xparse, float, titlesec, enumitem, dingbat, soul, multicol, listings, wrapfig}
@@ -175,6 +175,43 @@
         \caption{Diagrama de clases de la aplicación LibreBook}
         \label{fig:diagrama-clases}
       \end{figure}
+      Como se muestra en la Figura~\ref{fig:diagrama-clases}, la ha aumentado el número de clases respecto a la entrega anterior pero manteniendo las capas con una clara separación de responsabilidades\cite{android_architecture}:
+      En este apartado me voy a limitar a describir los cambios realizados en la aplicación.
+      \subsection{Activities}
+        \begin{itemize}
+          \item \textbf{Modificaciones en ProfileActivity:} Se ha ampliado para permitir la captura de imágenes mediante la cámara o su selección desde la galería, ajustarlas y guardarlas como fotos de perfil.
+        \end{itemize}
+      \subsection{Fragments}
+        \begin{itemize}
+          \item \textbf{MapFragment:} Fragment que muestra un mapa interactivo con las librerías cercanas a la ubicación del usuario utilizando OpenStreetMap.
+        \end{itemize}
+      \subsection{Services}
+        \begin{itemize}
+          \item \textbf{ReadingTimerService:} Implementa un servicio en primer plano que mantiene un temporizador de lectura activo incluso cuando la aplicación está en segundo plano. Muestra una notificación persistente que se actualiza con el tiempo transcurrido.
+          \item \textbf{LibreBookMessagingService:} Extiende FirebaseMessagingService para recibir y procesar mensajes push. Gestiona tanto mensajes de notificación como mensajes de datos.
+        \end{itemize}
+      \subsection{API}
+        \begin{itemize}
+          \item \textbf{ApiClient:} Proporciona métodos genéricos para realizar peticiones HTTP (GET, POST, PUT, DELETE) a nuestra API REST. Gestiona la comunicación asíncrona y el manejo de errores.
+          \item \textbf{ApiConfig:} Contiene la configuración básica como la URL base de la API.
+          \item \textbf{ApiParsers:} Conjunto de parseadores que convierten las respuestas JSON en objetos del dominio de la aplicación (Libro, Usuario, LibroConEstado, etc.).
+        \end{itemize}
+      \subsection{Provider}
+        \begin{itemize}
+          \item \textbf{LibreBooksProvider:} Content Provider que permite a otras aplicaciones acceder a la información de libros de LibreBook.
+        \end{itemize}
+      \subsection{Widget}
+        \begin{itemize}
+          \item \textbf{BookRecommendationWidgetProvider:} Implementa un widget de escritorio que muestra recomendaciones de libros y se actualiza periódicamente.
+        \end{itemize}
+      \subsection{Utils}
+        \begin{itemize}
+          \item \textbf{BookstoreFinder:} Clase utilitaria que utiliza la API de Overpass para buscar librerías y bibliotecas cercanas a una ubicación dada.
+          \item \textbf{CustomInfoWindow:} Componente personalizado para mostrar información detallada sobre una librería al seleccionar su marcador en el mapa.
+          \item \textbf{ShareUtils:} Proporciona métodos para compartir información de libros como texto plano o como archivos de texto.
+          \item \textbf{WidgetImageLoader:} Clase utilitaria para cargar imágenes de portadas de libros en el widget.
+          \item \textbf{FileUtils:} Proporciona métodos para gestionar archivos, convertir entre diferentes formatos de imagen y corregir orientación de imágenes capturadas.
+        \end{itemize}
     \cpsection{Base de datos}
       \begin{figure}[H]
         \centering
